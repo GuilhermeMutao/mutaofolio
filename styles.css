@@ -2389,6 +2389,30 @@ img {
     margin-bottom: 20px;
 }
 
+/* Snake Difficulty Select */
+.snake-difficulty-select {
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: 1px solid var(--primary-color);
+    background: var(--dark-secondary);
+    color: var(--text-primary);
+    font-size: 1rem;
+    margin-bottom: 15px;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.snake-difficulty-select:hover {
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
+}
+
+.snake-difficulty-select option {
+    background: var(--dark-primary);
+    color: var(--text-primary);
+}
+
 .game-score {
     color: var(--text-primary);
     font-size: 1.1rem;

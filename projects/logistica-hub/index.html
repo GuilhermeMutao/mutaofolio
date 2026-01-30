@@ -8,657 +8,419 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #0f172a;
-            color: #e2e8f0;
-            height: 100vh;
-            display: flex;
-        }
-
-        .sidebar {
-            width: 280px;
-            background: #1e293b;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            border-right: 1px solid rgba(99, 102, 241, 0.2);
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: #6366f1;
-            margin-bottom: 40px;
-        }
-
-        .logo i {
-            font-size: 2rem;
-        }
-
-        .nav-menu {
-            list-style: none;
-            flex: 1;
-        }
-
-        .nav-menu li {
-            margin-bottom: 5px;
-        }
-
-        .nav-menu a {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 15px;
-            color: #94a3b8;
-            text-decoration: none;
-            border-radius: 8px;
-            transition: all 0.3s;
-        }
-
-        .nav-menu a:hover,
-        .nav-menu a.active {
-            background: rgba(99, 102, 241, 0.2);
-            color: #6366f1;
-        }
-
-        .main-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        .header {
-            background: #1e293b;
-            padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid rgba(99, 102, 241, 0.2);
-        }
-
-        .search-bar {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: #0f172a;
-            padding: 10px 20px;
-            border-radius: 8px;
-            width: 400px;
-        }
-
-        .search-bar input {
-            background: none;
-            border: none;
-            color: #e2e8f0;
-            width: 100%;
-            outline: none;
-        }
-
-        .search-bar i {
-            color: #94a3b8;
-        }
-
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .notification-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: #0f172a;
-            border: none;
-            color: #94a3b8;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .notification-badge {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            width: 18px;
-            height: 18px;
-            background: #ef4444;
-            border-radius: 50%;
-            font-size: 0.7rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-        }
-
-        .content-area {
-            flex: 1;
-            display: grid;
-            grid-template-columns: 1fr 350px;
-            overflow: hidden;
-        }
-
-        .map-container {
-            position: relative;
-        }
-
-        #map {
-            width: 100%;
-            height: 100%;
-        }
-
-        .map-overlay {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            z-index: 1000;
-            display: flex;
-            gap: 10px;
-        }
-
-        .map-btn {
-            background: #1e293b;
-            border: none;
-            color: #e2e8f0;
-            padding: 10px 15px;
-            border-radius: 8px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 500;
-            transition: all 0.3s;
-        }
-
-        .map-btn:hover {
-            background: #6366f1;
-        }
-
-        .map-btn.active {
-            background: #6366f1;
-        }
-
-        .vehicles-panel {
-            background: #1e293b;
-            overflow-y: auto;
-            border-left: 1px solid rgba(99, 102, 241, 0.2);
-        }
-
-        .panel-header {
-            padding: 20px;
-            border-bottom: 1px solid rgba(99, 102, 241, 0.2);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .panel-header h2 {
-            font-size: 1.1rem;
-        }
-
-        .vehicle-count {
-            background: rgba(99, 102, 241, 0.2);
-            color: #6366f1;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-
-        .vehicle-list {
-            padding: 10px;
-        }
-
-        .vehicle-card {
-            background: #0f172a;
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 10px;
-            cursor: pointer;
-            transition: all 0.3s;
-            border: 1px solid transparent;
-        }
-
-        .vehicle-card:hover,
-        .vehicle-card.selected {
-            border-color: #6366f1;
-            transform: translateX(5px);
-        }
-
-        .vehicle-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .vehicle-id {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .vehicle-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-        }
-
-        .vehicle-icon.truck { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
-        .vehicle-icon.van { background: rgba(16, 185, 129, 0.2); color: #10b981; }
-        .vehicle-icon.moto { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
-
-        .vehicle-plate {
-            font-weight: 600;
-        }
-
-        .vehicle-driver {
-            font-size: 0.85rem;
-            color: #94a3b8;
-        }
-
-        .vehicle-status {
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-
-        .status-moving { background: rgba(16, 185, 129, 0.2); color: #10b981; }
-        .status-stopped { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
-        .status-delivering { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
-
-        .vehicle-info {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            font-size: 0.85rem;
-        }
-
-        .info-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            color: #94a3b8;
-        }
-
-        .info-item i {
-            font-size: 0.8rem;
-        }
-
-        .delivery-progress {
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 1px solid rgba(99, 102, 241, 0.1);
-        }
-
-        .progress-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-            font-size: 0.85rem;
-        }
-
-        .progress-bar {
-            height: 6px;
-            background: rgba(99, 102, 241, 0.2);
-            border-radius: 3px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #6366f1, #10b981);
-            border-radius: 3px;
-            transition: width 0.5s;
-        }
-
-        .back-btn {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(99, 102, 241, 0.9);
-            border: none;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s;
-            z-index: 1001;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .back-btn:hover {
-            background: #4f46e5;
-        }
-
-        .stats-bar {
-            display: flex;
-            gap: 20px;
-            padding: 15px 20px;
-            background: #0f172a;
-            border-bottom: 1px solid rgba(99, 102, 241, 0.1);
-        }
-
-        .stat-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .stat-icon {
-            width: 35px;
-            height: 35px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #0f172a; color: #e2e8f0; min-height: 100vh; display: flex; }
+        .sidebar { width: 280px; background: #1e293b; padding: 20px; display: flex; flex-direction: column; border-right: 1px solid rgba(99, 102, 241, 0.2); position: fixed; height: 100vh; overflow-y: auto; }
+        .logo { display: flex; align-items: center; gap: 12px; font-size: 1.4rem; font-weight: 700; color: #6366f1; margin-bottom: 40px; }
+        .logo i { font-size: 2rem; }
+        .nav-menu { list-style: none; flex: 1; }
+        .nav-menu li { margin-bottom: 5px; }
+        .nav-menu a { display: flex; align-items: center; gap: 12px; padding: 12px 15px; color: #94a3b8; text-decoration: none; border-radius: 8px; transition: all 0.3s; }
+        .nav-menu a:hover, .nav-menu a.active { background: rgba(99, 102, 241, 0.2); color: #6366f1; }
+        .main-content { flex: 1; margin-left: 280px; display: flex; flex-direction: column; min-height: 100vh; }
+        .header { background: #1e293b; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(99, 102, 241, 0.2); }
+        .search-bar { display: flex; align-items: center; gap: 10px; background: #0f172a; padding: 10px 20px; border-radius: 8px; width: 400px; }
+        .search-bar input { background: none; border: none; color: #e2e8f0; width: 100%; outline: none; }
+        .search-bar i { color: #94a3b8; }
+        .header-actions { display: flex; align-items: center; gap: 20px; }
+        .notification-btn { width: 40px; height: 40px; border-radius: 50%; background: #0f172a; border: none; color: #94a3b8; cursor: pointer; position: relative; }
+        .notification-badge { position: absolute; top: -5px; right: -5px; width: 18px; height: 18px; background: #ef4444; border-radius: 50%; font-size: 0.7rem; display: flex; align-items: center; justify-content: center; color: white; }
+        .page-content { display: none; animation: fadeInPage 0.4s ease; flex: 1; padding: 20px; }
+        .page-content.active { display: block; }
+        @keyframes fadeInPage { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .back-to-portfolio { position: fixed; bottom: 20px; left: 20px; z-index: 9999; background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; padding: 12px 20px; border-radius: 50px; text-decoration: none; font-weight: 600; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4); transition: all 0.3s ease; }
+        .back-to-portfolio:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5); }
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 25px; }
+        .stat-card { background: #1e293b; border-radius: 15px; padding: 20px; border: 1px solid rgba(99, 102, 241, 0.2); }
+        .stat-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .stat-icon { width: 45px; height: 45px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
         .stat-icon.green { background: rgba(16, 185, 129, 0.2); color: #10b981; }
         .stat-icon.blue { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
         .stat-icon.orange { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
-
-        .stat-info span {
-            display: block;
-        }
-
-        .stat-value {
-            font-weight: 600;
-            font-size: 1.1rem;
-        }
-
-        .stat-label {
-            font-size: 0.75rem;
-            color: #94a3b8;
-        }
-
-        /* Leaflet custom styles */
-        .leaflet-container {
-            background: #0f172a;
-        }
-
-        .custom-marker {
-            background: #6366f1;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            box-shadow: 0 3px 10px rgba(99, 102, 241, 0.5);
-        }
-
-        .pulse-marker {
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.7); }
-            70% { box-shadow: 0 0 0 15px rgba(99, 102, 241, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
-        }
-
-        @media (max-width: 1024px) {
-            .sidebar {
-                display: none;
-            }
-            .content-area {
-                grid-template-columns: 1fr;
-            }
-            .vehicles-panel {
-                display: none;
-            }
-        }
+        .stat-icon.red { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+        .stat-icon.indigo { background: rgba(99, 102, 241, 0.2); color: #6366f1; }
+        .stat-value { font-size: 1.8rem; font-weight: 700; margin-bottom: 5px; }
+        .stat-label { color: #64748b; font-size: 0.85rem; }
+        .card { background: #1e293b; border-radius: 15px; padding: 20px; border: 1px solid rgba(99, 102, 241, 0.2); margin-bottom: 20px; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .card-header h2 { font-size: 1.1rem; }
+        .btn { padding: 10px 18px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: all 0.3s; }
+        .btn-primary { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; }
+        .btn-secondary { background: rgba(99, 102, 241, 0.2); color: #6366f1; }
+        .content-grid { display: grid; grid-template-columns: 1fr 350px; gap: 20px; }
+        .map-container { height: 500px; min-height: 500px; border-radius: 12px; overflow: hidden; position: relative; background: #0f172a; }
+        #map, #routesMap { width: 100% !important; height: 100% !important; min-height: 500px; z-index: 1; }
+        .vehicle-list { max-height: 400px; overflow-y: auto; }
+        .vehicle-card { background: #0f172a; border-radius: 12px; padding: 15px; margin-bottom: 10px; cursor: pointer; transition: all 0.3s; border: 1px solid transparent; }
+        .vehicle-card:hover, .vehicle-card.selected { border-color: #6366f1; transform: translateX(5px); }
+        .vehicle-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .vehicle-id { display: flex; align-items: center; gap: 10px; }
+        .vehicle-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+        .vehicle-icon.truck { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
+        .vehicle-icon.van { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .vehicle-icon.moto { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+        .vehicle-plate { font-weight: 600; }
+        .vehicle-driver { font-size: 0.85rem; color: #94a3b8; }
+        .vehicle-status { padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+        .status-moving { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .status-stopped { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+        .status-delivering { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
+        .vehicle-info { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.85rem; }
+        .info-item { display: flex; align-items: center; gap: 6px; color: #94a3b8; }
+        .info-item i { font-size: 0.8rem; }
+        .delivery-progress { margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(99, 102, 241, 0.1); }
+        .progress-header { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.85rem; }
+        .progress-bar { height: 6px; background: rgba(99, 102, 241, 0.2); border-radius: 3px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #6366f1, #10b981); border-radius: 3px; transition: width 0.5s; }
+        .table { width: 100%; border-collapse: collapse; }
+        .table th { text-align: left; padding: 12px; color: #64748b; font-weight: 500; font-size: 0.85rem; border-bottom: 1px solid rgba(99, 102, 241, 0.2); }
+        .table td { padding: 15px 12px; border-bottom: 1px solid rgba(99, 102, 241, 0.1); }
+        .status-badge { padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 500; }
+        .status-entregue { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .status-transito { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
+        .status-pendente { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+        .driver-card { background: #0f172a; border-radius: 12px; padding: 20px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(99, 102, 241, 0.1); }
+        .driver-card:hover { border-color: #6366f1; }
+        .driver-info { display: flex; align-items: center; gap: 15px; }
+        .driver-avatar { width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, #6366f1, #8b5cf6); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+        .driver-name { font-weight: 600; margin-bottom: 3px; }
+        .driver-vehicle { font-size: 0.85rem; color: #64748b; }
+        .driver-stats { display: flex; gap: 30px; }
+        .driver-stat { text-align: center; }
+        .driver-stat-value { font-weight: 700; font-size: 1.2rem; }
+        .driver-stat-label { font-size: 0.75rem; color: #64748b; }
+        .fuel-card { background: #0f172a; border-radius: 12px; padding: 20px; margin-bottom: 15px; }
+        .fuel-header { display: flex; justify-content: space-between; margin-bottom: 15px; }
+        .fuel-vehicle { font-weight: 600; }
+        .fuel-date { font-size: 0.85rem; color: #64748b; }
+        .fuel-details { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+        .fuel-item { text-align: center; }
+        .fuel-value { font-weight: 700; font-size: 1.1rem; color: #6366f1; }
+        .fuel-label { font-size: 0.75rem; color: #64748b; }
+        .chart-container { height: 300px; }
+        .setting-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: #0f172a; border-radius: 10px; margin-bottom: 10px; }
+        .setting-info h4 { margin-bottom: 5px; }
+        .setting-info p { font-size: 0.85rem; color: #64748b; }
+        .toggle-switch { width: 50px; height: 26px; background: #64748b; border-radius: 13px; position: relative; cursor: pointer; transition: all 0.3s; }
+        .toggle-switch.active { background: #6366f1; }
+        .toggle-switch::after { content: ''; position: absolute; width: 22px; height: 22px; background: white; border-radius: 50%; top: 2px; left: 2px; transition: all 0.3s; }
+        .toggle-switch.active::after { left: 26px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; color: #94a3b8; font-size: 0.9rem; }
+        .form-group input, .form-group select { width: 100%; padding: 12px 15px; background: #0f172a; border: 1px solid rgba(99, 102, 241, 0.3); border-radius: 8px; color: #e2e8f0; font-size: 0.95rem; }
+        .form-group input:focus, .form-group select:focus { outline: none; border-color: #6366f1; }
+        .leaflet-container { background: #0f172a; }
+        .custom-marker { background: #6366f1; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 3px 10px rgba(99, 102, 241, 0.5); }
+        .pulse-marker { animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(99, 102, 241, 0); } 100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); } }
+        @media (max-width: 1200px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } .content-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) { .sidebar { display: none; } .main-content { margin-left: 0; } .stats-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
-    <a href="../../index.html#projects" class="back-btn">
-        <i class="fas fa-arrow-left"></i> Voltar
-    </a>
-
+    <a href="../../index.html#projects" class="back-to-portfolio"><i class="fas fa-arrow-left"></i> Voltar ao Portfólio</a>
     <aside class="sidebar">
-        <div class="logo">
-            <i class="fas fa-truck"></i>
-            <span>LogísticaHub</span>
-        </div>
+        <div class="logo"><i class="fas fa-truck"></i><span>LogísticaHub</span></div>
         <ul class="nav-menu">
-            <li><a href="#" class="active"><i class="fas fa-map-marked-alt"></i> Rastreamento</a></li>
-            <li><a href="#"><i class="fas fa-route"></i> Rotas</a></li>
-            <li><a href="#"><i class="fas fa-box"></i> Entregas</a></li>
-            <li><a href="#"><i class="fas fa-users"></i> Motoristas</a></li>
-            <li><a href="#"><i class="fas fa-gas-pump"></i> Combustível</a></li>
-            <li><a href="#"><i class="fas fa-chart-bar"></i> Relatórios</a></li>
-            <li><a href="#"><i class="fas fa-cog"></i> Configurações</a></li>
+            <li><a href="#" class="active" data-page="rastreamento"><i class="fas fa-map-marked-alt"></i> Rastreamento</a></li>
+            <li><a href="#" data-page="rotas"><i class="fas fa-route"></i> Rotas</a></li>
+            <li><a href="#" data-page="entregas"><i class="fas fa-box"></i> Entregas</a></li>
+            <li><a href="#" data-page="motoristas"><i class="fas fa-users"></i> Motoristas</a></li>
+            <li><a href="#" data-page="combustivel"><i class="fas fa-gas-pump"></i> Combustível</a></li>
+            <li><a href="#" data-page="relatorios"><i class="fas fa-chart-bar"></i> Relatórios</a></li>
+            <li><a href="#" data-page="configuracoes"><i class="fas fa-cog"></i> Configurações</a></li>
         </ul>
     </aside>
-
     <main class="main-content">
         <header class="header">
-            <div class="search-bar">
-                <i class="fas fa-search"></i>
-                <input type="text" placeholder="Buscar veículo, motorista ou entrega...">
-            </div>
+            <div class="search-bar"><i class="fas fa-search"></i><input type="text" placeholder="Buscar veículo, motorista ou entrega..."></div>
             <div class="header-actions">
-                <button class="notification-btn">
-                    <i class="fas fa-bell"></i>
-                    <span class="notification-badge">3</span>
-                </button>
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <span>Operador</span>
-                    <div style="width: 35px; height: 35px; background: #6366f1; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                        <i class="fas fa-user"></i>
-                    </div>
-                </div>
+                <button class="notification-btn"><i class="fas fa-bell"></i><span class="notification-badge">3</span></button>
+                <div style="display: flex; align-items: center; gap: 10px;"><span>Operador</span><div style="width: 35px; height: 35px; background: #6366f1; border-radius: 50%; display: flex; align-items: center; justify-content: center;"><i class="fas fa-user"></i></div></div>
             </div>
         </header>
 
-        <div class="stats-bar">
-            <div class="stat-item">
-                <div class="stat-icon green"><i class="fas fa-truck"></i></div>
-                <div class="stat-info">
-                    <span class="stat-value" id="vehicles-moving">8</span>
-                    <span class="stat-label">Em Movimento</span>
-                </div>
+        <!-- PAGE: RASTREAMENTO -->
+        <div class="page-content active" id="page-rastreamento">
+            <div class="stats-grid">
+                <div class="stat-card"><div class="stat-header"><div class="stat-icon green"><i class="fas fa-truck"></i></div></div><div class="stat-value" id="vehicles-moving">8</div><div class="stat-label">Em Movimento</div></div>
+                <div class="stat-card"><div class="stat-header"><div class="stat-icon blue"><i class="fas fa-box"></i></div></div><div class="stat-value">47</div><div class="stat-label">Entregas Hoje</div></div>
+                <div class="stat-card"><div class="stat-header"><div class="stat-icon orange"><i class="fas fa-clock"></i></div></div><div class="stat-value">12</div><div class="stat-label">Pendentes</div></div>
+                <div class="stat-card"><div class="stat-header"><div class="stat-icon red"><i class="fas fa-exclamation-triangle"></i></div></div><div class="stat-value">2</div><div class="stat-label">Atrasados</div></div>
             </div>
-            <div class="stat-item">
-                <div class="stat-icon blue"><i class="fas fa-box"></i></div>
-                <div class="stat-info">
-                    <span class="stat-value">47</span>
-                    <span class="stat-label">Entregas Hoje</span>
-                </div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-icon orange"><i class="fas fa-clock"></i></div>
-                <div class="stat-info">
-                    <span class="stat-value">12</span>
-                    <span class="stat-label">Pendentes</span>
+            <div class="content-grid">
+                <div class="card"><div class="card-header"><h2>🗺️ Mapa de Rastreamento</h2></div><div class="map-container" id="map"></div></div>
+                <div class="card"><div class="card-header"><h2>🚗 Veículos Ativos</h2><span style="background: rgba(99, 102, 241, 0.2); color: #6366f1; padding: 5px 12px; border-radius: 20px; font-size: 0.85rem;">12 online</span></div>
+                    <div class="vehicle-list" id="vehicle-list"></div>
                 </div>
             </div>
         </div>
 
-        <div class="content-area">
-            <div class="map-container">
-                <div class="map-overlay">
-                    <button class="map-btn active"><i class="fas fa-satellite"></i> Satélite</button>
-                    <button class="map-btn"><i class="fas fa-road"></i> Rotas</button>
-                    <button class="map-btn"><i class="fas fa-thermometer-half"></i> Tráfego</button>
-                </div>
-                <div id="map"></div>
+        <!-- PAGE: ROTAS -->
+        <div class="page-content" id="page-rotas">
+            <div class="stats-grid">
+                <div class="stat-card"><div class="stat-header"><div class="stat-icon indigo"><i class="fas fa-route"></i></div></div><div class="stat-value">24</div><div class="stat-label">Rotas Ativas</div></div>
+                <div class="stat-card"><div class="stat-header"><div class="stat-icon green"><i class="fas fa-check-circle"></i></div></div><div class="stat-value">18</div><div class="stat-label">Concluídas</div></div>
+                <div class="stat-card"><div class="stat-header"><div class="stat-icon blue"><i class="fas fa-road"></i></div></div><div class="stat-value">1,245 km</div><div class="stat-label">Total Percorrido</div></div>
+                <div class="stat-card"><div class="stat-header"><div class="stat-icon orange"><i class="fas fa-clock"></i></div></div><div class="stat-value">2h 15m</div><div class="stat-label">Tempo Médio</div></div>
             </div>
+            <div class="content-grid">
+                <div class="card"><div class="card-header"><h2>📍 Planejamento de Rotas</h2><button class="btn btn-primary"><i class="fas fa-plus"></i> Nova Rota</button></div><div class="map-container" id="routesMap"></div></div>
+                <div class="card"><div class="card-header"><h2>🛤️ Rotas do Dia</h2></div>
+                    <div class="vehicle-card"><div class="vehicle-header"><div class="vehicle-id"><div class="vehicle-icon truck"><i class="fas fa-truck"></i></div><div><div class="vehicle-plate">Rota Norte</div><div class="vehicle-driver">15 paradas • 85 km</div></div></div><span class="vehicle-status status-moving">Em Andamento</span></div><div class="delivery-progress"><div class="progress-header"><span>Progresso</span><span>60%</span></div><div class="progress-bar"><div class="progress-fill" style="width: 60%;"></div></div></div></div>
+                    <div class="vehicle-card"><div class="vehicle-header"><div class="vehicle-id"><div class="vehicle-icon van"><i class="fas fa-shuttle-van"></i></div><div><div class="vehicle-plate">Rota Centro</div><div class="vehicle-driver">22 paradas • 45 km</div></div></div><span class="vehicle-status status-delivering">Entregando</span></div><div class="delivery-progress"><div class="progress-header"><span>Progresso</span><span>85%</span></div><div class="progress-bar"><div class="progress-fill" style="width: 85%;"></div></div></div></div>
+                    <div class="vehicle-card"><div class="vehicle-header"><div class="vehicle-id"><div class="vehicle-icon moto"><i class="fas fa-motorcycle"></i></div><div><div class="vehicle-plate">Rota Sul</div><div class="vehicle-driver">8 paradas • 32 km</div></div></div><span class="vehicle-status status-stopped">Aguardando</span></div><div class="delivery-progress"><div class="progress-header"><span>Progresso</span><span>0%</span></div><div class="progress-bar"><div class="progress-fill" style="width: 0%;"></div></div></div></div>
+                </div>
+            </div>
+        </div>
 
-            <aside class="vehicles-panel">
-                <div class="panel-header">
-                    <h2>Veículos Ativos</h2>
-                    <span class="vehicle-count" id="vehicle-count">12 online</span>
-                </div>
-                <div class="vehicle-list" id="vehicle-list">
-                    <!-- Vehicles will be inserted here -->
-                </div>
-            </aside>
+        <!-- PAGE: ENTREGAS -->
+        <div class="page-content" id="page-entregas">
+            <div class="stats-grid">
+                <div class="stat-card"><div class="stat-header"><div class="stat-icon indigo"><i class="fas fa-box"></i></div></div><div class="stat-value">156</div><div class="stat-label">Total Entregas</div></div>
+                <div class="stat-card"><div class="stat-header"><div class="stat-icon green"><i class="fas fa-check"></i></div></div><div class="stat-value">128</div><div class="stat-label">Entregues</div></div>
+                <div class="stat-card"><div class="stat-header"><div class="stat-icon blue"><i class="fas fa-truck"></i></div></div><div class="stat-value">16</div><div class="stat-label">Em Trânsito</div></div>
+                <div class="stat-card"><div class="stat-header"><div class="stat-icon orange"><i class="fas fa-clock"></i></div></div><div class="stat-value">12</div><div class="stat-label">Pendentes</div></div>
+            </div>
+            <div class="card"><div class="card-header"><h2>📦 Lista de Entregas</h2><div style="display: flex; gap: 10px;"><button class="btn btn-secondary"><i class="fas fa-filter"></i> Filtrar</button><button class="btn btn-primary"><i class="fas fa-plus"></i> Nova Entrega</button></div></div>
+                <table class="table"><thead><tr><th>ID</th><th>Destinatário</th><th>Endereço</th><th>Veículo</th><th>Status</th><th>ETA</th></tr></thead>
+                    <tbody>
+                        <tr><td>#ENT-2345</td><td>Maria Silva</td><td>Rua das Flores, 123</td><td>TRK-001</td><td><span class="status-badge status-entregue">Entregue</span></td><td>-</td></tr>
+                        <tr><td>#ENT-2346</td><td>João Santos</td><td>Av. Brasil, 456</td><td>VAN-002</td><td><span class="status-badge status-transito">Em Trânsito</span></td><td>14:30</td></tr>
+                        <tr><td>#ENT-2347</td><td>Carlos Lima</td><td>Rua Central, 789</td><td>MOT-004</td><td><span class="status-badge status-transito">Em Trânsito</span></td><td>15:15</td></tr>
+                        <tr><td>#ENT-2348</td><td>Ana Costa</td><td>Praça Nova, 32</td><td>TRK-003</td><td><span class="status-badge status-pendente">Pendente</span></td><td>16:00</td></tr>
+                        <tr><td>#ENT-2349</td><td>Pedro Alves</td><td>Rua do Sol, 567</td><td>VAN-005</td><td><span class="status-badge status-entregue">Entregue</span></td><td>-</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- PAGE: MOTORISTAS -->
+        <div class="page-content" id="page-motoristas">
+            <div class="stats-grid">
+                <div class="stat-card"><div class="stat-header"><div class="stat-icon indigo"><i class="fas fa-users"></i></div></div><div class="stat-value">18</div><div class="stat-label">Total Motoristas</div></div>
+                <div class="stat-card"><div class="stat-header"><div class="stat-icon green"><i class="fas fa-user-check"></i></div></div><div class="stat-value">12</div><div class="stat-label">Em Atividade</div></div>
+                <div class="stat-card"><div class="stat-header"><div class="stat-icon blue"><i class="fas fa-star"></i></div></div><div class="stat-value">4.8</div><div class="stat-label">Avaliação Média</div></div>
+                <div class="stat-card"><div class="stat-header"><div class="stat-icon orange"><i class="fas fa-trophy"></i></div></div><div class="stat-value">95%</div><div class="stat-label">Taxa Pontualidade</div></div>
+            </div>
+            <div class="card"><div class="card-header"><h2>👨‍✈️ Equipe de Motoristas</h2><button class="btn btn-primary"><i class="fas fa-plus"></i> Novo Motorista</button></div>
+                <div class="driver-card"><div class="driver-info"><div class="driver-avatar"><i class="fas fa-user"></i></div><div><div class="driver-name">João Silva</div><div class="driver-vehicle">TRK-001 • Caminhão</div></div></div><div class="driver-stats"><div class="driver-stat"><div class="driver-stat-value">156</div><div class="driver-stat-label">Entregas</div></div><div class="driver-stat"><div class="driver-stat-value">4.9</div><div class="driver-stat-label">Avaliação</div></div><div class="driver-stat"><div class="driver-stat-value">98%</div><div class="driver-stat-label">Pontual</div></div></div></div>
+                <div class="driver-card"><div class="driver-info"><div class="driver-avatar"><i class="fas fa-user"></i></div><div><div class="driver-name">Maria Santos</div><div class="driver-vehicle">VAN-002 • Van</div></div></div><div class="driver-stats"><div class="driver-stat"><div class="driver-stat-value">189</div><div class="driver-stat-label">Entregas</div></div><div class="driver-stat"><div class="driver-stat-value">4.8</div><div class="driver-stat-label">Avaliação</div></div><div class="driver-stat"><div class="driver-stat-value">96%</div><div class="driver-stat-label">Pontual</div></div></div></div>
+                <div class="driver-card"><div class="driver-info"><div class="driver-avatar"><i class="fas fa-user"></i></div><div><div class="driver-name">Pedro Costa</div><div class="driver-vehicle">TRK-003 • Caminhão</div></div></div><div class="driver-stats"><div class="driver-stat"><div class="driver-stat-value">142</div><div class="driver-stat-label">Entregas</div></div><div class="driver-stat"><div class="driver-stat-value">4.7</div><div class="driver-stat-label">Avaliação</div></div><div class="driver-stat"><div class="driver-stat-value">94%</div><div class="driver-stat-label">Pontual</div></div></div></div>
+                <div class="driver-card"><div class="driver-info"><div class="driver-avatar"><i class="fas fa-user"></i></div><div><div class="driver-name">Ana Lima</div><div class="driver-vehicle">MOT-004 • Moto</div></div></div><div class="driver-stats"><div class="driver-stat"><div class="driver-stat-value">245</div><div class="driver-stat-label">Entregas</div></div><div class="driver-stat"><div class="driver-stat-value">4.9</div><div class="driver-stat-label">Avaliação</div></div><div class="driver-stat"><div class="driver-stat-value">99%</div><div class="driver-stat-label">Pontual</div></div></div></div>
+            </div>
+        </div>
+
+        <!-- PAGE: COMBUSTÍVEL -->
+        <div class="page-content" id="page-combustivel">
+            <div class="stats-grid">
+                <div class="stat-card"><div class="stat-header"><div class="stat-icon indigo"><i class="fas fa-gas-pump"></i></div></div><div class="stat-value">R$ 45K</div><div class="stat-label">Gasto Mensal</div></div>
+                <div class="stat-card"><div class="stat-header"><div class="stat-icon green"><i class="fas fa-tachometer-alt"></i></div></div><div class="stat-value">8.5 km/L</div><div class="stat-label">Média Consumo</div></div>
+                <div class="stat-card"><div class="stat-header"><div class="stat-icon blue"><i class="fas fa-fill-drip"></i></div></div><div class="stat-value">5,280 L</div><div class="stat-label">Litros Este Mês</div></div>
+                <div class="stat-card"><div class="stat-header"><div class="stat-icon orange"><i class="fas fa-chart-line"></i></div></div><div class="stat-value">-12%</div><div class="stat-label">vs Mês Anterior</div></div>
+            </div>
+            <div class="card"><div class="card-header"><h2>⛽ Últimos Abastecimentos</h2><button class="btn btn-primary"><i class="fas fa-plus"></i> Novo Registro</button></div>
+                <div class="fuel-card"><div class="fuel-header"><div class="fuel-vehicle">TRK-001 - João Silva</div><div class="fuel-date">30/01/2026 14:30</div></div><div class="fuel-details"><div class="fuel-item"><div class="fuel-value">120 L</div><div class="fuel-label">Litros</div></div><div class="fuel-item"><div class="fuel-value">R$ 720,00</div><div class="fuel-label">Valor</div></div><div class="fuel-item"><div class="fuel-value">45.230 km</div><div class="fuel-label">Hodômetro</div></div></div></div>
+                <div class="fuel-card"><div class="fuel-header"><div class="fuel-vehicle">VAN-002 - Maria Santos</div><div class="fuel-date">30/01/2026 11:15</div></div><div class="fuel-details"><div class="fuel-item"><div class="fuel-value">65 L</div><div class="fuel-label">Litros</div></div><div class="fuel-item"><div class="fuel-value">R$ 390,00</div><div class="fuel-label">Valor</div></div><div class="fuel-item"><div class="fuel-value">32.150 km</div><div class="fuel-label">Hodômetro</div></div></div></div>
+                <div class="fuel-card"><div class="fuel-header"><div class="fuel-vehicle">TRK-003 - Pedro Costa</div><div class="fuel-date">29/01/2026 16:45</div></div><div class="fuel-details"><div class="fuel-item"><div class="fuel-value">110 L</div><div class="fuel-label">Litros</div></div><div class="fuel-item"><div class="fuel-value">R$ 660,00</div><div class="fuel-label">Valor</div></div><div class="fuel-item"><div class="fuel-value">67.890 km</div><div class="fuel-label">Hodômetro</div></div></div></div>
+            </div>
+        </div>
+
+        <!-- PAGE: RELATÓRIOS -->
+        <div class="page-content" id="page-relatorios">
+            <div class="stats-grid">
+                <div class="stat-card"><div class="stat-header"><div class="stat-icon green"><i class="fas fa-chart-line"></i></div></div><div class="stat-value">+15%</div><div class="stat-label">Eficiência</div></div>
+                <div class="stat-card"><div class="stat-header"><div class="stat-icon blue"><i class="fas fa-box-open"></i></div></div><div class="stat-value">4,567</div><div class="stat-label">Entregas/Mês</div></div>
+                <div class="stat-card"><div class="stat-header"><div class="stat-icon orange"><i class="fas fa-road"></i></div></div><div class="stat-value">45,230 km</div><div class="stat-label">Distância Total</div></div>
+                <div class="stat-card"><div class="stat-header"><div class="stat-icon indigo"><i class="fas fa-clock"></i></div></div><div class="stat-value">32 min</div><div class="stat-label">Tempo Médio/Entrega</div></div>
+            </div>
+            <div class="content-grid" style="grid-template-columns: 1fr 1fr;">
+                <div class="card"><div class="card-header"><h2>📈 Entregas por Semana</h2></div><div class="chart-container"><canvas id="deliveriesChart"></canvas></div></div>
+                <div class="card"><div class="card-header"><h2>⛽ Consumo de Combustível</h2></div><div class="chart-container"><canvas id="fuelChart"></canvas></div></div>
+            </div>
+        </div>
+
+        <!-- PAGE: CONFIGURAÇÕES -->
+        <div class="page-content" id="page-configuracoes">
+            <div class="card">
+                <h3 style="margin-bottom: 20px;">⚙️ Configurações do Sistema</h3>
+                <div class="setting-item"><div class="setting-info"><h4>Rastreamento em Tempo Real</h4><p>Atualizar posição dos veículos a cada 10 segundos</p></div><div class="toggle-switch active" onclick="this.classList.toggle('active')"></div></div>
+                <div class="setting-item"><div class="setting-info"><h4>Notificações de Atraso</h4><p>Alertar quando entregas estiverem atrasadas</p></div><div class="toggle-switch active" onclick="this.classList.toggle('active')"></div></div>
+                <div class="setting-item"><div class="setting-info"><h4>Otimização Automática de Rotas</h4><p>Recalcular rotas automaticamente</p></div><div class="toggle-switch active" onclick="this.classList.toggle('active')"></div></div>
+                <div class="setting-item"><div class="setting-info"><h4>Alertas de Combustível</h4><p>Notificar quando nível estiver baixo</p></div><div class="toggle-switch" onclick="this.classList.toggle('active')"></div></div>
+                <h3 style="margin: 30px 0 20px;">🔧 Preferências</h3>
+                <div class="form-group"><label>Fuso Horário</label><select><option>America/Sao_Paulo (GMT-3)</option><option>America/Manaus (GMT-4)</option></select></div>
+                <div class="form-group"><label>Unidade de Distância</label><select><option>Quilômetros (km)</option><option>Milhas (mi)</option></select></div>
+                <button class="btn btn-primary" style="margin-top: 10px;"><i class="fas fa-save"></i> Salvar Configurações</button>
+            </div>
         </div>
     </main>
 
     <script>
-        // Initialize map centered on Brazil
-        const map = L.map('map').setView([-19.9167, -43.9345], 12);
-
-        // Dark tile layer
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
-            subdomains: 'abcd',
-            maxZoom: 20
-        }).addTo(map);
-
-        // Vehicle data
-        const vehicles = [
-            { id: 'TRK-001', plate: 'ABC-1234', driver: 'João Silva', type: 'truck', status: 'moving', lat: -19.9191, lng: -43.9386, speed: 45, deliveries: 8, completed: 5 },
-            { id: 'VAN-002', plate: 'DEF-5678', driver: 'Maria Santos', type: 'van', status: 'delivering', lat: -19.9245, lng: -43.9290, speed: 0, deliveries: 12, completed: 9 },
-            { id: 'TRK-003', plate: 'GHI-9012', driver: 'Pedro Costa', type: 'truck', status: 'moving', lat: -19.9120, lng: -43.9450, speed: 62, deliveries: 6, completed: 3 },
-            { id: 'MOT-004', plate: 'JKL-3456', driver: 'Ana Lima', type: 'moto', status: 'moving', lat: -19.9300, lng: -43.9200, speed: 35, deliveries: 15, completed: 12 },
-            { id: 'VAN-005', plate: 'MNO-7890', driver: 'Carlos Souza', type: 'van', status: 'stopped', lat: -19.9050, lng: -43.9500, speed: 0, deliveries: 10, completed: 10 },
-            { id: 'TRK-006', plate: 'PQR-1234', driver: 'Lucia Ferreira', type: 'truck', status: 'moving', lat: -19.9350, lng: -43.9150, speed: 55, deliveries: 7, completed: 4 },
-        ];
-
-        // Custom icon
-        function createIcon(type, status) {
-            const colors = {
-                truck: '#3b82f6',
-                van: '#10b981',
-                moto: '#f59e0b'
-            };
-
-            return L.divIcon({
-                className: 'custom-div-icon',
-                html: `<div class="custom-marker ${status === 'moving' ? 'pulse-marker' : ''}" style="background: ${colors[type]}">
-                    <i class="fas fa-${type === 'moto' ? 'motorcycle' : type === 'van' ? 'shuttle-van' : 'truck'}"></i>
-                </div>`,
-                iconSize: [30, 30],
-                iconAnchor: [15, 15]
+        // Navigation
+        const navLinks = document.querySelectorAll('.nav-menu a[data-page]');
+        const pages = document.querySelectorAll('.page-content');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetPage = this.getAttribute('data-page');
+                navLinks.forEach(l => l.classList.remove('active'));
+                pages.forEach(p => p.classList.remove('active'));
+                this.classList.add('active');
+                document.getElementById('page-' + targetPage).classList.add('active');
+                // Initialize maps when switching to those pages
+                if (targetPage === 'rotas') { setTimeout(initRoutesMap, 100); }
+                if (targetPage === 'rastreamento') { setTimeout(() => map.invalidateSize(), 100); }
             });
-        }
-
-        // Add markers
-        const markers = {};
-        vehicles.forEach(vehicle => {
-            const marker = L.marker([vehicle.lat, vehicle.lng], {
-                icon: createIcon(vehicle.type, vehicle.status)
-            }).addTo(map);
-
-            marker.bindPopup(`
-                <div style="text-align: center; padding: 10px;">
-                    <strong>${vehicle.plate}</strong><br>
-                    <small>${vehicle.driver}</small><br>
-                    <span style="color: ${vehicle.status === 'moving' ? '#10b981' : vehicle.status === 'delivering' ? '#3b82f6' : '#f59e0b'}">
-                        ${vehicle.status === 'moving' ? '🚗 Em movimento' : vehicle.status === 'delivering' ? '📦 Entregando' : '⏸ Parado'}
-                    </span><br>
-                    <small>${vehicle.speed} km/h</small>
-                </div>
-            `);
-
-            markers[vehicle.id] = marker;
         });
 
-        // Render vehicle list
-        function renderVehicleList() {
-            const list = document.getElementById('vehicle-list');
-            list.innerHTML = vehicles.map(v => `
-                <div class="vehicle-card" onclick="focusVehicle('${v.id}')">
-                    <div class="vehicle-header">
-                        <div class="vehicle-id">
-                            <div class="vehicle-icon ${v.type}">
-                                <i class="fas fa-${v.type === 'moto' ? 'motorcycle' : v.type === 'van' ? 'shuttle-van' : 'truck'}"></i>
-                            </div>
-                            <div>
-                                <div class="vehicle-plate">${v.plate}</div>
-                                <div class="vehicle-driver">${v.driver}</div>
-                            </div>
-                        </div>
-                        <span class="vehicle-status status-${v.status}">
-                            ${v.status === 'moving' ? 'Em movimento' : v.status === 'delivering' ? 'Entregando' : 'Parado'}
-                        </span>
-                    </div>
-                    <div class="vehicle-info">
-                        <div class="info-item">
-                            <i class="fas fa-tachometer-alt"></i>
-                            <span>${v.speed} km/h</span>
-                        </div>
-                        <div class="info-item">
-                            <i class="fas fa-box"></i>
-                            <span>${v.completed}/${v.deliveries} entregas</span>
-                        </div>
-                    </div>
-                    <div class="delivery-progress">
-                        <div class="progress-header">
-                            <span>Progresso</span>
-                            <span>${Math.round((v.completed / v.deliveries) * 100)}%</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: ${(v.completed / v.deliveries) * 100}%"></div>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
+        // Initialize map after DOM is ready
+        let map;
+        document.addEventListener('DOMContentLoaded', () => {
+            // First initialization attempt
+            initMainMap();
+        });
+
+        function initMainMap() {
+            const mapContainer = document.getElementById('map');
+            if (!mapContainer || map) return;
+            
+            // Create map
+            map = L.map('map', { 
+                zoomControl: true,
+                preferCanvas: true 
+            }).setView([-23.5505, -46.6333], 12);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { 
+                attribution: '&copy; OpenStreetMap contributors',
+                maxZoom: 19 
+            }).addTo(map);
+            
+            // Multiple invalidateSize calls to ensure proper rendering
+            map.invalidateSize();
+            setTimeout(() => { 
+                map.invalidateSize(); 
+                initVehicles(); 
+            }, 100);
+            setTimeout(() => map.invalidateSize(), 300);
+            setTimeout(() => map.invalidateSize(), 500);
+            setTimeout(() => map.invalidateSize(), 1000);
         }
 
-        function focusVehicle(id) {
-            const vehicle = vehicles.find(v => v.id === id);
-            if (vehicle) {
-                map.setView([vehicle.lat, vehicle.lng], 15);
-                markers[id].openPopup();
+        const vehicles = [
+            { id: 'TRK-001', plate: 'ABC-1234', driver: 'João Silva', type: 'truck', status: 'moving', lat: -23.5505, lng: -46.6333, speed: 45, deliveries: 8, completed: 5 },
+            { id: 'VAN-002', plate: 'DEF-5678', driver: 'Maria Santos', type: 'van', status: 'delivering', lat: -23.5605, lng: -46.6433, speed: 0, deliveries: 12, completed: 9 },
+            { id: 'TRK-003', plate: 'GHI-9012', driver: 'Pedro Costa', type: 'truck', status: 'moving', lat: -23.5405, lng: -46.6533, speed: 62, deliveries: 6, completed: 3 },
+            { id: 'MOT-004', plate: 'JKL-3456', driver: 'Ana Lima', type: 'moto', status: 'moving', lat: -23.5705, lng: -46.6233, speed: 35, deliveries: 15, completed: 12 },
+            { id: 'VAN-005', plate: 'MNO-7890', driver: 'Carlos Souza', type: 'van', status: 'stopped', lat: -23.5305, lng: -46.6133, speed: 0, deliveries: 10, completed: 10 },
+            { id: 'TRK-006', plate: 'PQR-1234', driver: 'Lucia Ferreira', type: 'truck', status: 'moving', lat: -23.5805, lng: -46.6633, speed: 55, deliveries: 7, completed: 4 },
+        ];
 
-                // Highlight card
-                document.querySelectorAll('.vehicle-card').forEach(card => card.classList.remove('selected'));
-                event.currentTarget.classList.add('selected');
-            }
+        function createIcon(type, status) {
+            const colors = { truck: '#3b82f6', van: '#10b981', moto: '#f59e0b' };
+            return L.divIcon({ className: 'custom-div-icon', html: `<div class="custom-marker ${status === 'moving' ? 'pulse-marker' : ''}" style="background: ${colors[type]}"><i class="fas fa-${type === 'moto' ? 'motorcycle' : type === 'van' ? 'shuttle-van' : 'truck'}"></i></div>`, iconSize: [30, 30], iconAnchor: [15, 15] });
         }
 
-        // Simulate vehicle movement
-        function simulateMovement() {
+        const markers = {};
+        function initVehicles() {
             vehicles.forEach(vehicle => {
-                if (vehicle.status === 'moving') {
-                    vehicle.lat += (Math.random() - 0.5) * 0.002;
-                    vehicle.lng += (Math.random() - 0.5) * 0.002;
-                    vehicle.speed = Math.floor(Math.random() * 30) + 30;
-                    
-                    markers[vehicle.id].setLatLng([vehicle.lat, vehicle.lng]);
-                }
+                const marker = L.marker([vehicle.lat, vehicle.lng], { icon: createIcon(vehicle.type, vehicle.status) }).addTo(map);
+                marker.bindPopup(`<div style="text-align: center; padding: 10px;"><strong>${vehicle.plate}</strong><br><small>${vehicle.driver}</small><br><span style="color: ${vehicle.status === 'moving' ? '#10b981' : vehicle.status === 'delivering' ? '#3b82f6' : '#f59e0b'}">${vehicle.status === 'moving' ? '🚗 Em movimento' : vehicle.status === 'delivering' ? '📦 Entregando' : '⏸ Parado'}</span><br><small>${vehicle.speed} km/h</small></div>`);
+                markers[vehicle.id] = marker;
             });
             renderVehicleList();
         }
 
-        // Initial render
-        renderVehicleList();
+        function renderVehicleList() {
+            const list = document.getElementById('vehicle-list');
+            list.innerHTML = vehicles.map(v => `<div class="vehicle-card" onclick="focusVehicle('${v.id}')"><div class="vehicle-header"><div class="vehicle-id"><div class="vehicle-icon ${v.type}"><i class="fas fa-${v.type === 'moto' ? 'motorcycle' : v.type === 'van' ? 'shuttle-van' : 'truck'}"></i></div><div><div class="vehicle-plate">${v.plate}</div><div class="vehicle-driver">${v.driver}</div></div></div><span class="vehicle-status status-${v.status}">${v.status === 'moving' ? 'Em movimento' : v.status === 'delivering' ? 'Entregando' : 'Parado'}</span></div><div class="vehicle-info"><div class="info-item"><i class="fas fa-tachometer-alt"></i><span>${v.speed} km/h</span></div><div class="info-item"><i class="fas fa-box"></i><span>${v.completed}/${v.deliveries}</span></div></div><div class="delivery-progress"><div class="progress-header"><span>Progresso</span><span>${Math.round((v.completed / v.deliveries) * 100)}%</span></div><div class="progress-bar"><div class="progress-fill" style="width: ${(v.completed / v.deliveries) * 100}%"></div></div></div></div>`).join('');
+        }
 
-        // Update every 3 seconds
+        function focusVehicle(id) {
+            const vehicle = vehicles.find(v => v.id === id);
+            if (vehicle) { map.setView([vehicle.lat, vehicle.lng], 15); markers[id].openPopup(); }
+        }
+
+        function simulateMovement() {
+            vehicles.forEach(vehicle => {
+                if (vehicle.status === 'moving') { vehicle.lat += (Math.random() - 0.5) * 0.002; vehicle.lng += (Math.random() - 0.5) * 0.002; vehicle.speed = Math.floor(Math.random() * 30) + 30; markers[vehicle.id].setLatLng([vehicle.lat, vehicle.lng]); }
+            });
+            renderVehicleList();
+        }
+
         setInterval(simulateMovement, 3000);
 
-        // Map button handlers
-        document.querySelectorAll('.map-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.map-btn').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-            });
-        });
+        // Routes Map
+        let routesMap;
+        function initRoutesMap() {
+            const routesContainer = document.getElementById('routesMap');
+            if (!routesContainer) return;
+            
+            if (!routesMap) {
+                routesMap = L.map('routesMap', { 
+                    zoomControl: true,
+                    preferCanvas: true 
+                }).setView([-23.5505, -46.6333], 12);
+                
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { 
+                    attribution: '&copy; OpenStreetMap contributors',
+                    maxZoom: 19 
+                }).addTo(routesMap);
+                
+                // Add sample route markers with custom icons
+                const routePoints = [
+                    { coords: [-23.5505, -46.6333], label: 'Origem - CD Principal' },
+                    { coords: [-23.5605, -46.6233], label: 'Parada 1 - Cliente A' },
+                    { coords: [-23.5705, -46.6133], label: 'Parada 2 - Cliente B' },
+                    { coords: [-23.5405, -46.6033], label: 'Destino Final' }
+                ];
+                
+                routePoints.forEach((point, i) => {
+                    const color = i === 0 ? '#10b981' : (i === routePoints.length - 1 ? '#ef4444' : '#6366f1');
+                    const icon = L.divIcon({
+                        className: 'route-marker',
+                        html: `<div style="background: ${color}; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.3);">${i + 1}</div>`,
+                        iconSize: [28, 28],
+                        iconAnchor: [14, 14]
+                    });
+                    L.marker(point.coords, { icon }).addTo(routesMap).bindPopup(`<strong>${point.label}</strong>`);
+                });
+                
+                // Draw route line
+                L.polyline(routePoints.map(p => p.coords), { 
+                    color: '#6366f1', 
+                    weight: 5, 
+                    opacity: 0.8,
+                    dashArray: '10, 10'
+                }).addTo(routesMap);
+            }
+            
+            // Multiple invalidateSize calls
+            routesMap.invalidateSize();
+            setTimeout(() => routesMap.invalidateSize(), 100);
+            setTimeout(() => routesMap.invalidateSize(), 300);
+            setTimeout(() => routesMap.invalidateSize(), 500);
+        }
+
+        // Charts
+        setTimeout(() => {
+            const deliveriesCtx = document.getElementById('deliveriesChart');
+            if (deliveriesCtx) {
+                new Chart(deliveriesCtx.getContext('2d'), {
+                    type: 'bar', data: { labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'], datasets: [{ label: 'Entregas', data: [145, 132, 165, 178, 156, 89, 45], backgroundColor: 'rgba(99, 102, 241, 0.8)', borderRadius: 5 }] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#94a3b8' } } }, scales: { y: { beginAtZero: true, grid: { color: 'rgba(99, 102, 241, 0.1)' }, ticks: { color: '#64748b' } }, x: { grid: { display: false }, ticks: { color: '#64748b' } } } }
+                });
+            }
+            const fuelCtx = document.getElementById('fuelChart');
+            if (fuelCtx) {
+                new Chart(fuelCtx.getContext('2d'), {
+                    type: 'line', data: { labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'], datasets: [{ label: 'Litros', data: [5200, 4800, 5500, 5100, 4900, 5280], borderColor: '#10b981', backgroundColor: 'rgba(16, 185, 129, 0.1)', fill: true, tension: 0.4 }] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#94a3b8' } } }, scales: { y: { beginAtZero: false, grid: { color: 'rgba(99, 102, 241, 0.1)' }, ticks: { color: '#64748b' } }, x: { grid: { display: false }, ticks: { color: '#64748b' } } } }
+                });
+            }
+        }, 500);
     </script>
 </body>
 </html>

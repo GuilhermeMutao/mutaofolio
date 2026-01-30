@@ -497,6 +497,254 @@
             background: #16a34a;
         }
 
+        /* Page Navigation System */
+        .page-content {
+            display: none;
+            animation: fadeInPage 0.4s ease;
+        }
+        .page-content.active {
+            display: block;
+        }
+        @keyframes fadeInPage {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* History Page */
+        .history-page {
+            padding: 20px;
+        }
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .history-header h2 {
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .history-filter {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .history-filter button {
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: rgba(34, 197, 94, 0.1);
+            color: #94a3b8;
+            border: none;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .history-filter button.active {
+            background: #22c55e;
+            color: white;
+        }
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .history-item {
+            background: #1e293b;
+            border-radius: 15px;
+            padding: 18px;
+            border-left: 4px solid #22c55e;
+        }
+        .history-item.pending {
+            border-left-color: #f59e0b;
+        }
+        .history-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+        .history-plate {
+            background: #fef08a;
+            color: #1e293b;
+            padding: 5px 12px;
+            border-radius: 5px;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+        .history-date {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+        .history-item-body {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .history-model {
+            font-weight: 600;
+        }
+        .history-status {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .history-status.completed {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+        .history-status.pending {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+        }
+
+        /* Photos Page */
+        .photos-page {
+            padding: 20px;
+        }
+        .photos-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .photos-header h2 {
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .photos-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .photo-stat-card {
+            background: #1e293b;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+        }
+        .photo-stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #22c55e;
+        }
+        .photo-stat-label {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+        .photos-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        .photo-thumb {
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, #1e293b, #334155);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+        .photo-thumb i {
+            font-size: 1.5rem;
+            color: #22c55e;
+            margin-bottom: 5px;
+        }
+        .photo-thumb span {
+            font-size: 0.7rem;
+            color: #64748b;
+        }
+
+        /* Profile Page */
+        .profile-page {
+            padding: 20px;
+        }
+        .profile-card {
+            background: linear-gradient(135deg, #1e293b, #334155);
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            margin-bottom: 25px;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #22c55e, #10b981);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 15px;
+        }
+        .profile-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        .profile-role {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+        .profile-stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .profile-stat {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+        }
+        .profile-stat-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #22c55e;
+        }
+        .profile-stat-label {
+            font-size: 0.7rem;
+            color: #64748b;
+        }
+        .profile-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .profile-menu-item {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 15px 18px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .profile-menu-item:hover {
+            background: rgba(34, 197, 94, 0.1);
+        }
+        .profile-menu-item i {
+            color: #22c55e;
+            width: 20px;
+        }
+        .profile-menu-item span {
+            flex: 1;
+        }
+        .profile-menu-item .arrow {
+            color: #64748b;
+        }
+
         @media (min-width: 768px) {
             body {
                 background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
@@ -512,11 +760,36 @@
                 overflow: hidden;
             }
         }
+
+        /* Back to Portfolio Button */
+        .back-to-portfolio {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 9999;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .back-to-portfolio:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
+        }
     </style>
 </head>
 <body>
-    <a href="../../index.html#projects" class="back-btn">
-        <i class="fas fa-arrow-left"></i> Voltar
+    <a href="../../index.html#projects" class="back-to-portfolio">
+        <i class="fas fa-arrow-left"></i> Voltar ao Portfólio
     </a>
 
     <div class="mobile-frame">
@@ -537,109 +810,309 @@
             </div>
         </div>
 
-        <div class="vehicle-card">
-            <div class="vehicle-header">
-                <div class="vehicle-plate">ABC-1234</div>
-                <div class="vehicle-status">Em Vistoria</div>
+        <!-- PÁGINA VISTORIA -->
+        <div class="page-content active" id="page-vistoria">
+            <div class="vehicle-card">
+                <div class="vehicle-header">
+                    <div class="vehicle-plate">ABC-1234</div>
+                    <div class="vehicle-status">Em Vistoria</div>
+                </div>
+                <div class="vehicle-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Modelo</span>
+                        <span class="detail-value">Toyota Corolla 2024</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Cor</span>
+                        <span class="detail-value">Prata</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Km</span>
+                        <span class="detail-value">12.450 km</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Combustível</span>
+                        <span class="detail-value">75%</span>
+                    </div>
+                </div>
             </div>
-            <div class="vehicle-details">
-                <div class="detail-item">
-                    <span class="detail-label">Modelo</span>
-                    <span class="detail-value">Toyota Corolla 2024</span>
+
+            <div class="progress-section">
+                <div class="progress-header">
+                    <span>Progresso da Vistoria</span>
+                    <span id="progressText">3 de 6 etapas</span>
                 </div>
-                <div class="detail-item">
-                    <span class="detail-label">Cor</span>
-                    <span class="detail-value">Prata</span>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 50%;"></div>
                 </div>
-                <div class="detail-item">
-                    <span class="detail-label">Km</span>
-                    <span class="detail-value">12.450 km</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Combustível</span>
-                    <span class="detail-value">75%</span>
+            </div>
+
+            <div class="steps-section">
+                <h2 class="section-title"><i class="fas fa-list-check"></i> Etapas da Vistoria</h2>
+                <div class="steps-list">
+                    <div class="step-item completed" data-step="1">
+                        <div class="step-icon"><i class="fas fa-car"></i></div>
+                        <div class="step-info">
+                            <div class="step-name">Identificação</div>
+                            <div class="step-desc">Placa, chassi e documentação</div>
+                        </div>
+                        <div class="step-status">✅</div>
+                    </div>
+                    <div class="step-item completed" data-step="2">
+                        <div class="step-icon"><i class="fas fa-shield-halved"></i></div>
+                        <div class="step-info">
+                            <div class="step-name">Carroceria</div>
+                            <div class="step-desc">Pintura, amassados, riscos</div>
+                        </div>
+                        <div class="step-status">✅</div>
+                    </div>
+                    <div class="step-item completed" data-step="3">
+                        <div class="step-icon"><i class="fas fa-circle-dot"></i></div>
+                        <div class="step-info">
+                            <div class="step-name">Pneus e Rodas</div>
+                            <div class="step-desc">Desgaste, calibragem, step</div>
+                        </div>
+                        <div class="step-status">✅</div>
+                    </div>
+                    <div class="step-item active" data-step="4" onclick="openModal('interior')">
+                        <div class="step-icon"><i class="fas fa-couch"></i></div>
+                        <div class="step-info">
+                            <div class="step-name">Interior</div>
+                            <div class="step-desc">Bancos, painel, ar-condicionado</div>
+                        </div>
+                        <div class="step-status">▶️</div>
+                    </div>
+                    <div class="step-item pending" data-step="5" onclick="openModal('mecanica')">
+                        <div class="step-icon"><i class="fas fa-gears"></i></div>
+                        <div class="step-info">
+                            <div class="step-name">Mecânica</div>
+                            <div class="step-desc">Motor, óleo, fluidos</div>
+                        </div>
+                        <div class="step-status">⏳</div>
+                    </div>
+                    <div class="step-item pending" data-step="6" onclick="openModal('eletrica')">
+                        <div class="step-icon"><i class="fas fa-bolt"></i></div>
+                        <div class="step-info">
+                            <div class="step-name">Elétrica</div>
+                            <div class="step-desc">Faróis, lanternas, bateria</div>
+                        </div>
+                        <div class="step-status">⏳</div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="progress-section">
-            <div class="progress-header">
-                <span>Progresso da Vistoria</span>
-                <span id="progressText">3 de 6 etapas</span>
-            </div>
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressFill" style="width: 50%;"></div>
+        <!-- PÁGINA HISTÓRICO -->
+        <div class="page-content" id="page-historico">
+            <div class="history-page">
+                <div class="history-header">
+                    <h2><i class="fas fa-history" style="color: #22c55e;"></i> Histórico</h2>
+                </div>
+
+                <div class="history-filter">
+                    <button class="active">Todas</button>
+                    <button>Concluídas</button>
+                    <button>Pendentes</button>
+                </div>
+
+                <div class="history-list">
+                    <div class="history-item">
+                        <div class="history-item-header">
+                            <div class="history-plate">ABC-1234</div>
+                            <div class="history-date">Hoje, 14:30</div>
+                        </div>
+                        <div class="history-item-body">
+                            <div class="history-model">Toyota Corolla 2024</div>
+                            <div class="history-status pending">Em Andamento</div>
+                        </div>
+                    </div>
+                    <div class="history-item">
+                        <div class="history-item-header">
+                            <div class="history-plate">XYZ-5678</div>
+                            <div class="history-date">Ontem, 16:45</div>
+                        </div>
+                        <div class="history-item-body">
+                            <div class="history-model">Honda Civic 2023</div>
+                            <div class="history-status completed">Concluída</div>
+                        </div>
+                    </div>
+                    <div class="history-item">
+                        <div class="history-item-header">
+                            <div class="history-plate">DEF-9012</div>
+                            <div class="history-date">27/01/2026</div>
+                        </div>
+                        <div class="history-item-body">
+                            <div class="history-model">VW Golf 2024</div>
+                            <div class="history-status completed">Concluída</div>
+                        </div>
+                    </div>
+                    <div class="history-item">
+                        <div class="history-item-header">
+                            <div class="history-plate">GHI-3456</div>
+                            <div class="history-date">26/01/2026</div>
+                        </div>
+                        <div class="history-item-body">
+                            <div class="history-model">Fiat Pulse 2025</div>
+                            <div class="history-status completed">Concluída</div>
+                        </div>
+                    </div>
+                    <div class="history-item">
+                        <div class="history-item-header">
+                            <div class="history-plate">JKL-7890</div>
+                            <div class="history-date">25/01/2026</div>
+                        </div>
+                        <div class="history-item-body">
+                            <div class="history-model">Jeep Compass 2024</div>
+                            <div class="history-status completed">Concluída</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="steps-section">
-            <h2 class="section-title"><i class="fas fa-list-check"></i> Etapas da Vistoria</h2>
-            <div class="steps-list">
-                <div class="step-item completed" data-step="1">
-                    <div class="step-icon"><i class="fas fa-car"></i></div>
-                    <div class="step-info">
-                        <div class="step-name">Identificação</div>
-                        <div class="step-desc">Placa, chassi e documentação</div>
-                    </div>
-                    <div class="step-status">✅</div>
+        <!-- PÁGINA FOTOS -->
+        <div class="page-content" id="page-fotos">
+            <div class="photos-page">
+                <div class="photos-header">
+                    <h2><i class="fas fa-camera" style="color: #22c55e;"></i> Galeria de Fotos</h2>
                 </div>
-                <div class="step-item completed" data-step="2">
-                    <div class="step-icon"><i class="fas fa-shield-halved"></i></div>
-                    <div class="step-info">
-                        <div class="step-name">Carroceria</div>
-                        <div class="step-desc">Pintura, amassados, riscos</div>
+
+                <div class="photos-stats">
+                    <div class="photo-stat-card">
+                        <div class="photo-stat-value">48</div>
+                        <div class="photo-stat-label">Total de Fotos</div>
                     </div>
-                    <div class="step-status">✅</div>
+                    <div class="photo-stat-card">
+                        <div class="photo-stat-value">12</div>
+                        <div class="photo-stat-label">Veículos</div>
+                    </div>
                 </div>
-                <div class="step-item completed" data-step="3">
-                    <div class="step-icon"><i class="fas fa-circle-dot"></i></div>
-                    <div class="step-info">
-                        <div class="step-name">Pneus e Rodas</div>
-                        <div class="step-desc">Desgaste, calibragem, step</div>
+
+                <h3 style="font-size: 1rem; margin-bottom: 15px;">
+                    <i class="fas fa-car" style="color: #22c55e;"></i> ABC-1234 (Atual)
+                </h3>
+                <div class="photos-grid">
+                    <div class="photo-thumb">
+                        <i class="fas fa-image"></i>
+                        <span>Frente</span>
                     </div>
-                    <div class="step-status">✅</div>
+                    <div class="photo-thumb">
+                        <i class="fas fa-image"></i>
+                        <span>Traseira</span>
+                    </div>
+                    <div class="photo-thumb">
+                        <i class="fas fa-image"></i>
+                        <span>Lateral E</span>
+                    </div>
+                    <div class="photo-thumb">
+                        <i class="fas fa-image"></i>
+                        <span>Lateral D</span>
+                    </div>
+                    <div class="photo-thumb">
+                        <i class="fas fa-image"></i>
+                        <span>Interior</span>
+                    </div>
+                    <div class="photo-thumb">
+                        <i class="fas fa-image"></i>
+                        <span>Motor</span>
+                    </div>
                 </div>
-                <div class="step-item active" data-step="4" onclick="openModal('interior')">
-                    <div class="step-icon"><i class="fas fa-couch"></i></div>
-                    <div class="step-info">
-                        <div class="step-name">Interior</div>
-                        <div class="step-desc">Bancos, painel, ar-condicionado</div>
+
+                <h3 style="font-size: 1rem; margin: 25px 0 15px;">
+                    <i class="fas fa-car" style="color: #64748b;"></i> XYZ-5678 (Ontem)
+                </h3>
+                <div class="photos-grid">
+                    <div class="photo-thumb">
+                        <i class="fas fa-image"></i>
+                        <span>Frente</span>
                     </div>
-                    <div class="step-status">▶️</div>
+                    <div class="photo-thumb">
+                        <i class="fas fa-image"></i>
+                        <span>Traseira</span>
+                    </div>
+                    <div class="photo-thumb">
+                        <i class="fas fa-image"></i>
+                        <span>Lateral E</span>
+                    </div>
                 </div>
-                <div class="step-item pending" data-step="5" onclick="openModal('mecanica')">
-                    <div class="step-icon"><i class="fas fa-gears"></i></div>
-                    <div class="step-info">
-                        <div class="step-name">Mecânica</div>
-                        <div class="step-desc">Motor, óleo, fluidos</div>
+            </div>
+        </div>
+
+        <!-- PÁGINA PERFIL -->
+        <div class="page-content" id="page-perfil">
+            <div class="profile-page">
+                <div class="profile-card">
+                    <div class="profile-avatar">
+                        <i class="fas fa-user"></i>
                     </div>
-                    <div class="step-status">⏳</div>
+                    <div class="profile-name">Carlos Vistoriador</div>
+                    <div class="profile-role">Vistoriador Sênior</div>
                 </div>
-                <div class="step-item pending" data-step="6" onclick="openModal('eletrica')">
-                    <div class="step-icon"><i class="fas fa-bolt"></i></div>
-                    <div class="step-info">
-                        <div class="step-name">Elétrica</div>
-                        <div class="step-desc">Faróis, lanternas, bateria</div>
+
+                <div class="profile-stats-row">
+                    <div class="profile-stat">
+                        <div class="profile-stat-value">156</div>
+                        <div class="profile-stat-label">Vistorias</div>
                     </div>
-                    <div class="step-status">⏳</div>
+                    <div class="profile-stat">
+                        <div class="profile-stat-value">98%</div>
+                        <div class="profile-stat-label">Aprovação</div>
+                    </div>
+                    <div class="profile-stat">
+                        <div class="profile-stat-value">4.9</div>
+                        <div class="profile-stat-label">Avaliação</div>
+                    </div>
+                </div>
+
+                <div class="profile-menu">
+                    <div class="profile-menu-item">
+                        <i class="fas fa-user-edit"></i>
+                        <span>Editar Perfil</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
+                    <div class="profile-menu-item">
+                        <i class="fas fa-bell"></i>
+                        <span>Notificações</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
+                    <div class="profile-menu-item">
+                        <i class="fas fa-shield-halved"></i>
+                        <span>Privacidade</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
+                    <div class="profile-menu-item">
+                        <i class="fas fa-cloud-arrow-down"></i>
+                        <span>Sincronização</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
+                    <div class="profile-menu-item">
+                        <i class="fas fa-question-circle"></i>
+                        <span>Ajuda</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
+                    <div class="profile-menu-item" style="color: #ef4444;">
+                        <i class="fas fa-sign-out-alt" style="color: #ef4444;"></i>
+                        <span>Sair</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
                 </div>
             </div>
         </div>
 
         <nav class="bottom-nav">
-            <a href="#" class="nav-item active">
+            <a href="#" class="nav-item active" data-page="vistoria">
                 <i class="fas fa-clipboard-check"></i>
                 <span>Vistoria</span>
             </a>
-            <a href="#" class="nav-item">
+            <a href="#" class="nav-item" data-page="historico">
                 <i class="fas fa-history"></i>
                 <span>Histórico</span>
             </a>
-            <a href="#" class="nav-item">
+            <a href="#" class="nav-item" data-page="fotos">
                 <i class="fas fa-camera"></i>
                 <span>Fotos</span>
             </a>
-            <a href="#" class="nav-item">
+            <a href="#" class="nav-item" data-page="perfil">
                 <i class="fas fa-user"></i>
                 <span>Perfil</span>
             </a>
@@ -813,11 +1286,47 @@
             }
         }
 
-        // Nav items
+        // Nav items - Page Navigation
         document.querySelectorAll('.nav-item').forEach(item => {
             item.addEventListener('click', function(e) {
                 e.preventDefault();
                 document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Navigate to page
+                const page = this.getAttribute('data-page');
+                if (page) {
+                    navigateToPage(page);
+                }
+            });
+        });
+
+        // Page Navigation Function
+        function navigateToPage(pageName) {
+            // Hide all pages
+            document.querySelectorAll('.page-content').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show target page
+            const targetPage = document.getElementById('page-' + pageName);
+            if (targetPage) {
+                targetPage.classList.add('active');
+            }
+
+            // Update nav items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('data-page') === pageName) {
+                    item.classList.add('active');
+                }
+            });
+        }
+
+        // History filter buttons
+        document.querySelectorAll('.history-filter button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.history-filter button').forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
             });
         });

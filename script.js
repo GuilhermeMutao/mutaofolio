@@ -901,6 +901,7 @@ function initSnakeGame() {
     const startBtn = document.getElementById('snake-start');
     const scoreEl = document.getElementById('snake-score');
     const recordEl = document.getElementById('snake-record');
+    const diffSelect = document.getElementById('snake-difficulty');
 
     if (!canvas || !startBtn) return;
 
@@ -915,16 +916,38 @@ function initSnakeGame() {
     let score = 0;
     let loop = null;
     let speed = 100;
+    let baseSpeed = 100;
+    let speedDecrement = 2;
+    let minSpeed = 50;
+    let pointsPerFood = 10;
     let record = parseInt(localStorage.getItem('snakeRecord') || '0');
+    let currentDifficulty = 'normal';
 
     if (recordEl) recordEl.textContent = record;
+
+    // Configurações de dificuldade
+    const difficulties = {
+        easy: { baseSpeed: 150, speedDecrement: 1, minSpeed: 80, pointsPerFood: 5, name: 'Fácil' },
+        normal: { baseSpeed: 100, speedDecrement: 2, minSpeed: 50, pointsPerFood: 10, name: 'Normal' },
+        hard: { baseSpeed: 70, speedDecrement: 3, minSpeed: 35, pointsPerFood: 15, name: 'Difícil' },
+        insane: { baseSpeed: 50, speedDecrement: 5, minSpeed: 25, pointsPerFood: 25, name: 'Insano' }
+    };
+
+    function setDifficulty(diff) {
+        currentDifficulty = diff;
+        const settings = difficulties[diff] || difficulties.normal;
+        baseSpeed = settings.baseSpeed;
+        speedDecrement = settings.speedDecrement;
+        minSpeed = settings.minSpeed;
+        pointsPerFood = settings.pointsPerFood;
+    }
 
     function init() {
         snake = [{ x: 10, y: 10 }, { x: 9, y: 10 }, { x: 8, y: 10 }];
         dir = { x: 1, y: 0 };
         nextDir = { x: 1, y: 0 };
         score = 0;
-        speed = 100;
+        speed = baseSpeed;
         if (scoreEl) scoreEl.textContent = '0';
         spawnFood();
     }
@@ -992,11 +1015,11 @@ function initSnakeGame() {
         snake.unshift(head);
 
         if (head.x === food.x && head.y === food.y) {
-            score += 10;
+            score += pointsPerFood;
             if (scoreEl) scoreEl.textContent = score;
             spawnFood();
-            if (speed > 50) {
-                speed -= 2;
+            if (speed > minSpeed) {
+                speed -= speedDecrement;
                 clearInterval(loop);
                 loop = setInterval(step, speed);
             }
@@ -1015,13 +1038,15 @@ function initSnakeGame() {
         clearInterval(loop);
         loop = null;
 
+        const diffName = difficulties[currentDifficulty]?.name || 'Normal';
+        
         if (score > record) {
             record = score;
             localStorage.setItem('snakeRecord', record);
             if (recordEl) recordEl.textContent = record;
-            showToast(`🎉 Novo recorde: ${record}!`);
+            showToast(`🎉 Novo recorde: ${record}! (${diffName})`);
         } else {
-            showToast(`💀 Game Over! Pontos: ${score}`);
+            showToast(`💀 Game Over! Pontos: ${score} (${diffName})`);
         }
 
         if (overlay) {
@@ -1029,11 +1054,15 @@ function initSnakeGame() {
             const h4 = overlay.querySelector('h4');
             const p = overlay.querySelector('p');
             if (h4) h4.textContent = 'Game Over!';
-            if (p) p.textContent = `Pontuação: ${score}`;
+            if (p) p.textContent = `Pontuação: ${score} (${diffName})`;
         }
     }
 
     function startGame() {
+        // Aplicar dificuldade selecionada
+        if (diffSelect) {
+            setDifficulty(diffSelect.value);
+        }
         init();
         if (overlay) overlay.classList.add('hidden');
         if (loop) clearInterval(loop);

@@ -424,11 +424,79 @@
                 display: none;
             }
         }
+
+        /* Back to Portfolio Button */
+        .back-to-portfolio {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 9999;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .back-to-portfolio:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
+        }
+
+        /* Page Content Visibility */
+        .page-content {
+            display: none;
+            animation: fadeInPage 0.4s ease;
+        }
+
+        .page-content.active {
+            display: block;
+        }
+
+        @keyframes fadeInPage {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            #page-competicoes > div:last-of-type {
+                grid-template-columns: 1fr;
+            }
+            #page-relatorios > div:last-of-type {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .btn-icon {
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .btn-icon:hover {
+            background: rgba(99, 102, 241, 0.2);
+            color: #6366f1;
+        }
     </style>
 </head>
 <body>
-    <a href="../../index.html#projects" class="back-btn">
-        <i class="fas fa-arrow-left"></i> Voltar ao Portfolio
+    <a href="../../index.html#projects" class="back-to-portfolio">
+        <i class="fas fa-arrow-left"></i> Voltar ao Portfólio
     </a>
 
     <nav class="navbar">
@@ -437,11 +505,11 @@
             <span>SGA</span>
         </div>
         <div class="nav-links">
-            <a href="#" class="active">Dashboard</a>
-            <a href="#">Atletas</a>
-            <a href="#">Treinos</a>
-            <a href="#">Competições</a>
-            <a href="#">Relatórios</a>
+            <a href="#" class="active" data-page="dashboard">Dashboard</a>
+            <a href="#" data-page="atletas">Atletas</a>
+            <a href="#" data-page="treinos">Treinos</a>
+            <a href="#" data-page="competicoes">Competições</a>
+            <a href="#" data-page="relatorios">Relatórios</a>
         </div>
         <div class="user-info">
             <span>Admin</span>
@@ -452,6 +520,8 @@
     </nav>
 
     <div class="container">
+        <!-- DASHBOARD PAGE -->
+        <div class="page-content active" id="page-dashboard">
         <div class="page-header">
             <div class="page-title">
                 <h1>Dashboard</h1>
@@ -632,6 +702,186 @@
                 </div>
             </div>
         </div>
+        </div> <!-- End Dashboard Page -->
+
+        <!-- ATLETAS PAGE -->
+        <div class="page-content" id="page-atletas">
+            <div class="page-header">
+                <div class="page-title">
+                    <h1>Gestão de Atletas</h1>
+                    <p>Gerencie todos os atletas cadastrados</p>
+                </div>
+                <button class="btn btn-primary" onclick="openModal()">
+                    <i class="fas fa-plus"></i> Novo Atleta
+                </button>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h2>Todos os Atletas</h2>
+                    <input type="text" id="search-athlete" placeholder="Buscar atleta..." style="padding: 10px 15px; border-radius: 8px; border: 1px solid rgba(99,102,241,0.3); background: rgba(15,23,42,0.8); color: #e2e8f0;">
+                </div>
+                <div class="card-body">
+                    <table class="athletes-table">
+                        <thead>
+                            <tr>
+                                <th>Atleta</th>
+                                <th>Modalidade</th>
+                                <th>Idade</th>
+                                <th>Status</th>
+                                <th>Desempenho</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><div class="athlete-info"><div class="athlete-avatar">LM</div><div><div class="athlete-name">Lucas Mendes</div><div class="athlete-sport">Natação</div></div></div></td><td>100m Livre</td><td>23</td><td><span class="status-badge status-active">Ativo</span></td><td><div class="progress-bar"><div class="progress-fill" style="width: 85%"></div></div></td><td><button class="btn-icon" title="Editar"><i class="fas fa-edit"></i></button><button class="btn-icon" title="Excluir"><i class="fas fa-trash"></i></button></td></tr>
+                            <tr><td><div class="athlete-info"><div class="athlete-avatar">AS</div><div><div class="athlete-name">Ana Silva</div><div class="athlete-sport">Atletismo</div></div></div></td><td>400m Rasos</td><td>21</td><td><span class="status-badge status-training">Treinando</span></td><td><div class="progress-bar"><div class="progress-fill" style="width: 72%"></div></div></td><td><button class="btn-icon" title="Editar"><i class="fas fa-edit"></i></button><button class="btn-icon" title="Excluir"><i class="fas fa-trash"></i></button></td></tr>
+                            <tr><td><div class="athlete-info"><div class="athlete-avatar">PO</div><div><div class="athlete-name">Pedro Oliveira</div><div class="athlete-sport">Judô</div></div></div></td><td>-81kg</td><td>26</td><td><span class="status-badge status-active">Ativo</span></td><td><div class="progress-bar"><div class="progress-fill" style="width: 90%"></div></div></td><td><button class="btn-icon" title="Editar"><i class="fas fa-edit"></i></button><button class="btn-icon" title="Excluir"><i class="fas fa-trash"></i></button></td></tr>
+                            <tr><td><div class="athlete-info"><div class="athlete-avatar">MC</div><div><div class="athlete-name">Maria Costa</div><div class="athlete-sport">Ginástica</div></div></div></td><td>Artística</td><td>19</td><td><span class="status-badge status-resting">Descansando</span></td><td><div class="progress-bar"><div class="progress-fill" style="width: 68%"></div></div></td><td><button class="btn-icon" title="Editar"><i class="fas fa-edit"></i></button><button class="btn-icon" title="Excluir"><i class="fas fa-trash"></i></button></td></tr>
+                            <tr><td><div class="athlete-info"><div class="athlete-avatar">RF</div><div><div class="athlete-name">Rafael Ferreira</div><div class="athlete-sport">Futebol</div></div></div></td><td>Meio-Campo</td><td>24</td><td><span class="status-badge status-active">Ativo</span></td><td><div class="progress-bar"><div class="progress-fill" style="width: 88%"></div></div></td><td><button class="btn-icon" title="Editar"><i class="fas fa-edit"></i></button><button class="btn-icon" title="Excluir"><i class="fas fa-trash"></i></button></td></tr>
+                            <tr><td><div class="athlete-info"><div class="athlete-avatar">JS</div><div><div class="athlete-name">Julia Santos</div><div class="athlete-sport">Vôlei</div></div></div></td><td>Levantadora</td><td>22</td><td><span class="status-badge status-training">Treinando</span></td><td><div class="progress-bar"><div class="progress-fill" style="width: 79%"></div></div></td><td><button class="btn-icon" title="Editar"><i class="fas fa-edit"></i></button><button class="btn-icon" title="Excluir"><i class="fas fa-trash"></i></button></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TREINOS PAGE -->
+        <div class="page-content" id="page-treinos">
+            <div class="page-header">
+                <div class="page-title">
+                    <h1>Planos de Treino</h1>
+                    <p>Gerencie os treinos dos atletas</p>
+                </div>
+                <button class="btn btn-primary" onclick="showNotification('Funcionalidade em desenvolvimento!')">
+                    <i class="fas fa-plus"></i> Novo Treino
+                </button>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card blue"><div class="icon"><i class="fas fa-calendar-alt"></i></div><h3>156</h3><p>Treinos Realizados</p></div>
+                <div class="stat-card green"><div class="icon"><i class="fas fa-clock"></i></div><h3>312h</h3><p>Horas de Treino</p></div>
+                <div class="stat-card purple"><div class="icon"><i class="fas fa-dumbbell"></i></div><h3>8</h3><p>Planos Ativos</p></div>
+                <div class="stat-card orange"><div class="icon"><i class="fas fa-fire"></i></div><h3>94%</h3><p>Taxa de Presença</p></div>
+            </div>
+            <div class="card">
+                <div class="card-header"><h2>Treinos da Semana</h2></div>
+                <div class="card-body">
+                    <div style="display: grid; gap: 15px;">
+                        <div style="background: rgba(59, 130, 246, 0.1); padding: 20px; border-radius: 12px; border-left: 4px solid #3b82f6; display: flex; justify-content: space-between; align-items: center;">
+                            <div><strong>Segunda-feira</strong><p style="color: #94a3b8; margin-top: 5px;">Treino de Resistência - Natação</p></div>
+                            <div style="text-align: right;"><span style="color: #10b981;">8 atletas</span><p style="color: #94a3b8; font-size: 0.85rem;">06:00 - 08:00</p></div>
+                        </div>
+                        <div style="background: rgba(16, 185, 129, 0.1); padding: 20px; border-radius: 12px; border-left: 4px solid #10b981; display: flex; justify-content: space-between; align-items: center;">
+                            <div><strong>Terça-feira</strong><p style="color: #94a3b8; margin-top: 5px;">Treino Técnico - Atletismo</p></div>
+                            <div style="text-align: right;"><span style="color: #10b981;">6 atletas</span><p style="color: #94a3b8; font-size: 0.85rem;">07:00 - 09:00</p></div>
+                        </div>
+                        <div style="background: rgba(139, 92, 246, 0.1); padding: 20px; border-radius: 12px; border-left: 4px solid #8b5cf6; display: flex; justify-content: space-between; align-items: center;">
+                            <div><strong>Quarta-feira</strong><p style="color: #94a3b8; margin-top: 5px;">Treino de Força - Judô</p></div>
+                            <div style="text-align: right;"><span style="color: #10b981;">5 atletas</span><p style="color: #94a3b8; font-size: 0.85rem;">14:00 - 16:00</p></div>
+                        </div>
+                        <div style="background: rgba(245, 158, 11, 0.1); padding: 20px; border-radius: 12px; border-left: 4px solid #f59e0b; display: flex; justify-content: space-between; align-items: center;">
+                            <div><strong>Quinta-feira</strong><p style="color: #94a3b8; margin-top: 5px;">Treino Coletivo - Futebol/Vôlei</p></div>
+                            <div style="text-align: right;"><span style="color: #10b981;">12 atletas</span><p style="color: #94a3b8; font-size: 0.85rem;">16:00 - 18:00</p></div>
+                        </div>
+                        <div style="background: rgba(239, 68, 68, 0.1); padding: 20px; border-radius: 12px; border-left: 4px solid #ef4444; display: flex; justify-content: space-between; align-items: center;">
+                            <div><strong>Sexta-feira</strong><p style="color: #94a3b8; margin-top: 5px;">Treino Flexibilidade - Ginástica</p></div>
+                            <div style="text-align: right;"><span style="color: #10b981;">4 atletas</span><p style="color: #94a3b8; font-size: 0.85rem;">15:00 - 17:00</p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- COMPETIÇÕES PAGE -->
+        <div class="page-content" id="page-competicoes">
+            <div class="page-header">
+                <div class="page-title">
+                    <h1>Competições</h1>
+                    <p>Acompanhe as competições dos atletas</p>
+                </div>
+                <button class="btn btn-primary" onclick="showNotification('Funcionalidade em desenvolvimento!')">
+                    <i class="fas fa-plus"></i> Nova Competição
+                </button>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card blue"><div class="icon"><i class="fas fa-trophy"></i></div><h3>12</h3><p>Competições 2026</p></div>
+                <div class="stat-card green"><div class="icon"><i class="fas fa-medal"></i></div><h3>47</h3><p>Medalhas Conquistadas</p></div>
+                <div class="stat-card purple"><div class="icon"><i class="fas fa-star"></i></div><h3>18</h3><p>Ouros</p></div>
+                <div class="stat-card orange"><div class="icon"><i class="fas fa-flag-checkered"></i></div><h3>3</h3><p>Próximos Eventos</p></div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div class="card">
+                    <div class="card-header"><h2>Próximas Competições</h2></div>
+                    <div class="card-body">
+                        <ul class="upcoming-events">
+                            <li class="event-item"><div class="event-date"><div class="day">15</div><div class="month">Fev</div></div><div class="event-info"><h4>Campeonato Regional</h4><p><i class="fas fa-map-marker-alt"></i> São Paulo, SP</p></div></li>
+                            <li class="event-item"><div class="event-date"><div class="day">22</div><div class="month">Fev</div></div><div class="event-info"><h4>Copa Brasil de Natação</h4><p><i class="fas fa-map-marker-alt"></i> Rio de Janeiro, RJ</p></div></li>
+                            <li class="event-item"><div class="event-date"><div class="day">05</div><div class="month">Mar</div></div><div class="event-info"><h4>Torneio Interestadual</h4><p><i class="fas fa-map-marker-alt"></i> Belo Horizonte, MG</p></div></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><h2>Últimas Conquistas</h2></div>
+                    <div class="card-body">
+                        <div style="display: flex; flex-direction: column; gap: 15px;">
+                            <div style="display: flex; align-items: center; gap: 15px; padding: 15px; background: rgba(255, 215, 0, 0.1); border-radius: 10px;">
+                                <div style="font-size: 2rem;">🥇</div>
+                                <div><strong>Lucas Mendes</strong><p style="color: #94a3b8; font-size: 0.9rem;">1º Lugar - 100m Livre</p></div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 15px; padding: 15px; background: rgba(192, 192, 192, 0.1); border-radius: 10px;">
+                                <div style="font-size: 2rem;">🥈</div>
+                                <div><strong>Ana Silva</strong><p style="color: #94a3b8; font-size: 0.9rem;">2º Lugar - 400m Rasos</p></div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 15px; padding: 15px; background: rgba(205, 127, 50, 0.1); border-radius: 10px;">
+                                <div style="font-size: 2rem;">🥉</div>
+                                <div><strong>Pedro Oliveira</strong><p style="color: #94a3b8; font-size: 0.9rem;">3º Lugar - Judô -81kg</p></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RELATÓRIOS PAGE -->
+        <div class="page-content" id="page-relatorios">
+            <div class="page-header">
+                <div class="page-title">
+                    <h1>Relatórios</h1>
+                    <p>Análise de desempenho e estatísticas</p>
+                </div>
+                <button class="btn btn-primary" onclick="showNotification('Relatório gerado com sucesso!')">
+                    <i class="fas fa-download"></i> Exportar PDF
+                </button>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card blue"><div class="icon"><i class="fas fa-chart-line"></i></div><h3>+12%</h3><p>Evolução Média</p></div>
+                <div class="stat-card green"><div class="icon"><i class="fas fa-percentage"></i></div><h3>87%</h3><p>Taxa de Sucesso</p></div>
+                <div class="stat-card purple"><div class="icon"><i class="fas fa-user-check"></i></div><h3>92%</h3><p>Frequência Treinos</p></div>
+                <div class="stat-card orange"><div class="icon"><i class="fas fa-heartbeat"></i></div><h3>Ótimo</h3><p>Saúde Geral</p></div>
+            </div>
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
+                <div class="card">
+                    <div class="card-header"><h2>Evolução de Performance</h2></div>
+                    <div class="card-body">
+                        <div class="chart-container" style="height: 300px;">
+                            <canvas id="reportChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><h2>Por Modalidade</h2></div>
+                    <div class="card-body">
+                        <div style="display: flex; flex-direction: column; gap: 15px;">
+                            <div><div style="display: flex; justify-content: space-between; margin-bottom: 5px;"><span>Natação</span><span>92%</span></div><div class="progress-bar"><div class="progress-fill" style="width: 92%"></div></div></div>
+                            <div><div style="display: flex; justify-content: space-between; margin-bottom: 5px;"><span>Atletismo</span><span>85%</span></div><div class="progress-bar"><div class="progress-fill" style="width: 85%"></div></div></div>
+                            <div><div style="display: flex; justify-content: space-between; margin-bottom: 5px;"><span>Judô</span><span>88%</span></div><div class="progress-bar"><div class="progress-fill" style="width: 88%"></div></div></div>
+                            <div><div style="display: flex; justify-content: space-between; margin-bottom: 5px;"><span>Ginástica</span><span>78%</span></div><div class="progress-bar"><div class="progress-fill" style="width: 78%"></div></div></div>
+                            <div><div style="display: flex; justify-content: space-between; margin-bottom: 5px;"><span>Futebol</span><span>90%</span></div><div class="progress-bar"><div class="progress-fill" style="width: 90%"></div></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <!-- Modal Novo Atleta -->
@@ -842,6 +1092,100 @@
                 closeModal();
             }
         });
+
+        // ============ NAVEGAÇÃO ENTRE PÁGINAS ============
+        const navLinks = document.querySelectorAll('.nav-links a[data-page]');
+        const pages = document.querySelectorAll('.page-content');
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetPage = this.getAttribute('data-page');
+
+                // Remove active from all links and pages
+                navLinks.forEach(l => l.classList.remove('active'));
+                pages.forEach(p => p.classList.remove('active'));
+
+                // Add active to clicked link and target page
+                this.classList.add('active');
+                document.getElementById('page-' + targetPage).classList.add('active');
+
+                // Initialize report chart if reports page
+                if (targetPage === 'relatorios') {
+                    initReportChart();
+                }
+            });
+        });
+
+        // Report Chart
+        let reportChartInstance = null;
+        function initReportChart() {
+            const reportCanvas = document.getElementById('reportChart');
+            if (!reportCanvas) return;
+            
+            if (reportChartInstance) {
+                reportChartInstance.destroy();
+            }
+
+            const ctx2 = reportCanvas.getContext('2d');
+            reportChartInstance = new Chart(ctx2, {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
+                    datasets: [{
+                        label: 'Treinos',
+                        data: [22, 25, 28, 24, 30, 27],
+                        backgroundColor: 'rgba(99, 102, 241, 0.8)',
+                        borderRadius: 5
+                    }, {
+                        label: 'Competições',
+                        data: [2, 3, 2, 4, 3, 5],
+                        backgroundColor: 'rgba(16, 185, 129, 0.8)',
+                        borderRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: { color: '#94a3b8' }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(99, 102, 241, 0.1)' },
+                            ticks: { color: '#94a3b8' }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#94a3b8' }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Search athlete functionality
+        const searchInput = document.getElementById('search-athlete');
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const athleteRows = document.querySelectorAll('#page-atletas .athletes-table tbody tr');
+                
+                athleteRows.forEach(row => {
+                    const name = row.querySelector('.athlete-name')?.textContent.toLowerCase() || '';
+                    const sport = row.querySelector('.athlete-sport')?.textContent.toLowerCase() || '';
+                    
+                    if (name.includes(searchTerm) || sport.includes(searchTerm)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+        }
     </script>
 </body>
 </html>

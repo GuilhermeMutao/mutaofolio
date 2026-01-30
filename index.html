@@ -759,6 +759,12 @@ console.log('Hello World!');
                             <div class="overlay-content">
                                 <h4>Snake Game</h4>
                                 <p>Use as setas do teclado ou os botões para jogar</p>
+                                <select id="snake-difficulty" class="snake-difficulty-select">
+                                    <option value="easy">🟢 Fácil</option>
+                                    <option value="normal" selected>🟡 Normal</option>
+                                    <option value="hard">🔴 Difícil</option>
+                                    <option value="insane">💀 Insano</option>
+                                </select>
                                 <button class="btn btn-primary" id="snake-start">Iniciar Jogo</button>
                             </div>
                         </div>
@@ -789,9 +795,10 @@ console.log('Hello World!');
                                 <i class="fas fa-redo"></i> Novo Jogo
                             </button>
                             <select id="memory-difficulty">
-                                <option value="4">Fácil (4x4)</option>
-                                <option value="6" selected>Médio (6x6)</option>
-                                <option value="8">Difícil (8x8)</option>
+                                <option value="2">🟢 Muito Fácil (2x2)</option>
+                                <option value="4">🟢 Fácil (4x4)</option>
+                                <option value="6" selected>🟡 Médio (6x6)</option>
+                                <option value="8">🔴 Difícil (8x8)</option>
                             </select>
                         </div>
                     </div>
