@@ -1351,3 +1351,930 @@ img {
         height: 250px;
     }
 }
+
+/* ===== PLAYGROUND SECTION ===== */
+.playground {
+    background: linear-gradient(135deg, var(--dark-color) 0%, var(--dark-secondary) 100%);
+}
+
+.section-subtitle {
+    text-align: center;
+    color: var(--text-secondary);
+    margin-bottom: 40px;
+    font-size: 1.1rem;
+}
+
+.playground-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.playground-tab {
+    background: var(--dark-tertiary);
+    border: 2px solid transparent;
+    color: var(--text-secondary);
+    padding: 12px 24px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.playground-tab:hover {
+    background: var(--dark-secondary);
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+}
+
+.playground-tab.active {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    border-color: transparent;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+}
+
+.playground-content {
+    background: var(--dark-tertiary);
+    border-radius: 20px;
+    padding: 30px;
+    min-height: 500px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.playground-panel {
+    display: none;
+    animation: fadeIn 0.3s ease;
+}
+
+.playground-panel.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.tool-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--dark-secondary);
+}
+
+.tool-header h3 {
+    color: var(--text-primary);
+    font-size: 1.3rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.tool-header h3 i {
+    color: var(--primary-color);
+}
+
+.tool-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.tool-btn {
+    background: var(--dark-secondary);
+    border: none;
+    color: var(--text-secondary);
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tool-btn:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: scale(1.1);
+}
+
+/* Markdown Editor */
+.markdown-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    height: 450px;
+}
+
+.markdown-editor, .markdown-preview {
+    display: flex;
+    flex-direction: column;
+    background: var(--dark-secondary);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.editor-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    padding: 10px;
+    background: var(--dark-color);
+    border-bottom: 1px solid var(--dark-tertiary);
+}
+
+.toolbar-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.toolbar-btn:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+#markdown-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    padding: 15px;
+    font-family: 'Fira Code', 'Consolas', monospace;
+    font-size: 0.9rem;
+    resize: none;
+    line-height: 1.6;
+}
+
+#markdown-input:focus {
+    outline: none;
+}
+
+#markdown-input::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.5;
+}
+
+.preview-header {
+    padding: 10px 15px;
+    background: var(--dark-color);
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-size: 0.9rem;
+    border-bottom: 1px solid var(--dark-tertiary);
+}
+
+.preview-content {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    color: var(--text-primary);
+    line-height: 1.7;
+}
+
+.preview-content h1, .preview-content h2, .preview-content h3 {
+    color: var(--text-primary);
+    margin: 15px 0 10px;
+}
+
+.preview-content h1 { font-size: 1.8rem; border-bottom: 2px solid var(--primary-color); padding-bottom: 10px; }
+.preview-content h2 { font-size: 1.5rem; }
+.preview-content h3 { font-size: 1.2rem; }
+
+.preview-content code {
+    background: var(--dark-color);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.85rem;
+    color: var(--primary-color);
+}
+
+.preview-content pre {
+    background: var(--dark-color);
+    padding: 15px;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 15px 0;
+}
+
+.preview-content pre code {
+    background: transparent;
+    padding: 0;
+}
+
+.preview-content blockquote {
+    border-left: 4px solid var(--primary-color);
+    padding-left: 15px;
+    margin: 15px 0;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+.preview-content ul, .preview-content ol {
+    padding-left: 25px;
+    margin: 10px 0;
+}
+
+.preview-content a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.preview-content a:hover {
+    text-decoration: underline;
+}
+
+.preview-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 15px 0;
+}
+
+.preview-content th, .preview-content td {
+    border: 1px solid var(--dark-color);
+    padding: 10px;
+    text-align: left;
+}
+
+.preview-content th {
+    background: var(--dark-color);
+}
+
+/* Checklist */
+.checklist-container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.checklist-input-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+#checklist-input {
+    flex: 1;
+    background: var(--dark-secondary);
+    border: 2px solid transparent;
+    color: var(--text-primary);
+    padding: 15px 20px;
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+#checklist-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+}
+
+.checklist-filters {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.checklist-filters .filter-btn {
+    background: var(--dark-secondary);
+    border: none;
+    color: var(--text-secondary);
+    padding: 8px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.checklist-filters .filter-btn:hover,
+.checklist-filters .filter-btn.active {
+    background: var(--primary-color);
+    color: white;
+}
+
+.checklist-stats {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: var(--dark-secondary);
+    border-radius: 12px;
+}
+
+#checklist-count {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    min-width: 80px;
+}
+
+.checklist-stats .progress-bar {
+    flex: 1;
+    height: 8px;
+    background: var(--dark-color);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.checklist-stats .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    border-radius: 4px;
+    transition: width 0.3s ease;
+    width: 0%;
+}
+
+#checklist-percentage {
+    color: var(--primary-color);
+    font-weight: 600;
+    min-width: 45px;
+    text-align: right;
+}
+
+.checklist-items {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 350px;
+    overflow-y: auto;
+}
+
+.checklist-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    background: var(--dark-secondary);
+    border-radius: 12px;
+    margin-bottom: 10px;
+    transition: all 0.3s ease;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+.checklist-item:hover {
+    transform: translateX(5px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.checklist-item.completed {
+    opacity: 0.6;
+}
+
+.checklist-item.completed .checklist-text {
+    text-decoration: line-through;
+    color: var(--text-secondary);
+}
+
+.checklist-checkbox {
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--primary-color);
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.checklist-checkbox:hover {
+    background: rgba(99, 102, 241, 0.1);
+}
+
+.checklist-item.completed .checklist-checkbox {
+    background: var(--primary-color);
+    color: white;
+}
+
+.checklist-text {
+    flex: 1;
+    color: var(--text-primary);
+    word-break: break-word;
+}
+
+.checklist-delete {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    opacity: 0;
+}
+
+.checklist-item:hover .checklist-delete {
+    opacity: 1;
+}
+
+.checklist-delete:hover {
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.1);
+}
+
+/* Pomodoro Timer */
+.pomodoro-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+.pomodoro-display {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.pomodoro-ring {
+    position: relative;
+    width: 250px;
+    height: 250px;
+}
+
+.pomodoro-svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+.pomodoro-bg {
+    fill: none;
+    stroke: var(--dark-secondary);
+    stroke-width: 10;
+}
+
+.pomodoro-progress {
+    fill: none;
+    stroke: var(--primary-color);
+    stroke-width: 10;
+    stroke-linecap: round;
+    stroke-dasharray: 565.48;
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 1s linear;
+}
+
+.pomodoro-time {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    font-family: 'Fira Code', monospace;
+}
+
+.pomodoro-label {
+    margin-top: 15px;
+    font-size: 1.2rem;
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.pomodoro-controls {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.pomodoro-btn {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: none;
+    background: var(--dark-secondary);
+    color: var(--text-primary);
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pomodoro-btn:hover:not(:disabled) {
+    background: var(--primary-color);
+    color: white;
+    transform: scale(1.1);
+}
+
+.pomodoro-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.pomodoro-modes {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.mode-btn {
+    background: var(--dark-secondary);
+    border: 2px solid transparent;
+    color: var(--text-secondary);
+    padding: 10px 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.mode-btn:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+.mode-btn.active {
+    background: var(--primary-color);
+    color: white;
+}
+
+.pomodoro-stats {
+    display: flex;
+    gap: 40px;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-value {
+    display: block;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.stat-label {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+/* Snake Game */
+.game-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+#snake-canvas {
+    background: var(--dark-secondary);
+    border-radius: 12px;
+    border: 3px solid var(--dark-color);
+}
+
+.game-overlay {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 400px;
+    height: 400px;
+    background: rgba(15, 23, 42, 0.95);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.game-overlay.hidden {
+    display: none;
+}
+
+.overlay-content h4 {
+    color: var(--text-primary);
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.overlay-content p {
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+}
+
+.game-score {
+    color: var(--text-primary);
+    font-size: 1.1rem;
+}
+
+.game-score span {
+    color: var(--primary-color);
+    font-weight: 700;
+}
+
+.game-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.control-row {
+    display: flex;
+    gap: 10px;
+}
+
+.control-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    border: none;
+    background: var(--dark-secondary);
+    color: var(--text-primary);
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.control-btn:hover, .control-btn:active {
+    background: var(--primary-color);
+    color: white;
+    transform: scale(0.95);
+}
+
+/* Memory Game */
+.memory-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.memory-grid {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.memory-card {
+    width: 60px;
+    height: 60px;
+    background: var(--dark-secondary);
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    transition: all 0.3s ease;
+    transform-style: preserve-3d;
+    position: relative;
+}
+
+.memory-card:hover:not(.flipped):not(.matched) {
+    transform: scale(1.05);
+    background: var(--dark-color);
+}
+
+.memory-card.flipped, .memory-card.matched {
+    background: var(--primary-color);
+    transform: rotateY(180deg);
+}
+
+.memory-card.matched {
+    background: var(--secondary-color);
+    cursor: default;
+}
+
+.memory-card .card-front, .memory-card .card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backface-visibility: hidden;
+    border-radius: 10px;
+}
+
+.memory-card .card-front {
+    background: var(--dark-secondary);
+}
+
+.memory-card .card-back {
+    transform: rotateY(180deg);
+}
+
+.memory-controls {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.memory-controls select {
+    background: var(--dark-secondary);
+    border: none;
+    color: var(--text-primary);
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.game-info {
+    display: flex;
+    gap: 20px;
+    color: var(--text-primary);
+}
+
+.game-info span span {
+    color: var(--primary-color);
+    font-weight: 700;
+}
+
+/* Typing Test */
+.typing-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.typing-stats {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-bottom: 30px;
+}
+
+.typing-stat {
+    text-align: center;
+    padding: 20px 30px;
+    background: var(--dark-secondary);
+    border-radius: 15px;
+}
+
+.typing-stat .stat-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    display: block;
+}
+
+.typing-stat .stat-label {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.typing-text-display {
+    background: var(--dark-secondary);
+    padding: 25px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+    line-height: 2;
+    color: var(--text-secondary);
+    min-height: 120px;
+}
+
+.typing-text-display .correct {
+    color: var(--secondary-color);
+}
+
+.typing-text-display .incorrect {
+    color: #ef4444;
+    text-decoration: underline;
+}
+
+.typing-text-display .current {
+    background: var(--primary-color);
+    color: white;
+    padding: 2px 4px;
+    border-radius: 3px;
+}
+
+#typing-input {
+    width: 100%;
+    background: var(--dark-secondary);
+    border: 2px solid transparent;
+    color: var(--text-primary);
+    padding: 20px;
+    border-radius: 15px;
+    font-size: 1.1rem;
+    resize: none;
+    height: 100px;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+}
+
+#typing-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+#typing-input:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.typing-controls {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    align-items: center;
+}
+
+.typing-controls select {
+    background: var(--dark-secondary);
+    border: none;
+    color: var(--text-primary);
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+/* Responsive Playground */
+@media (max-width: 768px) {
+    .playground-tabs {
+        gap: 8px;
+    }
+    
+    .playground-tab {
+        padding: 10px 16px;
+        font-size: 0.85rem;
+    }
+    
+    .playground-content {
+        padding: 20px;
+    }
+    
+    .markdown-container {
+        grid-template-columns: 1fr;
+        height: auto;
+    }
+    
+    .markdown-editor, .markdown-preview {
+        height: 300px;
+    }
+    
+    #snake-canvas {
+        width: 300px;
+        height: 300px;
+    }
+    
+    .game-overlay {
+        width: 300px;
+        height: 300px;
+    }
+    
+    .memory-card {
+        width: 45px;
+        height: 45px;
+        font-size: 1.3rem;
+    }
+    
+    .typing-stats {
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    
+    .typing-stat {
+        padding: 15px 20px;
+    }
+    
+    .typing-stat .stat-value {
+        font-size: 1.8rem;
+    }
+    
+    .pomodoro-time {
+        font-size: 2.5rem;
+    }
+    
+    .pomodoro-ring {
+        width: 200px;
+        height: 200px;
+    }
+}

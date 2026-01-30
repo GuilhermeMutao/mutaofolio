@@ -20,6 +20,7 @@
                 <li class="nav-item"><a href="#about" class="nav-link">Sobre</a></li>
                 <li class="nav-item"><a href="#skills" class="nav-link">Habilidades</a></li>
                 <li class="nav-item"><a href="#projects" class="nav-link">Projetos</a></li>
+                <li class="nav-item"><a href="#playground" class="nav-link">Playground</a></li>
                 <li class="nav-item"><a href="#experience" class="nav-link">Experiência</a></li>
                 <li class="nav-item"><a href="#education" class="nav-link">Formação</a></li>
                 <li class="nav-item"><a href="#contact" class="nav-link">Contato</a></li>
@@ -514,6 +515,261 @@
                             <span>Node.js</span>
                             <span>AWS S3</span>
                             <span>MongoDB</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Playground - Ferramentas e Jogos -->
+    <section id="playground" class="playground section">
+        <div class="container">
+            <h2 class="section-title">Playground</h2>
+            <p class="section-subtitle">Ferramentas úteis e jogos para se divertir!</p>
+            
+            <div class="playground-tabs">
+                <button class="playground-tab active" data-tab="markdown">
+                    <i class="fas fa-edit"></i> Editor Markdown
+                </button>
+                <button class="playground-tab" data-tab="checklist">
+                    <i class="fas fa-tasks"></i> Checklist
+                </button>
+                <button class="playground-tab" data-tab="pomodoro">
+                    <i class="fas fa-clock"></i> Pomodoro
+                </button>
+                <button class="playground-tab" data-tab="snake">
+                    <i class="fas fa-gamepad"></i> Snake Game
+                </button>
+                <button class="playground-tab" data-tab="memory">
+                    <i class="fas fa-brain"></i> Memory Game
+                </button>
+                <button class="playground-tab" data-tab="typing">
+                    <i class="fas fa-keyboard"></i> Typing Test
+                </button>
+            </div>
+
+            <div class="playground-content">
+                <!-- Editor Markdown -->
+                <div class="playground-panel active" id="panel-markdown">
+                    <div class="tool-header">
+                        <h3><i class="fas fa-edit"></i> Editor Markdown</h3>
+                        <div class="tool-actions">
+                            <button class="tool-btn" id="md-copy" title="Copiar HTML">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                            <button class="tool-btn" id="md-download" title="Baixar MD">
+                                <i class="fas fa-download"></i>
+                            </button>
+                            <button class="tool-btn" id="md-clear" title="Limpar">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="markdown-container">
+                        <div class="markdown-editor">
+                            <div class="editor-toolbar">
+                                <button class="toolbar-btn" data-action="bold" title="Negrito (Ctrl+B)"><i class="fas fa-bold"></i></button>
+                                <button class="toolbar-btn" data-action="italic" title="Itálico (Ctrl+I)"><i class="fas fa-italic"></i></button>
+                                <button class="toolbar-btn" data-action="heading" title="Título"><i class="fas fa-heading"></i></button>
+                                <button class="toolbar-btn" data-action="link" title="Link"><i class="fas fa-link"></i></button>
+                                <button class="toolbar-btn" data-action="image" title="Imagem"><i class="fas fa-image"></i></button>
+                                <button class="toolbar-btn" data-action="code" title="Código"><i class="fas fa-code"></i></button>
+                                <button class="toolbar-btn" data-action="list" title="Lista"><i class="fas fa-list-ul"></i></button>
+                                <button class="toolbar-btn" data-action="quote" title="Citação"><i class="fas fa-quote-right"></i></button>
+                                <button class="toolbar-btn" data-action="table" title="Tabela"><i class="fas fa-table"></i></button>
+                            </div>
+                            <textarea id="markdown-input" placeholder="Digite seu Markdown aqui...
+
+# Exemplo de Título
+
+**Texto em negrito** e *texto em itálico*
+
+- Item da lista 1
+- Item da lista 2
+
+`código inline`
+
+```javascript
+// Bloco de código
+console.log('Hello World!');
+```
+
+> Uma citação interessante
+
+[Link](https://exemplo.com)"></textarea>
+                        </div>
+                        <div class="markdown-preview">
+                            <div class="preview-header">Preview</div>
+                            <div id="markdown-output" class="preview-content"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Checklist -->
+                <div class="playground-panel" id="panel-checklist">
+                    <div class="tool-header">
+                        <h3><i class="fas fa-tasks"></i> Checklist Interativa</h3>
+                        <div class="tool-actions">
+                            <button class="tool-btn" id="checklist-clear-completed" title="Limpar concluídos">
+                                <i class="fas fa-broom"></i>
+                            </button>
+                            <button class="tool-btn" id="checklist-clear-all" title="Limpar tudo">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="checklist-container">
+                        <div class="checklist-input-container">
+                            <input type="text" id="checklist-input" placeholder="Adicionar nova tarefa..." maxlength="100">
+                            <button id="checklist-add" class="btn btn-primary">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                        <div class="checklist-filters">
+                            <button class="filter-btn active" data-filter="all">Todas</button>
+                            <button class="filter-btn" data-filter="pending">Pendentes</button>
+                            <button class="filter-btn" data-filter="completed">Concluídas</button>
+                        </div>
+                        <div class="checklist-stats">
+                            <span id="checklist-count">0 tarefas</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="checklist-progress"></div>
+                            </div>
+                            <span id="checklist-percentage">0%</span>
+                        </div>
+                        <ul id="checklist-items" class="checklist-items"></ul>
+                    </div>
+                </div>
+
+                <!-- Pomodoro Timer -->
+                <div class="playground-panel" id="panel-pomodoro">
+                    <div class="tool-header">
+                        <h3><i class="fas fa-clock"></i> Pomodoro Timer</h3>
+                    </div>
+                    <div class="pomodoro-container">
+                        <div class="pomodoro-display">
+                            <div class="pomodoro-ring">
+                                <svg class="pomodoro-svg" viewBox="0 0 200 200">
+                                    <circle class="pomodoro-bg" cx="100" cy="100" r="90"/>
+                                    <circle class="pomodoro-progress" cx="100" cy="100" r="90" id="pomodoro-circle"/>
+                                </svg>
+                                <div class="pomodoro-time" id="pomodoro-time">25:00</div>
+                            </div>
+                            <div class="pomodoro-label" id="pomodoro-label">Foco</div>
+                        </div>
+                        <div class="pomodoro-controls">
+                            <button class="pomodoro-btn" id="pomodoro-start">
+                                <i class="fas fa-play"></i>
+                            </button>
+                            <button class="pomodoro-btn" id="pomodoro-pause" disabled>
+                                <i class="fas fa-pause"></i>
+                            </button>
+                            <button class="pomodoro-btn" id="pomodoro-reset">
+                                <i class="fas fa-redo"></i>
+                            </button>
+                        </div>
+                        <div class="pomodoro-modes">
+                            <button class="mode-btn active" data-mode="work" data-time="25">Foco (25min)</button>
+                            <button class="mode-btn" data-mode="short" data-time="5">Pausa Curta (5min)</button>
+                            <button class="mode-btn" data-mode="long" data-time="15">Pausa Longa (15min)</button>
+                        </div>
+                        <div class="pomodoro-stats">
+                            <div class="stat-item">
+                                <span class="stat-value" id="pomodoro-sessions">0</span>
+                                <span class="stat-label">Sessões Hoje</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value" id="pomodoro-total-time">0h 0min</span>
+                                <span class="stat-label">Tempo Total</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Snake Game -->
+                <div class="playground-panel" id="panel-snake">
+                    <div class="tool-header">
+                        <h3><i class="fas fa-gamepad"></i> Snake Game</h3>
+                        <div class="game-score">
+                            Score: <span id="snake-score">0</span> | Record: <span id="snake-record">0</span>
+                        </div>
+                    </div>
+                    <div class="game-container">
+                        <canvas id="snake-canvas" width="400" height="400"></canvas>
+                        <div class="game-overlay" id="snake-overlay">
+                            <div class="overlay-content">
+                                <h4>Snake Game</h4>
+                                <p>Use as setas do teclado ou os botões para jogar</p>
+                                <button class="btn btn-primary" id="snake-start">Iniciar Jogo</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="game-controls">
+                        <button class="control-btn" data-direction="up"><i class="fas fa-arrow-up"></i></button>
+                        <div class="control-row">
+                            <button class="control-btn" data-direction="left"><i class="fas fa-arrow-left"></i></button>
+                            <button class="control-btn" data-direction="down"><i class="fas fa-arrow-down"></i></button>
+                            <button class="control-btn" data-direction="right"><i class="fas fa-arrow-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Memory Game -->
+                <div class="playground-panel" id="panel-memory">
+                    <div class="tool-header">
+                        <h3><i class="fas fa-brain"></i> Jogo da Memória</h3>
+                        <div class="game-info">
+                            <span>Movimentos: <span id="memory-moves">0</span></span>
+                            <span>Tempo: <span id="memory-time">0:00</span></span>
+                        </div>
+                    </div>
+                    <div class="memory-container">
+                        <div class="memory-grid" id="memory-grid"></div>
+                        <div class="memory-controls">
+                            <button class="btn btn-primary" id="memory-restart">
+                                <i class="fas fa-redo"></i> Novo Jogo
+                            </button>
+                            <select id="memory-difficulty">
+                                <option value="4">Fácil (4x4)</option>
+                                <option value="6" selected>Médio (6x6)</option>
+                                <option value="8">Difícil (8x8)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Typing Test -->
+                <div class="playground-panel" id="panel-typing">
+                    <div class="tool-header">
+                        <h3><i class="fas fa-keyboard"></i> Teste de Digitação</h3>
+                    </div>
+                    <div class="typing-container">
+                        <div class="typing-stats">
+                            <div class="typing-stat">
+                                <span class="stat-value" id="typing-wpm">0</span>
+                                <span class="stat-label">WPM</span>
+                            </div>
+                            <div class="typing-stat">
+                                <span class="stat-value" id="typing-accuracy">100%</span>
+                                <span class="stat-label">Precisão</span>
+                            </div>
+                            <div class="typing-stat">
+                                <span class="stat-value" id="typing-time">60</span>
+                                <span class="stat-label">Segundos</span>
+                            </div>
+                        </div>
+                        <div class="typing-text-display" id="typing-text"></div>
+                        <textarea id="typing-input" placeholder="Clique aqui e comece a digitar..." disabled></textarea>
+                        <div class="typing-controls">
+                            <button class="btn btn-primary" id="typing-start">
+                                <i class="fas fa-play"></i> Iniciar Teste
+                            </button>
+                            <select id="typing-duration">
+                                <option value="30">30 segundos</option>
+                                <option value="60" selected>60 segundos</option>
+                                <option value="120">120 segundos</option>
+                            </select>
                         </div>
                     </div>
                 </div>
