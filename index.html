@@ -3,12 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guilherme Mutão | Portfolio</title>
+    <title>Guilherme Mutão | Full-Stack Developer</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Guilherme Mutão - Desenvolvedor Full-Stack especializado em Angular, Node.js e Oracle DB. Transformando ideias em soluções digitais inovadoras.">
+    <meta name="keywords" content="desenvolvedor, full-stack, angular, node.js, javascript, typescript, oracle, web developer, programador">
+    <meta name="author" content="Guilherme Mutão">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Guilherme Mutão | Full-Stack Developer">
+    <meta property="og:description" content="Desenvolvedor Full-Stack especializado em Angular, Node.js e Oracle DB.">
+    <meta property="og:image" content="https://guilhermemutao.dev/og-image.jpg">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Guilherme Mutão | Full-Stack Developer">
+    <meta name="twitter:description" content="Desenvolvedor Full-Stack especializado em Angular, Node.js e Oracle DB.">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👨‍💻</text></svg>">
+    
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#6366f1">
+    
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+    <!-- Preloader -->
+    <div class="preloader" id="preloader">
+        <div class="preloader-content">
+            <div class="preloader-logo">GM</div>
+            <div class="preloader-bar">
+                <div class="preloader-progress"></div>
+            </div>
+            <p class="preloader-text">Carregando...</p>
+        </div>
+    </div>
+
+    <!-- Cursor Customizado -->
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-follower" id="cursor-follower"></div>
     <!-- Navegação -->
     <nav class="navbar" id="navbar">
         <div class="nav-container">
@@ -25,6 +63,9 @@
                 <li class="nav-item"><a href="#education" class="nav-link">Formação</a></li>
                 <li class="nav-item"><a href="#contact" class="nav-link">Contato</a></li>
             </ul>
+            <button class="theme-toggle" id="theme-toggle" title="Alternar Tema">
+                <i class="fas fa-moon" id="theme-icon"></i>
+            </button>
             <div class="hamburger" id="hamburger">
                 <span class="bar"></span>
                 <span class="bar"></span>
@@ -38,6 +79,10 @@
         <div class="hero-particles" id="particles"></div>
         <div class="hero-content">
             <div class="hero-text">
+                <div class="availability-badge">
+                    <span class="pulse"></span>
+                    <span>Disponível para projetos</span>
+                </div>
                 <p class="hero-greeting">Olá, eu sou</p>
                 <h1 class="hero-title">Guilherme Mutão</h1>
                 <h2 class="hero-subtitle">
@@ -51,6 +96,23 @@
                 <div class="hero-buttons">
                     <a href="#projects" class="btn btn-primary">Ver Projetos</a>
                     <a href="#contact" class="btn btn-secondary">Entrar em Contato</a>
+                    <a href="#" class="btn btn-icon" title="Download CV" id="download-cv">
+                        <i class="fas fa-download"></i>
+                    </a>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat-box">
+                        <span class="stat-number" data-count="4">0</span>
+                        <span class="stat-text">Anos de Experiência</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-number" data-count="20">0</span><span class="stat-plus">+</span>
+                        <span class="stat-text">Projetos Entregues</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-number" data-count="10">0</span><span class="stat-plus">+</span>
+                        <span class="stat-text">Clientes Satisfeitos</span>
+                    </div>
                 </div>
                 <div class="hero-social">
                     <a href="https://www.linkedin.com/in/guilhermemutao/" target="_blank" class="social-link">
@@ -70,9 +132,7 @@
             <div class="hero-image">
                 <div class="image-container">
                     <div class="image-bg"></div>
-                    <div class="image-placeholder">
-                        <i class="fas fa-user"></i>
-                    </div>
+                    <img src="assets/profile.png" alt="Guilherme Mutão" class="profile-image">
                 </div>
             </div>
         </div>
@@ -88,9 +148,7 @@
             <div class="about-content">
                 <div class="about-image">
                     <div class="about-img-container">
-                        <div class="about-img-placeholder">
-                            <i class="fas fa-code"></i>
-                        </div>
+                        <img src="assets/profile.png" alt="Guilherme Mutão" class="about-profile-image">
                     </div>
                 </div>
                 <div class="about-text">
@@ -855,6 +913,75 @@ console.log('Hello World!');
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Depoimentos -->
+    <section id="testimonials" class="testimonials section">
+        <div class="container">
+            <h2 class="section-title">Depoimentos</h2>
+            <div class="testimonials-slider">
+                <div class="testimonial-card active">
+                    <div class="testimonial-content">
+                        <div class="testimonial-quote">
+                            <i class="fas fa-quote-left"></i>
+                        </div>
+                        <p>"Guilherme é um profissional excepcional. Entregou o projeto antes do prazo com qualidade impecável. Sua capacidade de resolver problemas complexos é impressionante."</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">
+                                <i class="fas fa-user-tie"></i>
+                            </div>
+                            <div class="author-info">
+                                <h4>Carlos Silva</h4>
+                                <span>CTO - Tech Solutions</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <div class="testimonial-quote">
+                            <i class="fas fa-quote-left"></i>
+                        </div>
+                        <p>"Trabalhamos juntos em vários projetos de integração. Guilherme sempre demonstrou conhecimento técnico profundo e excelente comunicação com a equipe."</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="author-info">
+                                <h4>Ana Beatriz</h4>
+                                <span>Product Manager - Bravo Logistics</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <div class="testimonial-quote">
+                            <i class="fas fa-quote-left"></i>
+                        </div>
+                        <p>"O sistema que o Guilherme desenvolveu revolucionou nossa gestão municipal. Profissional dedicado, sempre disponível e com soluções criativas para cada desafio."</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">
+                                <i class="fas fa-building"></i>
+                            </div>
+                            <div class="author-info">
+                                <h4>Roberto Mendes</h4>
+                                <span>Secretário de TI - Prefeitura Municipal</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonials-dots">
+                <button class="dot active" data-index="0"></button>
+                <button class="dot" data-index="1"></button>
+                <button class="dot" data-index="2"></button>
+            </div>
+            <div class="testimonials-nav">
+                <button class="testimonial-btn prev"><i class="fas fa-chevron-left"></i></button>
+                <button class="testimonial-btn next"><i class="fas fa-chevron-right"></i></button>
             </div>
         </div>
     </section>

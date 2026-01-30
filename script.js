@@ -1,3 +1,34 @@
+// ===== PRELOADER =====
+window.addEventListener('load', () => {
+    const preloader = document.getElementById('preloader');
+    if (preloader) {
+        setTimeout(() => {
+            preloader.classList.add('hidden');
+        }, 1500);
+    }
+});
+
+// ===== CURSOR CUSTOMIZADO =====
+const cursor = document.getElementById('cursor');
+const cursorFollower = document.getElementById('cursor-follower');
+
+if (cursor && cursorFollower) {
+    document.addEventListener('mousemove', (e) => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+        
+        setTimeout(() => {
+            cursorFollower.style.left = e.clientX - 15 + 'px';
+            cursorFollower.style.top = e.clientY - 15 + 'px';
+        }, 50);
+    });
+
+    document.querySelectorAll('a, button, .project-card, .skill-item').forEach(el => {
+        el.addEventListener('mouseenter', () => cursorFollower.classList.add('hover'));
+        el.addEventListener('mouseleave', () => cursorFollower.classList.remove('hover'));
+    });
+}
+
 // ===== NAVEGAÇÃO =====
 const navbar = document.getElementById('navbar');
 const hamburger = document.getElementById('hamburger');
@@ -303,11 +334,129 @@ document.querySelectorAll('.skill-item').forEach(skill => {
 // ===== TEMA (DARK/LIGHT) =====
 function toggleTheme() {
     document.body.classList.toggle('light-theme');
-    localStorage.setItem('theme', document.body.classList.contains('light-theme') ? 'light' : 'dark');
+    const isLight = document.body.classList.contains('light-theme');
+    localStorage.setItem('theme', isLight ? 'light' : 'dark');
+    
+    const icon = document.getElementById('theme-icon');
+    if (icon) {
+        icon.className = isLight ? 'fas fa-sun' : 'fas fa-moon';
+    }
 }
 
+// Inicializar tema
 if (localStorage.getItem('theme') === 'light') {
     document.body.classList.add('light-theme');
+    const icon = document.getElementById('theme-icon');
+    if (icon) icon.className = 'fas fa-sun';
+}
+
+// Botão de toggle tema
+const themeToggle = document.getElementById('theme-toggle');
+if (themeToggle) {
+    themeToggle.addEventListener('click', toggleTheme);
+}
+
+// ===== CONTADOR DE ESTATÍSTICAS =====
+function animateCounters() {
+    const counters = document.querySelectorAll('.stat-number');
+    
+    counters.forEach(counter => {
+        const target = parseInt(counter.dataset.count);
+        const duration = 2000;
+        const increment = target / (duration / 16);
+        let current = 0;
+        
+        const updateCounter = () => {
+            current += increment;
+            if (current < target) {
+                counter.textContent = Math.floor(current);
+                requestAnimationFrame(updateCounter);
+            } else {
+                counter.textContent = target;
+            }
+        };
+        
+        updateCounter();
+    });
+}
+
+// Observer para iniciar contador quando visível
+const statsObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            animateCounters();
+            statsObserver.unobserve(entry.target);
+        }
+    });
+}, { threshold: 0.5 });
+
+const heroStats = document.querySelector('.hero-stats');
+if (heroStats) statsObserver.observe(heroStats);
+
+// ===== TESTIMONIALS SLIDER =====
+function initTestimonials() {
+    const cards = document.querySelectorAll('.testimonial-card');
+    const dots = document.querySelectorAll('.testimonials-dots .dot');
+    const prevBtn = document.querySelector('.testimonial-btn.prev');
+    const nextBtn = document.querySelector('.testimonial-btn.next');
+    
+    if (!cards.length) return;
+    
+    let current = 0;
+    let interval;
+    
+    function show(index) {
+        cards.forEach((card, i) => {
+            card.classList.remove('active');
+            if (dots[i]) dots[i].classList.remove('active');
+        });
+        
+        cards[index].classList.add('active');
+        if (dots[index]) dots[index].classList.add('active');
+    }
+    
+    function next() {
+        current = (current + 1) % cards.length;
+        show(current);
+    }
+    
+    function prev() {
+        current = (current - 1 + cards.length) % cards.length;
+        show(current);
+    }
+    
+    function startAutoPlay() {
+        interval = setInterval(next, 5000);
+    }
+    
+    function stopAutoPlay() {
+        clearInterval(interval);
+    }
+    
+    if (nextBtn) nextBtn.addEventListener('click', () => { stopAutoPlay(); next(); startAutoPlay(); });
+    if (prevBtn) prevBtn.addEventListener('click', () => { stopAutoPlay(); prev(); startAutoPlay(); });
+    
+    dots.forEach((dot, i) => {
+        dot.addEventListener('click', () => {
+            stopAutoPlay();
+            current = i;
+            show(current);
+            startAutoPlay();
+        });
+    });
+    
+    startAutoPlay();
+}
+
+// ===== DOWNLOAD CV =====
+const downloadCV = document.getElementById('download-cv');
+if (downloadCV) {
+    downloadCV.addEventListener('click', (e) => {
+        e.preventDefault();
+        showToast('📄 Download do CV iniciado!');
+        // Aqui você pode adicionar o link real para o CV
+        // window.open('caminho/para/seu/cv.pdf', '_blank');
+    });
 }
 
 // ===== LAZY LOADING PARA IMAGENS =====
@@ -397,6 +546,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initSnakeGame();
     initMemoryGame();
     initTypingTest();
+    initTestimonials();
 });
 
 // ===== PLAYGROUND TABS =====
