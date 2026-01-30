@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartBot - Atendimento Automatizado</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 300px 1fr 350px;
+            gap: 20px;
+            height: calc(100vh - 40px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: #1e293b;
+            border-radius: 20px;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .logo-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+        }
+
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.3rem;
+        }
+
+        .nav-menu {
+            list-style: none;
+            flex: 1;
+        }
+
+        .nav-menu li a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            color: #94a3b8;
+            text-decoration: none;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            transition: all 0.3s;
+        }
+
+        .nav-menu li a:hover,
+        .nav-menu li a.active {
+            background: rgba(139, 92, 246, 0.2);
+            color: #8b5cf6;
+        }
+
+        .bot-status {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            background: #10b981;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Main Chat Area */
+        .chat-area {
+            background: #1e293b;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            padding: 20px 25px;
+            border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-user {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .user-info h3 {
+            font-size: 1rem;
+            margin-bottom: 3px;
+        }
+
+        .user-info span {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        .chat-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-actions button {
+            background: rgba(139, 92, 246, 0.2);
+            border: none;
+            color: #8b5cf6;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .chat-actions button:hover {
+            background: #8b5cf6;
+            color: white;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 25px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .message {
+            display: flex;
+            gap: 12px;
+            max-width: 80%;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.user {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .message.bot .message-avatar {
+            background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+        }
+
+        .message.user .message-avatar {
+            background: #3b82f6;
+        }
+
+        .message-content {
+            background: #0f172a;
+            padding: 15px 18px;
+            border-radius: 18px;
+        }
+
+        .message.user .message-content {
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+        }
+
+        .message-time {
+            font-size: 0.7rem;
+            color: #64748b;
+            margin-top: 5px;
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 5px;
+            padding: 15px 18px;
+            background: #0f172a;
+            border-radius: 18px;
+            width: fit-content;
+        }
+
+        .typing-indicator span {
+            width: 8px;
+            height: 8px;
+            background: #8b5cf6;
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typing {
+            0%, 100% { opacity: 0.3; transform: translateY(0); }
+            50% { opacity: 1; transform: translateY(-5px); }
+        }
+
+        .chat-input {
+            padding: 20px 25px;
+            border-top: 1px solid rgba(139, 92, 246, 0.2);
+            display: flex;
+            gap: 15px;
+        }
+
+        .chat-input input {
+            flex: 1;
+            background: #0f172a;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            padding: 15px 20px;
+            border-radius: 30px;
+            color: #e2e8f0;
+            font-size: 0.95rem;
+        }
+
+        .chat-input input:focus {
+            outline: none;
+            border-color: #8b5cf6;
+        }
+
+        .send-btn {
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .send-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* Analytics Panel */
+        .analytics {
+            background: #1e293b;
+            border-radius: 20px;
+            padding: 25px;
+            overflow-y: auto;
+        }
+
+        .analytics h2 {
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: #0f172a;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stat-icon.purple { background: rgba(139, 92, 246, 0.2); color: #8b5cf6; }
+        .stat-icon.green { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .stat-icon.blue { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
+        .stat-icon.orange { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: #64748b;
+        }
+
+        .quick-replies {
+            margin-top: 25px;
+        }
+
+        .quick-replies h3 {
+            font-size: 1rem;
+            margin-bottom: 15px;
+        }
+
+        .reply-btn {
+            display: block;
+            width: 100%;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            color: #e2e8f0;
+            padding: 12px 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .reply-btn:hover {
+            background: rgba(139, 92, 246, 0.3);
+            border-color: #8b5cf6;
+        }
+
+        .intents-list {
+            margin-top: 25px;
+        }
+
+        .intents-list h3 {
+            font-size: 1rem;
+            margin-bottom: 15px;
+        }
+
+        .intent-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(139, 92, 246, 0.1);
+        }
+
+        .intent-name {
+            font-size: 0.9rem;
+        }
+
+        .intent-count {
+            background: rgba(139, 92, 246, 0.2);
+            color: #8b5cf6;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: rgba(139, 92, 246, 0.9);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-btn:hover {
+            background: #7c3aed;
+        }
+
+        @media (max-width: 1200px) {
+            .container {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+            .sidebar, .analytics {
+                display: none;
+            }
+            .chat-area {
+                height: calc(100vh - 40px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="../../index.html#projects" class="back-btn">
+        <i class="fas fa-arrow-left"></i> Voltar
+    </a>
+
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <span class="logo-text">SmartBot</span>
+            </div>
+
+            <ul class="nav-menu">
+                <li><a href="#" class="active"><i class="fas fa-comments"></i> Conversas</a></li>
+                <li><a href="#"><i class="fas fa-brain"></i> Intents</a></li>
+                <li><a href="#"><i class="fas fa-reply"></i> Respostas</a></li>
+                <li><a href="#"><i class="fas fa-sitemap"></i> Fluxos</a></li>
+                <li><a href="#"><i class="fas fa-chart-bar"></i> Analytics</a></li>
+                <li><a href="#"><i class="fas fa-plug"></i> Integrações</a></li>
+                <li><a href="#"><i class="fas fa-cog"></i> Configurações</a></li>
+            </ul>
+
+            <div class="bot-status">
+                <div class="status-dot"></div>
+                <div>
+                    <strong>Bot Online</strong>
+                    <div style="font-size: 0.8rem; color: #64748b;">Respondendo 24/7</div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Chat Area -->
+        <main class="chat-area">
+            <div class="chat-header">
+                <div class="chat-user">
+                    <div class="user-avatar">CL</div>
+                    <div class="user-info">
+                        <h3>Cliente #1247</h3>
+                        <span><i class="fab fa-whatsapp"></i> WhatsApp</span>
+                    </div>
+                </div>
+                <div class="chat-actions">
+                    <button><i class="fas fa-user-plus"></i></button>
+                    <button><i class="fas fa-ellipsis-v"></i></button>
+                </div>
+            </div>
+
+            <div class="chat-messages" id="chatMessages">
+                <div class="message bot">
+                    <div class="message-avatar"><i class="fas fa-robot"></i></div>
+                    <div>
+                        <div class="message-content">
+                            Olá! 👋 Sou o assistente virtual da TechCorp. Como posso ajudá-lo hoje?
+                        </div>
+                        <div class="message-time">10:30</div>
+                    </div>
+                </div>
+
+                <div class="message user">
+                    <div class="message-avatar">CL</div>
+                    <div>
+                        <div class="message-content">
+                            Quero saber o status do meu pedido
+                        </div>
+                        <div class="message-time">10:31</div>
+                    </div>
+                </div>
+
+                <div class="message bot">
+                    <div class="message-avatar"><i class="fas fa-robot"></i></div>
+                    <div>
+                        <div class="message-content">
+                            Claro! Para consultar seu pedido, preciso do número. Você pode encontrá-lo no e-mail de confirmação. Qual é o número do pedido?
+                        </div>
+                        <div class="message-time">10:31</div>
+                    </div>
+                </div>
+
+                <div class="message user">
+                    <div class="message-avatar">CL</div>
+                    <div>
+                        <div class="message-content">
+                            #PED-2024-78542
+                        </div>
+                        <div class="message-time">10:32</div>
+                    </div>
+                </div>
+
+                <div class="message bot">
+                    <div class="message-avatar"><i class="fas fa-robot"></i></div>
+                    <div>
+                        <div class="message-content">
+                            ✅ Encontrei seu pedido!<br><br>
+                            <strong>Pedido:</strong> #PED-2024-78542<br>
+                            <strong>Status:</strong> Em trânsito 🚚<br>
+                            <strong>Previsão:</strong> 27/01/2026<br>
+                            <strong>Rastreio:</strong> BR123456789<br><br>
+                            Posso ajudar com mais alguma coisa?
+                        </div>
+                        <div class="message-time">10:32</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-input">
+                <input type="text" id="messageInput" placeholder="Simule uma mensagem do cliente..." onkeypress="handleKeyPress(event)">
+                <button class="send-btn" onclick="sendMessage()">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </main>
+
+        <!-- Analytics Panel -->
+        <aside class="analytics">
+            <h2>📊 Analytics Hoje</h2>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon purple"><i class="fas fa-comments"></i></div>
+                </div>
+                <div class="stat-value" id="totalConversas">1,247</div>
+                <div class="stat-label">Conversas Hoje</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon green"><i class="fas fa-check-circle"></i></div>
+                </div>
+                <div class="stat-value">89%</div>
+                <div class="stat-label">Resolvidas pelo Bot</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon blue"><i class="fas fa-clock"></i></div>
+                </div>
+                <div class="stat-value">1.2s</div>
+                <div class="stat-label">Tempo Médio Resposta</div>
+            </div>
+
+            <div class="quick-replies">
+                <h3>💬 Respostas Rápidas</h3>
+                <button class="reply-btn" onclick="addQuickReply('Qual o horário de funcionamento?')">
+                    <i class="fas fa-clock"></i> Horário de funcionamento
+                </button>
+                <button class="reply-btn" onclick="addQuickReply('Preciso de suporte técnico')">
+                    <i class="fas fa-headset"></i> Suporte técnico
+                </button>
+                <button class="reply-btn" onclick="addQuickReply('Quero fazer uma reclamação')">
+                    <i class="fas fa-exclamation-circle"></i> Reclamação
+                </button>
+            </div>
+
+            <div class="intents-list">
+                <h3>🎯 Top Intents</h3>
+                <div class="intent-item">
+                    <span class="intent-name">consulta_pedido</span>
+                    <span class="intent-count">342</span>
+                </div>
+                <div class="intent-item">
+                    <span class="intent-name">suporte_tecnico</span>
+                    <span class="intent-count">256</span>
+                </div>
+                <div class="intent-item">
+                    <span class="intent-name">duvida_produto</span>
+                    <span class="intent-count">198</span>
+                </div>
+                <div class="intent-item">
+                    <span class="intent-name">horario_atendimento</span>
+                    <span class="intent-count">156</span>
+                </div>
+                <div class="intent-item">
+                    <span class="intent-name">reclamacao</span>
+                    <span class="intent-count">87</span>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <script>
+        const responses = {
+            'pedido': 'Para consultar seu pedido, informe o número que está no e-mail de confirmação. Formato: #PED-XXXX-XXXXX',
+            'horario': 'Nosso horário de atendimento é de segunda a sexta, das 8h às 18h. Mas eu estou disponível 24 horas! 🤖',
+            'suporte': 'Vou transferir você para nossa equipe de suporte técnico. Um momento, por favor... 👨‍💻',
+            'reclamação': 'Lamento que você teve uma experiência ruim. Vou registrar sua reclamação e um supervisor entrará em contato em até 24h.',
+            'ola': 'Olá! 👋 Como posso ajudá-lo hoje?',
+            'obrigado': 'De nada! Foi um prazer ajudar. Tenha um ótimo dia! 😊',
+            'default': 'Entendi! Deixe-me verificar isso para você. Poderia me dar mais detalhes sobre sua solicitação?'
+        };
+
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            if (!message) return;
+
+            addMessage(message, 'user');
+            input.value = '';
+
+            // Show typing indicator
+            showTyping();
+
+            // Simulate bot response
+            setTimeout(() => {
+                hideTyping();
+                const response = getBotResponse(message);
+                addMessage(response, 'bot');
+                updateStats();
+            }, 1500);
+        }
+
+        function addMessage(text, type) {
+            const container = document.getElementById('chatMessages');
+            const time = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            messageDiv.innerHTML = `
+                <div class="message-avatar">${type === 'bot' ? '<i class="fas fa-robot"></i>' : 'CL'}</div>
+                <div>
+                    <div class="message-content">${text}</div>
+                    <div class="message-time">${time}</div>
+                </div>
+            `;
+            container.appendChild(messageDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function showTyping() {
+            const container = document.getElementById('chatMessages');
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message bot';
+            typingDiv.id = 'typingIndicator';
+            typingDiv.innerHTML = `
+                <div class="message-avatar"><i class="fas fa-robot"></i></div>
+                <div class="typing-indicator">
+                    <span></span><span></span><span></span>
+                </div>
+            `;
+            container.appendChild(typingDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function hideTyping() {
+            const typing = document.getElementById('typingIndicator');
+            if (typing) typing.remove();
+        }
+
+        function getBotResponse(message) {
+            const lower = message.toLowerCase();
+            if (lower.includes('pedido') || lower.includes('status') || lower.includes('rastreio')) {
+                return responses.pedido;
+            } else if (lower.includes('horario') || lower.includes('funcionamento') || lower.includes('aberto')) {
+                return responses.horario;
+            } else if (lower.includes('suporte') || lower.includes('tecnico') || lower.includes('problema')) {
+                return responses.suporte;
+            } else if (lower.includes('reclamação') || lower.includes('reclamar') || lower.includes('insatisfeito')) {
+                return responses.reclamação;
+            } else if (lower.includes('ola') || lower.includes('oi') || lower.includes('bom dia') || lower.includes('boa tarde')) {
+                return responses.ola;
+            } else if (lower.includes('obrigado') || lower.includes('valeu') || lower.includes('thanks')) {
+                return responses.obrigado;
+            }
+            return responses.default;
+        }
+
+        function addQuickReply(text) {
+            document.getElementById('messageInput').value = text;
+            sendMessage();
+        }
+
+        function handleKeyPress(e) {
+            if (e.key === 'Enter') sendMessage();
+        }
+
+        function updateStats() {
+            const el = document.getElementById('totalConversas');
+            const current = parseInt(el.textContent.replace(',', ''));
+            el.textContent = (current + 1).toLocaleString();
+        }
+    </script>
+</body>
+</html>

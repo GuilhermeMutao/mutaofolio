@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guilherme Mutão | Portfolio</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navegação -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#home" class="nav-logo">
+                <span class="logo-text">GM</span>
+            </a>
+            <ul class="nav-menu" id="nav-menu">
+                <li class="nav-item"><a href="#home" class="nav-link">Início</a></li>
+                <li class="nav-item"><a href="#about" class="nav-link">Sobre</a></li>
+                <li class="nav-item"><a href="#skills" class="nav-link">Habilidades</a></li>
+                <li class="nav-item"><a href="#projects" class="nav-link">Projetos</a></li>
+                <li class="nav-item"><a href="#experience" class="nav-link">Experiência</a></li>
+                <li class="nav-item"><a href="#education" class="nav-link">Formação</a></li>
+                <li class="nav-item"><a href="#contact" class="nav-link">Contato</a></li>
+            </ul>
+            <div class="hamburger" id="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-particles" id="particles"></div>
+        <div class="hero-content">
+            <div class="hero-text">
+                <p class="hero-greeting">Olá, eu sou</p>
+                <h1 class="hero-title">Guilherme Mutão</h1>
+                <h2 class="hero-subtitle">
+                    <span class="typing-text" id="typing"></span>
+                    <span class="cursor">|</span>
+                </h2>
+                <p class="hero-description">
+                    Desenvolvedor Full-Stack especializado em sistemas web. 
+                    Apaixonado por transformar ideias em soluções digitais funcionais e inovadoras.
+                </p>
+                <div class="hero-buttons">
+                    <a href="#projects" class="btn btn-primary">Ver Projetos</a>
+                    <a href="#contact" class="btn btn-secondary">Entrar em Contato</a>
+                </div>
+                <div class="hero-social">
+                    <a href="https://www.linkedin.com/in/guilhermemutao/" target="_blank" class="social-link">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                    <a href="https://github.com/GuilhermeMutao" target="_blank" class="social-link">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="mailto:guilhermemutao@gmail.com" class="social-link">
+                        <i class="fas fa-envelope"></i>
+                    </a>
+                    <a href="https://wa.me/5534997680592" target="_blank" class="social-link">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="image-container">
+                    <div class="image-bg"></div>
+                    <div class="image-placeholder">
+                        <i class="fas fa-user"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <a href="#about" class="scroll-down">
+            <i class="fas fa-chevron-down"></i>
+        </a>
+    </section>
+
+    <!-- Sobre -->
+    <section id="about" class="about section">
+        <div class="container">
+            <h2 class="section-title">Sobre Mim</h2>
+            <div class="about-content">
+                <div class="about-image">
+                    <div class="about-img-container">
+                        <div class="about-img-placeholder">
+                            <i class="fas fa-code"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-text">
+                    <h3>Desenvolvedor Full-Stack | Angular | Node.js | Oracle DB</h3>
+                    <p>
+                        Desenvolvedor Full-Stack especializado em sistemas web, formado em Análise e 
+                        Desenvolvimento de Sistemas pelo IFTM, com experiência sólida em JavaScript, 
+                        Angular, Node.js e bancos de dados Oracle.
+                    </p>
+                    <p>
+                        Apaixonado por transformar ideias em soluções digitais funcionais e inovadoras. 
+                        Atualmente cursando Pós-graduação em Ciência de Dados, sempre em busca de 
+                        desafios que me permitam expandir conhecimentos e contribuir para o sucesso 
+                        de equipes e projetos.
+                    </p>
+                    <div class="about-info">
+                        <div class="info-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Uberaba, MG - Brasil</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-briefcase"></i>
+                            <span>Full-Stack Developer @ Radix</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-graduation-cap"></i>
+                            <span>Pós-graduando em Data Science</span>
+                        </div>
+                    </div>
+                    <a href="#contact" class="btn btn-primary">Vamos Conversar</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Habilidades -->
+    <section id="skills" class="skills section">
+        <div class="container">
+            <h2 class="section-title">Habilidades</h2>
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <h3><i class="fas fa-code"></i> Front-end</h3>
+                    <div class="skill-items">
+                        <div class="skill-item">
+                            <div class="skill-icon"><i class="fab fa-angular"></i></div>
+                            <span>Angular</span>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-icon"><i class="fab fa-js"></i></div>
+                            <span>TypeScript</span>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-icon"><i class="fas fa-code"></i></div>
+                            <span>RxJS</span>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-icon"><i class="fab fa-html5"></i></div>
+                            <span>HTML5</span>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-icon"><i class="fab fa-css3-alt"></i></div>
+                            <span>CSS3/SCSS</span>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-icon"><i class="fab fa-react"></i></div>
+                            <span>React</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3><i class="fas fa-server"></i> Back-end</h3>
+                    <div class="skill-items">
+                        <div class="skill-item">
+                            <div class="skill-icon"><i class="fab fa-node-js"></i></div>
+                            <span>Node.js</span>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-icon"><i class="fab fa-js"></i></div>
+                            <span>JavaScript</span>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-icon"><i class="fas fa-cogs"></i></div>
+                            <span>REST APIs</span>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-icon"><i class="fab fa-python"></i></div>
+                            <span>Python</span>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-icon"><i class="fas fa-project-diagram"></i></div>
+                            <span>Integrations</span>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-icon"><i class="fas fa-shield-alt"></i></div>
+                            <span>Authentication</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3><i class="fas fa-database"></i> Banco de Dados</h3>
+                    <div class="skill-items">
+                        <div class="skill-item">
+                            <div class="skill-icon"><i class="fas fa-database"></i></div>
+                            <span>Oracle DB</span>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-icon"><i class="fas fa-database"></i></div>
+                            <span>PostgreSQL</span>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-icon"><i class="fas fa-database"></i></div>
+                            <span>MySQL</span>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-icon"><i class="fas fa-leaf"></i></div>
+                            <span>MongoDB</span>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-icon"><i class="fas fa-code"></i></div>
+                            <span>SQL/PL-SQL</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3><i class="fas fa-tools"></i> Ferramentas & Metodologias</h3>
+                    <div class="skill-items">
+                        <div class="skill-item">
+                            <div class="skill-icon"><i class="fab fa-git-alt"></i></div>
+                            <span>Git/GitHub</span>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-icon"><i class="fas fa-tasks"></i></div>
+                            <span>Scrum/Agile</span>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-icon"><i class="fab fa-docker"></i></div>
+                            <span>Docker</span>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-icon"><i class="fas fa-chart-line"></i></div>
+                            <span>Data Science</span>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-icon"><i class="fas fa-code-branch"></i></div>
+                            <span>CI/CD</span>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-icon"><i class="fab fa-linux"></i></div>
+                            <span>Linux</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projetos -->
+    <section id="projects" class="projects section">
+        <div class="container">
+            <h2 class="section-title">Projetos</h2>
+            <div class="projects-filter">
+                <button class="filter-btn active" data-filter="all">Todos</button>
+                <button class="filter-btn" data-filter="web">Web</button>
+                <button class="filter-btn" data-filter="mobile">Mobile</button>
+                <button class="filter-btn" data-filter="backend">Backend</button>
+            </div>
+            <div class="projects-grid">
+                <!-- Projeto 1 -->
+                <div class="project-card" data-category="web">
+                    <div class="project-image">
+                        <div class="project-img-placeholder">
+                            <i class="fas fa-running"></i>
+                        </div>
+                        <div class="project-overlay">
+                            <div class="project-links">
+                                <a href="projects/sga-atletas/index.html" class="project-link" title="Ver Demo">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                                <a href="https://github.com/GuilhermeMutao/sga-atletas" class="project-link" title="Ver Código">
+                                    <i class="fab fa-github"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <h3>SGA - Sistema de Gestão de Atletas</h3>
+                        <p>Plataforma completa para clubes esportivos gerenciarem atletas, treinos, avaliações físicas e desempenho em competições. Inclui dashboard com gráficos de evolução, controle de presença e relatórios exportáveis em PDF.</p>
+                        <div class="project-tech">
+                            <span>Angular 17</span>
+                            <span>Node.js</span>
+                            <span>Oracle DB</span>
+                            <span>Chart.js</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Projeto 2 -->
+                <div class="project-card" data-category="web">
+                    <div class="project-image">
+                        <div class="project-img-placeholder">
+                            <i class="fas fa-truck-loading"></i>
+                        </div>
+                        <div class="project-overlay">
+                            <div class="project-links">
+                                <a href="projects/logistica-hub/index.html" class="project-link" title="Ver Demo">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                                <a href="https://github.com/GuilhermeMutao/logistica-hub" class="project-link" title="Ver Código">
+                                    <i class="fab fa-github"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <h3>LogísticaHub - Gestão de Frotas</h3>
+                        <p>Sistema de gestão logística com rastreamento de veículos em tempo real via GPS, controle de entregas, roteirização inteligente e integração com ERPs. Notificações automáticas via WhatsApp para clientes.</p>
+                        <div class="project-tech">
+                            <span>Angular</span>
+                            <span>Node.js</span>
+                            <span>Oracle DB</span>
+                            <span>WebSocket</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Projeto 3 -->
+                <div class="project-card" data-category="web">
+                    <div class="project-image">
+                        <div class="project-img-placeholder">
+                            <i class="fas fa-file-invoice-dollar"></i>
+                        </div>
+                        <div class="project-overlay">
+                            <div class="project-links">
+                                <a href="projects/iptu-digital/index.html" class="project-link" title="Ver Demo">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                                <a href="https://github.com/GuilhermeMutao/iptu-digital" class="project-link" title="Ver Código">
+                                    <i class="fab fa-github"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <h3>IPTU Digital - Portal do Contribuinte</h3>
+                        <p>Portal municipal para consulta e pagamento de IPTU, emissão de guias, parcelamentos e certidões negativas. Integração com bancos para baixa automática e painel administrativo para fiscalização.</p>
+                        <div class="project-tech">
+                            <span>Angular</span>
+                            <span>Node.js</span>
+                            <span>PostgreSQL</span>
+                            <span>PIX API</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Projeto 4 -->
+                <div class="project-card" data-category="backend">
+                    <div class="project-image">
+                        <div class="project-img-placeholder">
+                            <i class="fas fa-cogs"></i>
+                        </div>
+                        <div class="project-overlay">
+                            <div class="project-links">
+                                <a href="projects/integration-api/index.html" class="project-link" title="Ver Demo">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                                <a href="https://github.com/GuilhermeMutao/integration-api" class="project-link" title="Ver Código">
+                                    <i class="fab fa-github"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <h3>IntegrationAPI - Middleware Empresarial</h3>
+                        <p>Middleware robusto para integração entre sistemas legados e modernos. Suporta transformação de dados XML/JSON, filas de processamento, retry automático e monitoramento com alertas via Slack/Teams.</p>
+                        <div class="project-tech">
+                            <span>Node.js</span>
+                            <span>Express</span>
+                            <span>RabbitMQ</span>
+                            <span>Docker</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Projeto 5 -->
+                <div class="project-card" data-category="web">
+                    <div class="project-image">
+                        <div class="project-img-placeholder">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                        <div class="project-overlay">
+                            <div class="project-links">
+                                <a href="projects/scrum-analytics/index.html" class="project-link" title="Ver Demo">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                                <a href="https://github.com/GuilhermeMutao/scrum-analytics" class="project-link" title="Ver Código">
+                                    <i class="fab fa-github"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <h3>ScrumAnalytics - Métricas de Time</h3>
+                        <p>Dashboard completo para acompanhamento de sprints com velocity, burndown, cycle time e lead time. Integração com Jira e Azure DevOps. Previsões de entrega usando Machine Learning.</p>
+                        <div class="project-tech">
+                            <span>Angular</span>
+                            <span>RxJS</span>
+                            <span>Python</span>
+                            <span>D3.js</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Projeto 6 -->
+                <div class="project-card" data-category="mobile">
+                    <div class="project-image">
+                        <div class="project-img-placeholder">
+                            <i class="fas fa-qrcode"></i>
+                        </div>
+                        <div class="project-overlay">
+                            <div class="project-links">
+                                <a href="projects/event-check/index.html" class="project-link" title="Ver Demo">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                                <a href="https://github.com/GuilhermeMutao/checkin-eventos" class="project-link" title="Ver Código">
+                                    <i class="fab fa-github"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <h3>EventCheck - Check-in por QR Code</h3>
+                        <p>Aplicativo para gestão de eventos com credenciamento via QR Code, controle de acesso em tempo real, emissão de certificados automáticos e painel com estatísticas de participação.</p>
+                        <div class="project-tech">
+                            <span>React Native</span>
+                            <span>Node.js</span>
+                            <span>MongoDB</span>
+                            <span>Socket.io</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Projeto 7 -->
+                <div class="project-card" data-category="backend">
+                    <div class="project-image">
+                        <div class="project-img-placeholder">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="project-overlay">
+                            <div class="project-links">
+                                <a href="projects/smart-bot/index.html" class="project-link" title="Ver Demo">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                                <a href="https://github.com/GuilhermeMutao/chatbot-atendimento" class="project-link" title="Ver Código">
+                                    <i class="fab fa-github"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <h3>SmartBot - Atendimento Automatizado</h3>
+                        <p>Chatbot inteligente para atendimento ao cliente via WhatsApp e Telegram. Integração com ChatGPT para respostas contextuais, escalação para atendentes humanos e histórico de conversas.</p>
+                        <div class="project-tech">
+                            <span>Node.js</span>
+                            <span>OpenAI API</span>
+                            <span>Redis</span>
+                            <span>PostgreSQL</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Projeto 8 -->
+                <div class="project-card" data-category="web">
+                    <div class="project-image">
+                        <div class="project-img-placeholder">
+                            <i class="fas fa-warehouse"></i>
+                        </div>
+                        <div class="project-overlay">
+                            <div class="project-links">
+                                <a href="projects/estoque-smart/index.html" class="project-link" title="Ver Demo">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                                <a href="https://github.com/GuilhermeMutao/estoque-smart" class="project-link" title="Ver Código">
+                                    <i class="fab fa-github"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <h3>EstoqueSmart - Gestão de Inventário</h3>
+                        <p>Sistema de controle de estoque com leitor de código de barras, alertas de estoque mínimo, controle de validade, múltiplos almoxarifados e integração com nota fiscal eletrônica.</p>
+                        <div class="project-tech">
+                            <span>Angular</span>
+                            <span>Node.js</span>
+                            <span>Oracle DB</span>
+                            <span>NFe API</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Projeto 9 -->
+                <div class="project-card" data-category="mobile">
+                    <div class="project-image">
+                        <div class="project-img-placeholder">
+                            <i class="fas fa-clipboard-check"></i>
+                        </div>
+                        <div class="project-overlay">
+                            <div class="project-links">
+                                <a href="projects/vistoria-app/index.html" class="project-link" title="Ver Demo">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                                <a href="https://github.com/GuilhermeMutao/vistoria-app" class="project-link" title="Ver Código">
+                                    <i class="fab fa-github"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <h3>VistoriaApp - Inspeção de Veículos</h3>
+                        <p>Aplicativo mobile para vistoria de veículos com checklist dinâmico, captura de fotos geolocalizadas, assinatura digital do cliente e geração automática de laudo em PDF.</p>
+                        <div class="project-tech">
+                            <span>React Native</span>
+                            <span>Node.js</span>
+                            <span>AWS S3</span>
+                            <span>MongoDB</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experiência -->
+    <section id="experience" class="experience section">
+        <div class="container">
+            <h2 class="section-title">Experiência</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">Janeiro 2026 - Presente</div>
+                        <h3>Full-Stack Developer</h3>
+                        <h4>Radix</h4>
+                        <p>
+                            Desenvolvimento de soluções full-stack, aplicando as melhores práticas 
+                            e tecnologias modernas para entregar produtos de alta qualidade.
+                        </p>
+                        <div class="timeline-tech">
+                            <span>Angular</span>
+                            <span>Node.js</span>
+                            <span>Oracle DB</span>
+                            <span>TypeScript</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">Outubro 2023 - Janeiro 2026</div>
+                        <h3>Full-Stack Developer</h3>
+                        <h4>Bravo - Logistics Services</h4>
+                        <p>
+                            Liderança proativa na integração de soluções entre empresa e clientes, 
+                            otimizando comunicação e automatizando processos com diversos sistemas 
+                            externos e internos. Foco em eficiência operacional.
+                        </p>
+                        <div class="timeline-tech">
+                            <span>Angular</span>
+                            <span>Node.js</span>
+                            <span>Oracle DB</span>
+                            <span>REST APIs</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">Abril 2022 - Outubro 2023</div>
+                        <h3>Developer</h3>
+                        <h4>Codiub - Digital Solution</h4>
+                        <p>
+                            Desenvolvimento de sistemas para o município, criando soluções inovadoras 
+                            para diversos setores do governo local, melhorando a gestão pública 
+                            e otimizando processos administrativos.
+                        </p>
+                        <div class="timeline-tech">
+                            <span>Angular</span>
+                            <span>Node.js</span>
+                            <span>PostgreSQL</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">Dezembro 2021 - Janeiro 2022</div>
+                        <h3>Estagiário - Área Maker</h3>
+                        <h4>Escola Cenecista Dr. José Ferreira</h4>
+                        <p>
+                            Estágio na área Maker, trabalhando em projetos práticos e criativos 
+                            focados em prototipagem e inovação tecnológica. Atividades envolvendo 
+                            eletrônica, programação e design.
+                        </p>
+                        <div class="timeline-tech">
+                            <span>Arduino</span>
+                            <span>Eletrônica</span>
+                            <span>Prototipagem</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Educação -->
+    <section id="education" class="education section">
+        <div class="container">
+            <h2 class="section-title">Formação</h2>
+            <div class="education-grid">
+                <div class="education-card">
+                    <div class="education-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <div class="education-content">
+                        <div class="education-date">Fevereiro 2025 - Dezembro 2025</div>
+                        <h3>Pós-Graduação em Ciência de Dados</h3>
+                        <h4>Instituto Federal do Triângulo Mineiro - IFTM</h4>
+                        <p>Especialização em análise de dados, machine learning e inteligência artificial.</p>
+                    </div>
+                </div>
+                <div class="education-card">
+                    <div class="education-icon">
+                        <i class="fas fa-laptop-code"></i>
+                    </div>
+                    <div class="education-content">
+                        <div class="education-date">2020 - Dezembro 2023</div>
+                        <h3>Tecnólogo em Análise e Desenvolvimento de Sistemas</h3>
+                        <h4>Instituto Federal do Triângulo Mineiro - IFTM</h4>
+                        <p>Formação completa em desenvolvimento de software, banco de dados e engenharia de sistemas.</p>
+                    </div>
+                </div>
+                <div class="education-card">
+                    <div class="education-icon">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <div class="education-content">
+                        <div class="education-date">Fevereiro 2017 - Dezembro 2019</div>
+                        <h3>Curso Técnico Integrado em Manutenção e Suporte em Informática</h3>
+                        <h4>Instituto Federal do Triângulo Mineiro - IFTM</h4>
+                        <p>Base técnica em hardware, redes, sistemas operacionais e suporte técnico.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Certificações -->
+            <h2 class="section-title" style="margin-top: 80px;">Certificações</h2>
+            <div class="certifications-grid">
+                <div class="cert-item">
+                    <i class="fab fa-angular"></i>
+                    <span>Angular: Ciclo de Vida</span>
+                </div>
+                <div class="cert-item">
+                    <i class="fab fa-angular"></i>
+                    <span>Angular: Animações Interativas</span>
+                </div>
+                <div class="cert-item">
+                    <i class="fas fa-code"></i>
+                    <span>RxJS e Angular: Programação Reativa</span>
+                </div>
+                <div class="cert-item">
+                    <i class="fab fa-react"></i>
+                    <span>React e React Native</span>
+                </div>
+                <div class="cert-item">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Métricas Ágeis</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contato -->
+    <section id="contact" class="contact section">
+        <div class="container">
+            <h2 class="section-title">Contato</h2>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <h3>Vamos trabalhar juntos!</h3>
+                    <p>
+                        Estou sempre aberto a discutir novos projetos, ideias criativas 
+                        ou oportunidades para fazer parte de suas visões.
+                    </p>
+                    <div class="contact-details">
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="contact-text">
+                                <h4>Email</h4>
+                                <p>guilhermemutao@gmail.com</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fab fa-whatsapp"></i>
+                            </div>
+                            <div class="contact-text">
+                                <h4>WhatsApp</h4>
+                                <p>+55 (34) 99768-0592</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div class="contact-text">
+                                <h4>Localização</h4>
+                                <p>Uberaba, Minas Gerais - Brasil</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fab fa-linkedin"></i>
+                            </div>
+                            <div class="contact-text">
+                                <h4>LinkedIn</h4>
+                                <p>linkedin.com/in/guilhermemutao</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="contact-social">
+                        <a href="https://www.linkedin.com/in/guilhermemutao/" target="_blank" class="social-btn">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        <a href="https://github.com/GuilhermeMutao" target="_blank" class="social-btn">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="https://wa.me/5534997680592" target="_blank" class="social-btn">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                        <a href="mailto:guilhermemutao@gmail.com" class="social-btn">
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="contact-form-container">
+                    <form class="contact-form" id="contact-form">
+                        <div class="form-group">
+                            <input type="text" name="name" placeholder="Seu Nome" required>
+                            <span class="form-icon"><i class="fas fa-user"></i></span>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" name="email" placeholder="Seu Email" required>
+                            <span class="form-icon"><i class="fas fa-envelope"></i></span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" name="subject" placeholder="Assunto" required>
+                            <span class="form-icon"><i class="fas fa-tag"></i></span>
+                        </div>
+                        <div class="form-group">
+                            <textarea name="message" placeholder="Sua Mensagem" rows="5" required></textarea>
+                            <span class="form-icon"><i class="fas fa-comment"></i></span>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <span>Enviar Mensagem</span>
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <span class="logo-text">GM</span>
+                    <p>Transformando ideias em realidade digital.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Links Rápidos</h4>
+                    <ul>
+                        <li><a href="#home">Início</a></li>
+                        <li><a href="#about">Sobre</a></li>
+                        <li><a href="#projects">Projetos</a></li>
+                        <li><a href="#contact">Contato</a></li>
+                    </ul>
+                </div>
+                <div class="footer-social">
+                    <h4>Redes Sociais</h4>
+                    <div class="social-links">
+                        <a href="https://www.linkedin.com/in/guilhermemutao/" target="_blank">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        <a href="https://github.com/GuilhermeMutao" target="_blank">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="https://wa.me/5534997680592" target="_blank">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Guilherme Mutão. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top -->
+    <a href="#home" class="back-to-top" id="back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+
+    <script src="script.js"></script>
+</body>
+</html>

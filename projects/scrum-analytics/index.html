@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScrumAnalytics - Métricas Ágeis</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            min-height: 100vh;
+        }
+
+        .app-container {
+            display: flex;
+        }
+
+        .sidebar {
+            width: 260px;
+            background: #1e293b;
+            min-height: 100vh;
+            padding: 20px;
+            position: fixed;
+            left: 0;
+            top: 0;
+            border-right: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .logo span {
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .nav-section {
+            margin-bottom: 30px;
+        }
+
+        .nav-section-title {
+            font-size: 0.75rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-menu li a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            color: #94a3b8;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            transition: all 0.3s;
+        }
+
+        .nav-menu li a:hover,
+        .nav-menu li a.active {
+            background: rgba(139, 92, 246, 0.2);
+            color: #8b5cf6;
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            padding: 30px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-title h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        .page-title p {
+            color: #64748b;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .sprint-selector {
+            background: #1e293b;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            color: #e2e8f0;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(139, 92, 246, 0.4);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .metric-card {
+            background: #1e293b;
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+        }
+
+        .metric-card.purple::before { background: #8b5cf6; }
+        .metric-card.green::before { background: #10b981; }
+        .metric-card.blue::before { background: #3b82f6; }
+        .metric-card.orange::before { background: #f59e0b; }
+
+        .metric-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .metric-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .metric-card.purple .metric-icon { background: rgba(139, 92, 246, 0.2); color: #8b5cf6; }
+        .metric-card.green .metric-icon { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .metric-card.blue .metric-icon { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
+        .metric-card.orange .metric-icon { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+
+        .metric-trend {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.85rem;
+            padding: 5px 10px;
+            border-radius: 20px;
+        }
+
+        .trend-up { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .trend-down { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+
+        .metric-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .metric-label {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .chart-card {
+            background: #1e293b;
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .chart-header h2 {
+            font-size: 1.1rem;
+        }
+
+        .chart-legend {
+            display: flex;
+            gap: 20px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: #94a3b8;
+        }
+
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .chart-container {
+            height: 300px;
+        }
+
+        .sprint-progress {
+            margin-bottom: 30px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .progress-bar {
+            height: 12px;
+            background: rgba(139, 92, 246, 0.2);
+            border-radius: 6px;
+            overflow: hidden;
+            display: flex;
+        }
+
+        .progress-segment {
+            height: 100%;
+            transition: width 0.5s;
+        }
+
+        .segment-done { background: #10b981; }
+        .segment-progress { background: #3b82f6; }
+        .segment-todo { background: #64748b; }
+
+        .tasks-section {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .task-column {
+            background: #1e293b;
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .column-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(139, 92, 246, 0.1);
+        }
+
+        .column-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .column-count {
+            background: rgba(139, 92, 246, 0.2);
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: #8b5cf6;
+        }
+
+        .task-card {
+            background: #0f172a;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid transparent;
+        }
+
+        .task-card:hover {
+            border-color: #8b5cf6;
+            transform: translateX(5px);
+        }
+
+        .task-id {
+            font-size: 0.8rem;
+            color: #8b5cf6;
+            margin-bottom: 8px;
+        }
+
+        .task-title {
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .task-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .task-points {
+            background: rgba(139, 92, 246, 0.2);
+            color: #8b5cf6;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .task-assignee {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .priority-high { border-left: 3px solid #ef4444; }
+        .priority-medium { border-left: 3px solid #f59e0b; }
+        .priority-low { border-left: 3px solid #10b981; }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(139, 92, 246, 0.9);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-btn:hover {
+            background: #7c3aed;
+        }
+
+        @media (max-width: 1200px) {
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            .tasks-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="../../index.html#projects" class="back-btn">
+        <i class="fas fa-arrow-left"></i> Voltar
+    </a>
+
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <span>ScrumAnalytics</span>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Principal</div>
+                <ul class="nav-menu">
+                    <li><a href="#" class="active"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="#"><i class="fas fa-columns"></i> Board</a></li>
+                    <li><a href="#"><i class="fas fa-list"></i> Backlog</a></li>
+                    <li><a href="#"><i class="fas fa-calendar"></i> Sprints</a></li>
+                </ul>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Relatórios</div>
+                <ul class="nav-menu">
+                    <li><a href="#"><i class="fas fa-fire"></i> Burndown</a></li>
+                    <li><a href="#"><i class="fas fa-tachometer-alt"></i> Velocity</a></li>
+                    <li><a href="#"><i class="fas fa-clock"></i> Cycle Time</a></li>
+                    <li><a href="#"><i class="fas fa-chart-pie"></i> Reports</a></li>
+                </ul>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Integrações</div>
+                <ul class="nav-menu">
+                    <li><a href="#"><i class="fab fa-jira"></i> Jira</a></li>
+                    <li><a href="#"><i class="fab fa-microsoft"></i> Azure DevOps</a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="header">
+                <div class="page-title">
+                    <h1>Sprint Dashboard</h1>
+                    <p>Sprint 24 • 15 Jan - 29 Jan 2026</p>
+                </div>
+                <div class="header-actions">
+                    <select class="sprint-selector">
+                        <option>Sprint 24 (Atual)</option>
+                        <option>Sprint 23</option>
+                        <option>Sprint 22</option>
+                        <option>Sprint 21</option>
+                    </select>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-download"></i> Exportar
+                    </button>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-card purple">
+                    <div class="metric-header">
+                        <div class="metric-icon">
+                            <i class="fas fa-tachometer-alt"></i>
+                        </div>
+                        <div class="metric-trend trend-up">
+                            <i class="fas fa-arrow-up"></i> 12%
+                        </div>
+                    </div>
+                    <div class="metric-value">42</div>
+                    <div class="metric-label">Velocity (pontos/sprint)</div>
+                </div>
+                <div class="metric-card green">
+                    <div class="metric-header">
+                        <div class="metric-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="metric-trend trend-up">
+                            <i class="fas fa-arrow-up"></i> 8%
+                        </div>
+                    </div>
+                    <div class="metric-value">78%</div>
+                    <div class="metric-label">Taxa de Conclusão</div>
+                </div>
+                <div class="metric-card blue">
+                    <div class="metric-header">
+                        <div class="metric-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="metric-trend trend-down">
+                            <i class="fas fa-arrow-down"></i> 15%
+                        </div>
+                    </div>
+                    <div class="metric-value">2.3d</div>
+                    <div class="metric-label">Cycle Time Médio</div>
+                </div>
+                <div class="metric-card orange">
+                    <div class="metric-header">
+                        <div class="metric-icon">
+                            <i class="fas fa-hourglass-half"></i>
+                        </div>
+                        <div class="metric-trend trend-down">
+                            <i class="fas fa-arrow-down"></i> 5%
+                        </div>
+                    </div>
+                    <div class="metric-value">4.1d</div>
+                    <div class="metric-label">Lead Time Médio</div>
+                </div>
+            </div>
+
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h2>Burndown Chart</h2>
+                        <div class="chart-legend">
+                            <div class="legend-item">
+                                <div class="legend-dot" style="background: #8b5cf6;"></div>
+                                <span>Ideal</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-dot" style="background: #10b981;"></div>
+                                <span>Real</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="burndownChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h2>Velocity History</h2>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="velocityChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-card sprint-progress">
+                <div class="progress-header">
+                    <h2>Progresso da Sprint</h2>
+                    <span>32 de 42 pontos concluídos</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-segment segment-done" style="width: 55%;"></div>
+                    <div class="progress-segment segment-progress" style="width: 20%;"></div>
+                    <div class="progress-segment segment-todo" style="width: 25%;"></div>
+                </div>
+                <div style="display: flex; gap: 30px; margin-top: 15px;">
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: #10b981;"></div>
+                        <span>Concluído (23 pts)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: #3b82f6;"></div>
+                        <span>Em Progresso (9 pts)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: #64748b;"></div>
+                        <span>A Fazer (10 pts)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tasks-section">
+                <div class="task-column">
+                    <div class="column-header">
+                        <div class="column-title">
+                            <span>📋 A Fazer</span>
+                            <span class="column-count">4</span>
+                        </div>
+                    </div>
+                    <div class="task-card priority-high">
+                        <div class="task-id">PROJ-142</div>
+                        <div class="task-title">Implementar autenticação OAuth2</div>
+                        <div class="task-meta">
+                            <span class="task-points">5 pts</span>
+                            <div class="task-assignee">JS</div>
+                        </div>
+                    </div>
+                    <div class="task-card priority-medium">
+                        <div class="task-id">PROJ-145</div>
+                        <div class="task-title">Criar testes unitários módulo de pagamento</div>
+                        <div class="task-meta">
+                            <span class="task-points">3 pts</span>
+                            <div class="task-assignee">MC</div>
+                        </div>
+                    </div>
+                    <div class="task-card priority-low">
+                        <div class="task-id">PROJ-148</div>
+                        <div class="task-title">Documentar API endpoints</div>
+                        <div class="task-meta">
+                            <span class="task-points">2 pts</span>
+                            <div class="task-assignee">AL</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="task-column">
+                    <div class="column-header">
+                        <div class="column-title">
+                            <span>🔄 Em Progresso</span>
+                            <span class="column-count">3</span>
+                        </div>
+                    </div>
+                    <div class="task-card priority-high">
+                        <div class="task-id">PROJ-138</div>
+                        <div class="task-title">Refatorar componente de dashboard</div>
+                        <div class="task-meta">
+                            <span class="task-points">5 pts</span>
+                            <div class="task-assignee">GM</div>
+                        </div>
+                    </div>
+                    <div class="task-card priority-medium">
+                        <div class="task-id">PROJ-140</div>
+                        <div class="task-title">Integração com API de notificações</div>
+                        <div class="task-meta">
+                            <span class="task-points">3 pts</span>
+                            <div class="task-assignee">PS</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="task-column">
+                    <div class="column-header">
+                        <div class="column-title">
+                            <span>✅ Concluído</span>
+                            <span class="column-count">6</span>
+                        </div>
+                    </div>
+                    <div class="task-card priority-high" style="opacity: 0.7;">
+                        <div class="task-id">PROJ-135</div>
+                        <div class="task-title">Corrigir bug crítico no checkout</div>
+                        <div class="task-meta">
+                            <span class="task-points">8 pts</span>
+                            <div class="task-assignee">GM</div>
+                        </div>
+                    </div>
+                    <div class="task-card priority-medium" style="opacity: 0.7;">
+                        <div class="task-id">PROJ-136</div>
+                        <div class="task-title">Otimizar queries do relatório</div>
+                        <div class="task-meta">
+                            <span class="task-points">5 pts</span>
+                            <div class="task-assignee">JS</div>
+                        </div>
+                    </div>
+                    <div class="task-card priority-low" style="opacity: 0.7;">
+                        <div class="task-id">PROJ-137</div>
+                        <div class="task-title">Atualizar bibliotecas do projeto</div>
+                        <div class="task-meta">
+                            <span class="task-points">2 pts</span>
+                            <div class="task-assignee">AL</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Burndown Chart
+        const burndownCtx = document.getElementById('burndownChart').getContext('2d');
+        new Chart(burndownCtx, {
+            type: 'line',
+            data: {
+                labels: ['Dia 1', 'Dia 2', 'Dia 3', 'Dia 4', 'Dia 5', 'Dia 6', 'Dia 7', 'Dia 8', 'Dia 9', 'Dia 10'],
+                datasets: [{
+                    label: 'Ideal',
+                    data: [42, 37.8, 33.6, 29.4, 25.2, 21, 16.8, 12.6, 8.4, 4.2, 0],
+                    borderColor: '#8b5cf6',
+                    borderDash: [5, 5],
+                    fill: false,
+                    tension: 0
+                }, {
+                    label: 'Real',
+                    data: [42, 40, 35, 32, 28, 22, 18, 15, null, null, null],
+                    borderColor: '#10b981',
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    fill: true,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(139, 92, 246, 0.1)'
+                        },
+                        ticks: {
+                            color: '#64748b'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            color: '#64748b'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Velocity Chart
+        const velocityCtx = document.getElementById('velocityChart').getContext('2d');
+        new Chart(velocityCtx, {
+            type: 'bar',
+            data: {
+                labels: ['S20', 'S21', 'S22', 'S23', 'S24'],
+                datasets: [{
+                    label: 'Velocity',
+                    data: [35, 38, 40, 37, 42],
+                    backgroundColor: [
+                        'rgba(139, 92, 246, 0.6)',
+                        'rgba(139, 92, 246, 0.6)',
+                        'rgba(139, 92, 246, 0.6)',
+                        'rgba(139, 92, 246, 0.6)',
+                        'rgba(16, 185, 129, 0.8)'
+                    ],
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(139, 92, 246, 0.1)'
+                        },
+                        ticks: {
+                            color: '#64748b'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            color: '#64748b'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Drag and drop simulation
+        document.querySelectorAll('.task-card').forEach(card => {
+            card.addEventListener('click', function() {
+                this.style.transform = 'scale(1.02)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 200);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EstoqueSmart - Gestão de Inventário</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            min-height: 100vh;
+        }
+
+        .app-layout {
+            display: flex;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: #1e293b;
+            min-height: 100vh;
+            padding: 20px;
+            position: fixed;
+            left: 0;
+            border-right: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 35px;
+        }
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, #f59e0b, #ef4444);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .logo span {
+            font-weight: 700;
+            font-size: 1.15rem;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            color: #94a3b8;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            transition: all 0.3s;
+        }
+
+        .nav-menu a:hover,
+        .nav-menu a.active {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            padding: 25px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .page-title h1 {
+            font-size: 1.6rem;
+            margin-bottom: 5px;
+        }
+
+        .page-title p {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: #1e293b;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            padding: 10px 15px;
+            border-radius: 8px;
+            gap: 10px;
+        }
+
+        .search-box input {
+            background: none;
+            border: none;
+            color: #e2e8f0;
+            width: 200px;
+            outline: none;
+        }
+
+        .search-box i {
+            color: #64748b;
+        }
+
+        .btn {
+            padding: 10px 18px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #f59e0b, #ef4444);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(245, 158, 11, 0.4);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: #1e293b;
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .stat-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .stat-icon.orange { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+        .stat-icon.green { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .stat-icon.red { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+        .stat-icon.blue { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
+
+        .stat-trend {
+            font-size: 0.8rem;
+            padding: 4px 8px;
+            border-radius: 15px;
+        }
+
+        .trend-up { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .trend-down { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #64748b;
+            font-size: 0.85rem;
+        }
+
+        /* Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        .card {
+            background: #1e293b;
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-header h2 {
+            font-size: 1.1rem;
+        }
+
+        /* Products Table */
+        .products-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .products-table th {
+            text-align: left;
+            padding: 12px;
+            color: #64748b;
+            font-weight: 500;
+            font-size: 0.85rem;
+            border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .products-table td {
+            padding: 15px 12px;
+            border-bottom: 1px solid rgba(139, 92, 246, 0.1);
+        }
+
+        .product-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .product-img {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(239, 68, 68, 0.2));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .product-name {
+            font-weight: 500;
+        }
+
+        .product-sku {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        .stock-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .stock-ok { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .stock-low { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+        .stock-critical { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+
+        .action-btn {
+            background: none;
+            border: none;
+            color: #64748b;
+            cursor: pointer;
+            padding: 5px;
+            transition: color 0.3s;
+        }
+
+        .action-btn:hover {
+            color: #f59e0b;
+        }
+
+        /* Alerts List */
+        .alerts-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .alert-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 15px;
+            background: #0f172a;
+            border-radius: 10px;
+            border-left: 3px solid;
+        }
+
+        .alert-item.warning { border-color: #f59e0b; }
+        .alert-item.danger { border-color: #ef4444; }
+        .alert-item.info { border-color: #3b82f6; }
+
+        .alert-icon {
+            width: 35px;
+            height: 35px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .alert-item.warning .alert-icon { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+        .alert-item.danger .alert-icon { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+        .alert-item.info .alert-icon { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
+
+        .alert-content {
+            flex: 1;
+        }
+
+        .alert-title {
+            font-weight: 600;
+            margin-bottom: 3px;
+            font-size: 0.9rem;
+        }
+
+        .alert-desc {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        .alert-time {
+            font-size: 0.75rem;
+            color: #64748b;
+        }
+
+        /* Chart */
+        .chart-container {
+            height: 200px;
+            margin-top: 15px;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #1e293b;
+            border-radius: 20px;
+            padding: 30px;
+            width: 100%;
+            max-width: 500px;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .modal-header h2 {
+            font-size: 1.3rem;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: #64748b;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            background: #0f172a;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 8px;
+            color: #e2e8f0;
+            font-size: 0.95rem;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #f59e0b;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(245, 158, 11, 0.9);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-btn:hover {
+            background: #d97706;
+        }
+
+        @media (max-width: 1200px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .header {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="../../index.html#projects" class="back-btn">
+        <i class="fas fa-arrow-left"></i> Voltar
+    </a>
+
+    <div class="app-layout">
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-boxes-stacked"></i>
+                </div>
+                <span>EstoqueSmart</span>
+            </div>
+
+            <ul class="nav-menu">
+                <li><a href="#" class="active"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="#"><i class="fas fa-box"></i> Produtos</a></li>
+                <li><a href="#"><i class="fas fa-arrow-down"></i> Entradas</a></li>
+                <li><a href="#"><i class="fas fa-arrow-up"></i> Saídas</a></li>
+                <li><a href="#"><i class="fas fa-truck"></i> Fornecedores</a></li>
+                <li><a href="#"><i class="fas fa-warehouse"></i> Localizações</a></li>
+                <li><a href="#"><i class="fas fa-chart-line"></i> Relatórios</a></li>
+                <li><a href="#"><i class="fas fa-cog"></i> Configurações</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <div class="header">
+                <div class="page-title">
+                    <h1>Gestão de Estoque</h1>
+                    <p>Visão geral do inventário • Atualizado há 5 min</p>
+                </div>
+                <div class="header-actions">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Buscar produto...">
+                    </div>
+                    <button class="btn btn-primary" onclick="openModal()">
+                        <i class="fas fa-plus"></i> Novo Produto
+                    </button>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon orange"><i class="fas fa-boxes-stacked"></i></div>
+                        <span class="stat-trend trend-up"><i class="fas fa-arrow-up"></i> 12%</span>
+                    </div>
+                    <div class="stat-value" id="totalProdutos">1,247</div>
+                    <div class="stat-label">Total de Produtos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon green"><i class="fas fa-check-circle"></i></div>
+                        <span class="stat-trend trend-up"><i class="fas fa-arrow-up"></i> 5%</span>
+                    </div>
+                    <div class="stat-value">1,089</div>
+                    <div class="stat-label">Em Estoque</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon red"><i class="fas fa-exclamation-triangle"></i></div>
+                        <span class="stat-trend trend-down"><i class="fas fa-arrow-down"></i> 8%</span>
+                    </div>
+                    <div class="stat-value">23</div>
+                    <div class="stat-label">Estoque Baixo</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon blue"><i class="fas fa-dollar-sign"></i></div>
+                        <span class="stat-trend trend-up"><i class="fas fa-arrow-up"></i> 18%</span>
+                    </div>
+                    <div class="stat-value">R$ 2.4M</div>
+                    <div class="stat-label">Valor Total</div>
+                </div>
+            </div>
+
+            <div class="content-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>📦 Produtos Recentes</h2>
+                        <button class="btn" style="background: rgba(245, 158, 11, 0.2); color: #f59e0b;">
+                            Ver Todos
+                        </button>
+                    </div>
+                    <table class="products-table">
+                        <thead>
+                            <tr>
+                                <th>Produto</th>
+                                <th>Categoria</th>
+                                <th>Qtd</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productsTable">
+                            <tr>
+                                <td>
+                                    <div class="product-info">
+                                        <div class="product-img"><i class="fas fa-laptop"></i></div>
+                                        <div>
+                                            <div class="product-name">Notebook Dell XPS 15</div>
+                                            <div class="product-sku">SKU: NB-001-DL</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>Eletrônicos</td>
+                                <td>45</td>
+                                <td><span class="stock-badge stock-ok">Em Estoque</span></td>
+                                <td>
+                                    <button class="action-btn"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="product-info">
+                                        <div class="product-img"><i class="fas fa-keyboard"></i></div>
+                                        <div>
+                                            <div class="product-name">Teclado Mecânico RGB</div>
+                                            <div class="product-sku">SKU: KB-045-MC</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>Periféricos</td>
+                                <td>8</td>
+                                <td><span class="stock-badge stock-low">Baixo</span></td>
+                                <td>
+                                    <button class="action-btn"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="product-info">
+                                        <div class="product-img"><i class="fas fa-headphones"></i></div>
+                                        <div>
+                                            <div class="product-name">Headset Gamer Pro</div>
+                                            <div class="product-sku">SKU: HS-102-GP</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>Periféricos</td>
+                                <td>2</td>
+                                <td><span class="stock-badge stock-critical">Crítico</span></td>
+                                <td>
+                                    <button class="action-btn"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="product-info">
+                                        <div class="product-img"><i class="fas fa-tv"></i></div>
+                                        <div>
+                                            <div class="product-name">Monitor LG 27" 4K</div>
+                                            <div class="product-sku">SKU: MN-027-LG</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>Monitores</td>
+                                <td>32</td>
+                                <td><span class="stock-badge stock-ok">Em Estoque</span></td>
+                                <td>
+                                    <button class="action-btn"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="product-info">
+                                        <div class="product-img"><i class="fas fa-mouse"></i></div>
+                                        <div>
+                                            <div class="product-name">Mouse Wireless</div>
+                                            <div class="product-sku">SKU: MS-089-WL</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>Periféricos</td>
+                                <td>156</td>
+                                <td><span class="stock-badge stock-ok">Em Estoque</span></td>
+                                <td>
+                                    <button class="action-btn"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 20px;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>⚠️ Alertas</h2>
+                        </div>
+                        <div class="alerts-list">
+                            <div class="alert-item danger">
+                                <div class="alert-icon"><i class="fas fa-exclamation"></i></div>
+                                <div class="alert-content">
+                                    <div class="alert-title">Estoque Crítico</div>
+                                    <div class="alert-desc">Headset Gamer Pro - apenas 2 unidades</div>
+                                </div>
+                                <span class="alert-time">5 min</span>
+                            </div>
+                            <div class="alert-item warning">
+                                <div class="alert-icon"><i class="fas fa-bell"></i></div>
+                                <div class="alert-content">
+                                    <div class="alert-title">Estoque Baixo</div>
+                                    <div class="alert-desc">Teclado Mecânico - 8 unidades</div>
+                                </div>
+                                <span class="alert-time">15 min</span>
+                            </div>
+                            <div class="alert-item info">
+                                <div class="alert-icon"><i class="fas fa-truck"></i></div>
+                                <div class="alert-content">
+                                    <div class="alert-title">Pedido a Caminho</div>
+                                    <div class="alert-desc">50x Mouse Wireless chegando</div>
+                                </div>
+                                <span class="alert-time">1h</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>📊 Movimentação</h2>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="movementChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal Novo Produto -->
+    <div class="modal" id="productModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>➕ Novo Produto</h2>
+                <button class="close-modal" onclick="closeModal()">&times;</button>
+            </div>
+            <form onsubmit="addProduct(event)">
+                <div class="form-group">
+                    <label>Nome do Produto</label>
+                    <input type="text" id="productName" placeholder="Ex: Notebook Dell XPS" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>SKU</label>
+                        <input type="text" id="productSku" placeholder="Ex: NB-001-DL" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Categoria</label>
+                        <select id="productCategory">
+                            <option>Eletrônicos</option>
+                            <option>Periféricos</option>
+                            <option>Monitores</option>
+                            <option>Acessórios</option>
+                            <option>Outros</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Quantidade</label>
+                        <input type="number" id="productQty" placeholder="0" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Preço (R$)</label>
+                        <input type="number" id="productPrice" placeholder="0.00" step="0.01" min="0" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 15px;">
+                    <i class="fas fa-save"></i> Cadastrar Produto
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Movement Chart
+        const ctx = document.getElementById('movementChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+                datasets: [{
+                    label: 'Entradas',
+                    data: [65, 78, 45, 89, 56, 32, 28],
+                    borderColor: '#10b981',
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }, {
+                    label: 'Saídas',
+                    data: [45, 52, 68, 74, 62, 48, 35],
+                    borderColor: '#ef4444',
+                    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'bottom',
+                        labels: {
+                            color: '#94a3b8',
+                            padding: 15
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(139, 92, 246, 0.1)'
+                        },
+                        ticks: { color: '#64748b' }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { color: '#64748b' }
+                    }
+                }
+            }
+        });
+
+        function openModal() {
+            document.getElementById('productModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('productModal').classList.remove('active');
+        }
+
+        function addProduct(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('productName').value;
+            const sku = document.getElementById('productSku').value;
+            const category = document.getElementById('productCategory').value;
+            const qty = parseInt(document.getElementById('productQty').value);
+
+            const icons = ['laptop', 'keyboard', 'headphones', 'tv', 'mouse', 'desktop', 'tablet'];
+            const icon = icons[Math.floor(Math.random() * icons.length)];
+
+            let status, statusClass;
+            if (qty > 20) {
+                status = 'Em Estoque';
+                statusClass = 'stock-ok';
+            } else if (qty > 5) {
+                status = 'Baixo';
+                statusClass = 'stock-low';
+            } else {
+                status = 'Crítico';
+                statusClass = 'stock-critical';
+            }
+
+            const tbody = document.getElementById('productsTable');
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td>
+                    <div class="product-info">
+                        <div class="product-img"><i class="fas fa-${icon}"></i></div>
+                        <div>
+                            <div class="product-name">${name}</div>
+                            <div class="product-sku">SKU: ${sku}</div>
+                        </div>
+                    </div>
+                </td>
+                <td>${category}</td>
+                <td>${qty}</td>
+                <td><span class="stock-badge ${statusClass}">${status}</span></td>
+                <td>
+                    <button class="action-btn"><i class="fas fa-edit"></i></button>
+                    <button class="action-btn"><i class="fas fa-trash"></i></button>
+                </td>
+            `;
+            newRow.style.animation = 'fadeIn 0.3s ease';
+            tbody.insertBefore(newRow, tbody.firstChild);
+
+            // Update total
+            const totalEl = document.getElementById('totalProdutos');
+            const current = parseInt(totalEl.textContent.replace(',', ''));
+            totalEl.textContent = (current + 1).toLocaleString();
+
+            closeModal();
+            e.target.reset();
+        }
+
+        // Close modal on outside click
+        document.getElementById('productModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+    </script>
+</body>
+</html>

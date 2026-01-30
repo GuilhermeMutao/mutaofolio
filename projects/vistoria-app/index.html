@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VistoriaApp - Inspeção de Veículos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            min-height: 100vh;
+        }
+
+        .mobile-frame {
+            max-width: 420px;
+            margin: 0 auto;
+            min-height: 100vh;
+            background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+            position: relative;
+            padding-bottom: 80px;
+        }
+
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 20px;
+            font-size: 0.85rem;
+        }
+
+        .header {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .header h1 {
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header h1 i {
+            color: #22c55e;
+        }
+
+        .sync-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            color: #22c55e;
+        }
+
+        .sync-status i {
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Vehicle Info */
+        .vehicle-card {
+            margin: 20px;
+            background: linear-gradient(135deg, #1e293b, #334155);
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+        }
+
+        .vehicle-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .vehicle-plate {
+            background: #fef08a;
+            color: #1e293b;
+            padding: 8px 20px;
+            border-radius: 5px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            font-family: 'Courier New', monospace;
+        }
+
+        .vehicle-status {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        .vehicle-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .detail-label {
+            font-size: 0.75rem;
+            color: #64748b;
+            text-transform: uppercase;
+        }
+
+        .detail-value {
+            font-weight: 600;
+        }
+
+        /* Progress */
+        .progress-section {
+            padding: 0 20px;
+            margin-bottom: 25px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: rgba(139, 92, 246, 0.2);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #22c55e, #10b981);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        /* Inspection Steps */
+        .steps-section {
+            padding: 0 20px;
+        }
+
+        .section-title {
+            font-size: 1rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .steps-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .step-item {
+            background: #1e293b;
+            border-radius: 15px;
+            padding: 18px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid transparent;
+        }
+
+        .step-item:hover {
+            border-color: rgba(139, 92, 246, 0.5);
+            transform: translateX(5px);
+        }
+
+        .step-item.completed {
+            border-color: rgba(34, 197, 94, 0.3);
+        }
+
+        .step-item.active {
+            border-color: #8b5cf6;
+            background: rgba(139, 92, 246, 0.1);
+        }
+
+        .step-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .step-item.completed .step-icon {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+
+        .step-item.pending .step-icon {
+            background: rgba(139, 92, 246, 0.2);
+            color: #8b5cf6;
+        }
+
+        .step-item.active .step-icon {
+            background: #8b5cf6;
+            color: white;
+        }
+
+        .step-info {
+            flex: 1;
+        }
+
+        .step-name {
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+
+        .step-desc {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        .step-status {
+            font-size: 1.2rem;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 420px;
+            background: #1e293b;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-around;
+            border-radius: 25px 25px 0 0;
+            border-top: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            color: #64748b;
+            text-decoration: none;
+            font-size: 0.75rem;
+            transition: color 0.3s;
+            padding: 5px 15px;
+        }
+
+        .nav-item.active {
+            color: #22c55e;
+        }
+
+        .nav-item i {
+            font-size: 1.2rem;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            align-items: flex-end;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #1e293b;
+            border-radius: 25px 25px 0 0;
+            padding: 30px;
+            width: 100%;
+            max-width: 420px;
+            margin: 0 auto;
+            max-height: 85vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .modal-header h2 {
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .close-modal {
+            background: rgba(239, 68, 68, 0.2);
+            border: none;
+            color: #ef4444;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        /* Checklist */
+        .checklist {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: #0f172a;
+            border-radius: 12px;
+            cursor: pointer;
+        }
+
+        .checkbox {
+            width: 28px;
+            height: 28px;
+            border: 2px solid #64748b;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .check-item.checked .checkbox {
+            background: #22c55e;
+            border-color: #22c55e;
+        }
+
+        .check-item.checked .checkbox i {
+            color: white;
+        }
+
+        .checkbox i {
+            color: transparent;
+        }
+
+        .check-label {
+            flex: 1;
+        }
+
+        /* Photo Capture */
+        .photo-section {
+            margin-bottom: 25px;
+        }
+
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .photo-slot {
+            aspect-ratio: 1;
+            background: #0f172a;
+            border: 2px dashed rgba(139, 92, 246, 0.3);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .photo-slot:hover {
+            border-color: #8b5cf6;
+            background: rgba(139, 92, 246, 0.1);
+        }
+
+        .photo-slot.filled {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(16, 185, 129, 0.1));
+            border: 2px solid #22c55e;
+        }
+
+        .photo-slot i {
+            font-size: 1.5rem;
+            color: #64748b;
+            margin-bottom: 5px;
+        }
+
+        .photo-slot.filled i {
+            color: #22c55e;
+        }
+
+        .photo-slot span {
+            font-size: 0.7rem;
+            color: #64748b;
+        }
+
+        /* Observation */
+        .observation-input {
+            width: 100%;
+            padding: 15px;
+            background: #0f172a;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 12px;
+            color: #e2e8f0;
+            font-size: 0.95rem;
+            resize: none;
+            height: 100px;
+            margin-bottom: 20px;
+        }
+
+        .observation-input:focus {
+            outline: none;
+            border-color: #8b5cf6;
+        }
+
+        /* Buttons */
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #22c55e, #10b981);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(34, 197, 94, 0.4);
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            background: rgba(34, 197, 94, 0.9);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-btn:hover {
+            background: #16a34a;
+        }
+
+        @media (min-width: 768px) {
+            body {
+                background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 20px;
+            }
+            .mobile-frame {
+                border-radius: 40px;
+                min-height: 800px;
+                box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
+                overflow: hidden;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="../../index.html#projects" class="back-btn">
+        <i class="fas fa-arrow-left"></i> Voltar
+    </a>
+
+    <div class="mobile-frame">
+        <div class="status-bar">
+            <span>9:41</span>
+            <span>
+                <i class="fas fa-signal"></i>
+                <i class="fas fa-wifi"></i>
+                <i class="fas fa-battery-full"></i>
+            </span>
+        </div>
+
+        <div class="header">
+            <h1><i class="fas fa-clipboard-check"></i> VistoriaApp</h1>
+            <div class="sync-status">
+                <i class="fas fa-sync"></i>
+                <span>Sincronizado</span>
+            </div>
+        </div>
+
+        <div class="vehicle-card">
+            <div class="vehicle-header">
+                <div class="vehicle-plate">ABC-1234</div>
+                <div class="vehicle-status">Em Vistoria</div>
+            </div>
+            <div class="vehicle-details">
+                <div class="detail-item">
+                    <span class="detail-label">Modelo</span>
+                    <span class="detail-value">Toyota Corolla 2024</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Cor</span>
+                    <span class="detail-value">Prata</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Km</span>
+                    <span class="detail-value">12.450 km</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Combustível</span>
+                    <span class="detail-value">75%</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="progress-section">
+            <div class="progress-header">
+                <span>Progresso da Vistoria</span>
+                <span id="progressText">3 de 6 etapas</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 50%;"></div>
+            </div>
+        </div>
+
+        <div class="steps-section">
+            <h2 class="section-title"><i class="fas fa-list-check"></i> Etapas da Vistoria</h2>
+            <div class="steps-list">
+                <div class="step-item completed" data-step="1">
+                    <div class="step-icon"><i class="fas fa-car"></i></div>
+                    <div class="step-info">
+                        <div class="step-name">Identificação</div>
+                        <div class="step-desc">Placa, chassi e documentação</div>
+                    </div>
+                    <div class="step-status">✅</div>
+                </div>
+                <div class="step-item completed" data-step="2">
+                    <div class="step-icon"><i class="fas fa-shield-halved"></i></div>
+                    <div class="step-info">
+                        <div class="step-name">Carroceria</div>
+                        <div class="step-desc">Pintura, amassados, riscos</div>
+                    </div>
+                    <div class="step-status">✅</div>
+                </div>
+                <div class="step-item completed" data-step="3">
+                    <div class="step-icon"><i class="fas fa-circle-dot"></i></div>
+                    <div class="step-info">
+                        <div class="step-name">Pneus e Rodas</div>
+                        <div class="step-desc">Desgaste, calibragem, step</div>
+                    </div>
+                    <div class="step-status">✅</div>
+                </div>
+                <div class="step-item active" data-step="4" onclick="openModal('interior')">
+                    <div class="step-icon"><i class="fas fa-couch"></i></div>
+                    <div class="step-info">
+                        <div class="step-name">Interior</div>
+                        <div class="step-desc">Bancos, painel, ar-condicionado</div>
+                    </div>
+                    <div class="step-status">▶️</div>
+                </div>
+                <div class="step-item pending" data-step="5" onclick="openModal('mecanica')">
+                    <div class="step-icon"><i class="fas fa-gears"></i></div>
+                    <div class="step-info">
+                        <div class="step-name">Mecânica</div>
+                        <div class="step-desc">Motor, óleo, fluidos</div>
+                    </div>
+                    <div class="step-status">⏳</div>
+                </div>
+                <div class="step-item pending" data-step="6" onclick="openModal('eletrica')">
+                    <div class="step-icon"><i class="fas fa-bolt"></i></div>
+                    <div class="step-info">
+                        <div class="step-name">Elétrica</div>
+                        <div class="step-desc">Faróis, lanternas, bateria</div>
+                    </div>
+                    <div class="step-status">⏳</div>
+                </div>
+            </div>
+        </div>
+
+        <nav class="bottom-nav">
+            <a href="#" class="nav-item active">
+                <i class="fas fa-clipboard-check"></i>
+                <span>Vistoria</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-history"></i>
+                <span>Histórico</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-camera"></i>
+                <span>Fotos</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-user"></i>
+                <span>Perfil</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- Modal de Inspeção -->
+    <div class="modal" id="inspectionModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-couch"></i> <span id="modalTitle">Interior</span></h2>
+                <button class="close-modal" onclick="closeModal()">&times;</button>
+            </div>
+
+            <div class="checklist" id="checklist">
+                <div class="check-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"><i class="fas fa-check"></i></div>
+                    <span class="check-label">Bancos em bom estado</span>
+                </div>
+                <div class="check-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"><i class="fas fa-check"></i></div>
+                    <span class="check-label">Cintos de segurança funcionais</span>
+                </div>
+                <div class="check-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"><i class="fas fa-check"></i></div>
+                    <span class="check-label">Ar-condicionado funcionando</span>
+                </div>
+                <div class="check-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"><i class="fas fa-check"></i></div>
+                    <span class="check-label">Painel sem avarias</span>
+                </div>
+                <div class="check-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"><i class="fas fa-check"></i></div>
+                    <span class="check-label">Vidros elétricos operantes</span>
+                </div>
+            </div>
+
+            <div class="photo-section">
+                <h3 style="font-size: 0.95rem; margin-bottom: 10px;">📸 Registro Fotográfico</h3>
+                <div class="photo-grid">
+                    <div class="photo-slot" onclick="capturePhoto(this)">
+                        <i class="fas fa-camera"></i>
+                        <span>Foto 1</span>
+                    </div>
+                    <div class="photo-slot" onclick="capturePhoto(this)">
+                        <i class="fas fa-camera"></i>
+                        <span>Foto 2</span>
+                    </div>
+                    <div class="photo-slot" onclick="capturePhoto(this)">
+                        <i class="fas fa-camera"></i>
+                        <span>Foto 3</span>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="font-size: 0.95rem; margin-bottom: 10px;">📝 Observações</h3>
+            <textarea class="observation-input" placeholder="Digite observações adicionais..."></textarea>
+
+            <button class="btn btn-success" onclick="saveStep()">
+                <i class="fas fa-check-circle"></i> Concluir Etapa
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let completedSteps = 3;
+        const totalSteps = 6;
+
+        function openModal(type) {
+            const titles = {
+                'interior': 'Interior',
+                'mecanica': 'Mecânica',
+                'eletrica': 'Elétrica'
+            };
+            
+            const checklists = {
+                'interior': [
+                    'Bancos em bom estado',
+                    'Cintos de segurança funcionais',
+                    'Ar-condicionado funcionando',
+                    'Painel sem avarias',
+                    'Vidros elétricos operantes'
+                ],
+                'mecanica': [
+                    'Nível de óleo adequado',
+                    'Fluido de freio OK',
+                    'Correia em bom estado',
+                    'Sem vazamentos visíveis',
+                    'Motor liga sem ruídos'
+                ],
+                'eletrica': [
+                    'Faróis funcionando',
+                    'Lanternas traseiras OK',
+                    'Setas operantes',
+                    'Bateria com carga',
+                    'Luzes internas OK'
+                ]
+            };
+
+            document.getElementById('modalTitle').textContent = titles[type] || 'Inspeção';
+            
+            const checklist = document.getElementById('checklist');
+            checklist.innerHTML = '';
+            
+            (checklists[type] || checklists['interior']).forEach(item => {
+                checklist.innerHTML += `
+                    <div class="check-item" onclick="toggleCheck(this)">
+                        <div class="checkbox"><i class="fas fa-check"></i></div>
+                        <span class="check-label">${item}</span>
+                    </div>
+                `;
+            });
+
+            // Reset photo slots
+            document.querySelectorAll('.photo-slot').forEach(slot => {
+                slot.classList.remove('filled');
+                slot.querySelector('i').className = 'fas fa-camera';
+            });
+
+            document.getElementById('inspectionModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('inspectionModal').classList.remove('active');
+        }
+
+        function toggleCheck(item) {
+            item.classList.toggle('checked');
+        }
+
+        function capturePhoto(slot) {
+            slot.classList.add('filled');
+            slot.querySelector('i').className = 'fas fa-check-circle';
+            slot.querySelector('span').textContent = 'Capturado';
+        }
+
+        function saveStep() {
+            completedSteps++;
+            if (completedSteps > totalSteps) completedSteps = totalSteps;
+
+            // Update progress
+            const progress = (completedSteps / totalSteps) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('progressText').textContent = `${completedSteps} de ${totalSteps} etapas`;
+
+            // Update step items
+            const steps = document.querySelectorAll('.step-item');
+            steps.forEach((step, index) => {
+                if (index < completedSteps) {
+                    step.classList.remove('active', 'pending');
+                    step.classList.add('completed');
+                    step.querySelector('.step-status').textContent = '✅';
+                } else if (index === completedSteps) {
+                    step.classList.remove('completed', 'pending');
+                    step.classList.add('active');
+                    step.querySelector('.step-status').textContent = '▶️';
+                } else {
+                    step.classList.remove('completed', 'active');
+                    step.classList.add('pending');
+                    step.querySelector('.step-status').textContent = '⏳';
+                }
+            });
+
+            closeModal();
+
+            // Check if completed
+            if (completedSteps === totalSteps) {
+                setTimeout(() => {
+                    alert('🎉 Vistoria concluída com sucesso!');
+                }, 300);
+            }
+        }
+
+        // Nav items
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

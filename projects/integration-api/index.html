@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IntegrationAPI - Middleware Empresarial</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a0f;
+            color: #e2e8f0;
+            min-height: 100vh;
+        }
+
+        .dashboard {
+            display: flex;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: linear-gradient(180deg, #12121a 0%, #0a0a0f 100%);
+            min-height: 100vh;
+            padding: 25px;
+            position: fixed;
+            border-right: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 40px;
+        }
+
+        .logo-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .logo-text span {
+            color: #8b5cf6;
+        }
+
+        .nav-section {
+            margin-bottom: 30px;
+        }
+
+        .nav-title {
+            font-size: 0.7rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            color: #94a3b8;
+            text-decoration: none;
+            border-radius: 10px;
+            margin-bottom: 5px;
+            transition: all 0.3s;
+        }
+
+        .nav-menu a:hover,
+        .nav-menu a.active {
+            background: rgba(99, 102, 241, 0.2);
+            color: #6366f1;
+        }
+
+        .api-status {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: auto;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            background: #10b981;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+            50% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+        }
+
+        .status-text {
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-uptime {
+            font-size: 0.75rem;
+            color: #64748b;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            padding: 30px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-title h1 {
+            font-size: 1.6rem;
+            margin-bottom: 5px;
+        }
+
+        .page-title p {
+            color: #64748b;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 10px 18px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: rgba(99, 102, 241, 0.2);
+            color: #6366f1;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #12121a 0%, #1a1a2e 100%);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+        }
+
+        .stat-icon.indigo { background: rgba(99, 102, 241, 0.2); color: #6366f1; }
+        .stat-icon.green { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .stat-icon.yellow { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+        .stat-icon.red { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+
+        .stat-trend {
+            font-size: 0.8rem;
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+
+        .trend-up { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .trend-down { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #64748b;
+        }
+
+        /* Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 20px;
+        }
+
+        .card {
+            background: linear-gradient(135deg, #12121a 0%, #1a1a2e 100%);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-header h2 {
+            font-size: 1.1rem;
+        }
+
+        /* API Endpoints */
+        .endpoints-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .endpoint-item {
+            background: rgba(10, 10, 15, 0.8);
+            border-radius: 12px;
+            padding: 18px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+
+        .endpoint-item:hover {
+            border-color: rgba(99, 102, 241, 0.5);
+            transform: translateX(5px);
+        }
+
+        .method-badge {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            font-family: 'Fira Code', monospace;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .method-get { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .method-post { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
+        .method-put { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+        .method-delete { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+
+        .endpoint-info {
+            flex: 1;
+        }
+
+        .endpoint-path {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            color: #e2e8f0;
+            margin-bottom: 4px;
+        }
+
+        .endpoint-desc {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        .endpoint-stats {
+            text-align: right;
+        }
+
+        .endpoint-calls {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .endpoint-latency {
+            font-size: 0.75rem;
+            color: #10b981;
+        }
+
+        /* Live Requests */
+        .requests-feed {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .request-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-bottom: 1px solid rgba(99, 102, 241, 0.1);
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .request-status {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .status-200 { background: #10b981; }
+        .status-400 { background: #f59e0b; }
+        .status-500 { background: #ef4444; }
+
+        .request-info {
+            flex: 1;
+        }
+
+        .request-endpoint {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.8rem;
+        }
+
+        .request-time {
+            font-size: 0.7rem;
+            color: #64748b;
+        }
+
+        .request-code {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.8rem;
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+
+        .code-200 { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .code-201 { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
+        .code-400 { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+        .code-500 { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+
+        /* Chart */
+        .chart-container {
+            height: 200px;
+            margin-top: 15px;
+        }
+
+        /* Systems Grid */
+        .systems-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .system-card {
+            background: rgba(10, 10, 15, 0.8);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .system-icon {
+            width: 50px;
+            height: 50px;
+            margin: 0 auto 12px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+        }
+
+        .system-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .system-status {
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .system-status.online { color: #10b981; }
+        .system-status.offline { color: #ef4444; }
+
+        .back-btn {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: rgba(99, 102, 241, 0.9);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-btn:hover {
+            background: #4f46e5;
+        }
+
+        @media (max-width: 1200px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="../../index.html#projects" class="back-btn">
+        <i class="fas fa-arrow-left"></i> Voltar
+    </a>
+
+    <div class="dashboard">
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-code-branch"></i>
+                </div>
+                <div class="logo-text">Integration<span>API</span></div>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-title">Monitoramento</div>
+                <ul class="nav-menu">
+                    <li><a href="#" class="active"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+                    <li><a href="#"><i class="fas fa-plug"></i> Endpoints</a></li>
+                    <li><a href="#"><i class="fas fa-stream"></i> Logs</a></li>
+                    <li><a href="#"><i class="fas fa-bell"></i> Alertas</a></li>
+                </ul>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-title">Configuração</div>
+                <ul class="nav-menu">
+                    <li><a href="#"><i class="fas fa-sitemap"></i> Rotas</a></li>
+                    <li><a href="#"><i class="fas fa-shield-alt"></i> Autenticação</a></li>
+                    <li><a href="#"><i class="fas fa-exchange-alt"></i> Transformações</a></li>
+                    <li><a href="#"><i class="fas fa-cog"></i> Configurações</a></li>
+                </ul>
+            </div>
+
+            <div class="api-status">
+                <div class="status-indicator">
+                    <div class="status-dot"></div>
+                    <span class="status-text">API Online</span>
+                </div>
+                <div class="status-uptime">Uptime: 99.98% (30 dias)</div>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="header">
+                <div class="page-title">
+                    <h1>API Gateway Dashboard</h1>
+                    <p>Monitoramento em tempo real • Atualizado há 5s</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-secondary">
+                        <i class="fas fa-download"></i> Exportar
+                    </button>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Nova Rota
+                    </button>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon indigo"><i class="fas fa-globe"></i></div>
+                        <span class="stat-trend trend-up"><i class="fas fa-arrow-up"></i> 15%</span>
+                    </div>
+                    <div class="stat-value" id="totalRequests">2.4M</div>
+                    <div class="stat-label">Requisições Hoje</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon green"><i class="fas fa-check-circle"></i></div>
+                        <span class="stat-trend trend-up"><i class="fas fa-arrow-up"></i> 2%</span>
+                    </div>
+                    <div class="stat-value">99.2%</div>
+                    <div class="stat-label">Taxa de Sucesso</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon yellow"><i class="fas fa-bolt"></i></div>
+                        <span class="stat-trend trend-down"><i class="fas fa-arrow-down"></i> 8%</span>
+                    </div>
+                    <div class="stat-value">45ms</div>
+                    <div class="stat-label">Latência Média</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon red"><i class="fas fa-exclamation-triangle"></i></div>
+                        <span class="stat-trend trend-down"><i class="fas fa-arrow-down"></i> 25%</span>
+                    </div>
+                    <div class="stat-value">0.8%</div>
+                    <div class="stat-label">Taxa de Erro</div>
+                </div>
+            </div>
+
+            <div class="content-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>🔌 Endpoints Ativos</h2>
+                        <button class="btn btn-secondary" style="padding: 8px 15px; font-size: 0.85rem;">
+                            Ver Todos
+                        </button>
+                    </div>
+                    <div class="endpoints-list">
+                        <div class="endpoint-item">
+                            <span class="method-badge method-get">GET</span>
+                            <div class="endpoint-info">
+                                <div class="endpoint-path">/api/v1/users</div>
+                                <div class="endpoint-desc">Lista todos os usuários</div>
+                            </div>
+                            <div class="endpoint-stats">
+                                <div class="endpoint-calls">45.2K</div>
+                                <div class="endpoint-latency">32ms</div>
+                            </div>
+                        </div>
+                        <div class="endpoint-item">
+                            <span class="method-badge method-post">POST</span>
+                            <div class="endpoint-info">
+                                <div class="endpoint-path">/api/v1/orders</div>
+                                <div class="endpoint-desc">Cria novo pedido</div>
+                            </div>
+                            <div class="endpoint-stats">
+                                <div class="endpoint-calls">28.1K</div>
+                                <div class="endpoint-latency">68ms</div>
+                            </div>
+                        </div>
+                        <div class="endpoint-item">
+                            <span class="method-badge method-get">GET</span>
+                            <div class="endpoint-info">
+                                <div class="endpoint-path">/api/v1/products/{id}</div>
+                                <div class="endpoint-desc">Retorna produto por ID</div>
+                            </div>
+                            <div class="endpoint-stats">
+                                <div class="endpoint-calls">89.5K</div>
+                                <div class="endpoint-latency">25ms</div>
+                            </div>
+                        </div>
+                        <div class="endpoint-item">
+                            <span class="method-badge method-put">PUT</span>
+                            <div class="endpoint-info">
+                                <div class="endpoint-path">/api/v1/inventory</div>
+                                <div class="endpoint-desc">Atualiza estoque</div>
+                            </div>
+                            <div class="endpoint-stats">
+                                <div class="endpoint-calls">12.3K</div>
+                                <div class="endpoint-latency">55ms</div>
+                            </div>
+                        </div>
+                        <div class="endpoint-item">
+                            <span class="method-badge method-delete">DELETE</span>
+                            <div class="endpoint-info">
+                                <div class="endpoint-path">/api/v1/cache</div>
+                                <div class="endpoint-desc">Limpa cache do sistema</div>
+                            </div>
+                            <div class="endpoint-stats">
+                                <div class="endpoint-calls">1.2K</div>
+                                <div class="endpoint-latency">12ms</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 20px;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>📡 Requisições em Tempo Real</h2>
+                        </div>
+                        <div class="requests-feed" id="requestsFeed">
+                            <div class="request-item">
+                                <div class="request-status status-200"></div>
+                                <div class="request-info">
+                                    <div class="request-endpoint">GET /api/v1/users</div>
+                                    <div class="request-time">agora</div>
+                                </div>
+                                <span class="request-code code-200">200</span>
+                            </div>
+                            <div class="request-item">
+                                <div class="request-status status-200"></div>
+                                <div class="request-info">
+                                    <div class="request-endpoint">POST /api/v1/orders</div>
+                                    <div class="request-time">1s atrás</div>
+                                </div>
+                                <span class="request-code code-201">201</span>
+                            </div>
+                            <div class="request-item">
+                                <div class="request-status status-400"></div>
+                                <div class="request-info">
+                                    <div class="request-endpoint">PUT /api/v1/inventory</div>
+                                    <div class="request-time">3s atrás</div>
+                                </div>
+                                <span class="request-code code-400">400</span>
+                            </div>
+                            <div class="request-item">
+                                <div class="request-status status-200"></div>
+                                <div class="request-info">
+                                    <div class="request-endpoint">GET /api/v1/products/42</div>
+                                    <div class="request-time">5s atrás</div>
+                                </div>
+                                <span class="request-code code-200">200</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>🔗 Sistemas Integrados</h2>
+                        </div>
+                        <div class="systems-grid">
+                            <div class="system-card">
+                                <div class="system-icon" style="background: rgba(239, 68, 68, 0.2); color: #ef4444;">
+                                    <i class="fas fa-database"></i>
+                                </div>
+                                <div class="system-name">Oracle DB</div>
+                                <div class="system-status online">
+                                    <i class="fas fa-circle" style="font-size: 6px;"></i> Online
+                                </div>
+                            </div>
+                            <div class="system-card">
+                                <div class="system-icon" style="background: rgba(59, 130, 246, 0.2); color: #3b82f6;">
+                                    <i class="fab fa-salesforce"></i>
+                                </div>
+                                <div class="system-name">SAP</div>
+                                <div class="system-status online">
+                                    <i class="fas fa-circle" style="font-size: 6px;"></i> Online
+                                </div>
+                            </div>
+                            <div class="system-card">
+                                <div class="system-icon" style="background: rgba(16, 185, 129, 0.2); color: #10b981;">
+                                    <i class="fas fa-file-invoice"></i>
+                                </div>
+                                <div class="system-name">Fiscal</div>
+                                <div class="system-status online">
+                                    <i class="fas fa-circle" style="font-size: 6px;"></i> Online
+                                </div>
+                            </div>
+                            <div class="system-card">
+                                <div class="system-icon" style="background: rgba(245, 158, 11, 0.2); color: #f59e0b;">
+                                    <i class="fas fa-warehouse"></i>
+                                </div>
+                                <div class="system-name">WMS</div>
+                                <div class="system-status online">
+                                    <i class="fas fa-circle" style="font-size: 6px;"></i> Online
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const endpoints = [
+            { method: 'GET', path: '/api/v1/users', codes: [200, 200, 200, 200, 400] },
+            { method: 'POST', path: '/api/v1/orders', codes: [201, 201, 400, 201] },
+            { method: 'GET', path: '/api/v1/products/42', codes: [200, 200, 200, 404] },
+            { method: 'PUT', path: '/api/v1/inventory', codes: [200, 400, 200] },
+            { method: 'DELETE', path: '/api/v1/cache', codes: [200, 200] },
+            { method: 'GET', path: '/api/v1/health', codes: [200] }
+        ];
+
+        function addRequest() {
+            const feed = document.getElementById('requestsFeed');
+            const endpoint = endpoints[Math.floor(Math.random() * endpoints.length)];
+            const code = endpoint.codes[Math.floor(Math.random() * endpoint.codes.length)];
+
+            let statusClass, codeClass;
+            if (code >= 200 && code < 300) {
+                statusClass = 'status-200';
+                codeClass = code === 201 ? 'code-201' : 'code-200';
+            } else if (code >= 400 && code < 500) {
+                statusClass = 'status-400';
+                codeClass = 'code-400';
+            } else {
+                statusClass = 'status-500';
+                codeClass = 'code-500';
+            }
+
+            const requestItem = document.createElement('div');
+            requestItem.className = 'request-item';
+            requestItem.innerHTML = `
+                <div class="request-status ${statusClass}"></div>
+                <div class="request-info">
+                    <div class="request-endpoint">${endpoint.method} ${endpoint.path}</div>
+                    <div class="request-time">agora</div>
+                </div>
+                <span class="request-code ${codeClass}">${code}</span>
+            `;
+
+            feed.insertBefore(requestItem, feed.firstChild);
+
+            // Update times on existing items
+            const items = feed.querySelectorAll('.request-item');
+            items.forEach((item, index) => {
+                if (index > 0) {
+                    const timeEl = item.querySelector('.request-time');
+                    timeEl.textContent = `${index * 2}s atrás`;
+                }
+            });
+
+            // Remove old items
+            if (items.length > 8) {
+                feed.removeChild(feed.lastChild);
+            }
+        }
+
+        // Simulate live requests
+        setInterval(addRequest, 2000);
+
+        // Update total requests counter
+        setInterval(() => {
+            const el = document.getElementById('totalRequests');
+            const current = parseFloat(el.textContent);
+            el.textContent = (current + 0.1).toFixed(1) + 'M';
+        }, 5000);
+    </script>
+</body>
+</html>
