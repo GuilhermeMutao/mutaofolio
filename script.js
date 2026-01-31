@@ -6,7 +6,32 @@ window.addEventListener('load', () => {
             preloader.classList.add('hidden');
         }, 1500);
     }
+    
+    // Iniciar skeleton loading para projetos
+    initProjectsSkeleton();
 });
+
+// ===== SKELETON LOADING PARA PROJETOS =====
+function initProjectsSkeleton() {
+    const skeletonGrid = document.getElementById('skeleton-grid');
+    const projectsGrid = document.getElementById('projects-grid');
+    
+    if (!skeletonGrid || !projectsGrid) return;
+    
+    // Simular tempo de carregamento (1.8s após o preloader)
+    setTimeout(() => {
+        // Esconder skeleton
+        skeletonGrid.classList.add('hidden');
+        
+        // Mostrar projetos com animação
+        projectsGrid.classList.add('loaded');
+        
+        // Remover skeleton do DOM após a animação
+        setTimeout(() => {
+            skeletonGrid.style.display = 'none';
+        }, 300);
+    }, 1800);
+}
 
 // ===== CURSOR CUSTOMIZADO =====
 const cursor = document.getElementById('cursor');
@@ -47,8 +72,24 @@ window.addEventListener('scroll', () => {
 // Menu mobile
 if (hamburger) {
     hamburger.addEventListener('click', () => {
+        const isExpanded = hamburger.classList.contains('active');
         hamburger.classList.toggle('active');
         navMenu.classList.toggle('active');
+        
+        // Acessibilidade - atualizar aria-expanded
+        hamburger.setAttribute('aria-expanded', !isExpanded);
+        hamburger.setAttribute('aria-label', isExpanded ? 'Abrir menu de navegação' : 'Fechar menu de navegação');
+    });
+    
+    // Suporte a teclado - fechar menu com Escape
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && navMenu.classList.contains('active')) {
+            hamburger.classList.remove('active');
+            navMenu.classList.remove('active');
+            hamburger.setAttribute('aria-expanded', 'false');
+            hamburger.setAttribute('aria-label', 'Abrir menu de navegação');
+            hamburger.focus();
+        }
     });
 }
 
@@ -131,31 +172,43 @@ function typeEffect() {
 
 // ===== PARTICLES =====
 const particles = document.getElementById('particles');
+let particleCount = 0;
+const MAX_PARTICLES = 30;
 
 function createParticle() {
     if (!particles) return;
     
+    // Limitar número de partículas para performance
+    if (particleCount >= MAX_PARTICLES) return;
+    
+    particleCount++;
     const particle = document.createElement('div');
+    const size = Math.random() * 4 + 2;
+    
     particle.style.cssText = `
         position: absolute;
-        width: ${Math.random() * 5 + 2}px;
-        height: ${Math.random() * 5 + 2}px;
-        background: rgba(99, 102, 241, ${Math.random() * 0.5 + 0.2});
+        width: ${size}px;
+        height: ${size}px;
+        background: rgba(99, 102, 241, ${Math.random() * 0.4 + 0.1});
         border-radius: 50%;
         left: ${Math.random() * 100}%;
         top: ${Math.random() * 100}%;
-        animation: particleFloat ${Math.random() * 10 + 10}s linear infinite;
+        animation: particleFloat ${Math.random() * 8 + 12}s linear forwards;
         pointer-events: none;
+        will-change: transform, opacity;
     `;
     particles.appendChild(particle);
 
+    // Remover partícula após animação
+    const animDuration = parseFloat(particle.style.animationDuration) * 1000;
     setTimeout(() => {
         particle.remove();
-    }, 20000);
+        particleCount--;
+    }, animDuration);
 }
 
-// Criar partículas periodicamente
-setInterval(createParticle, 500);
+// Criar partículas com intervalo maior para performance
+setInterval(createParticle, 800);
 
 // Adicionar animação de partículas ao CSS
 const particleStyle = document.createElement('style');
@@ -220,63 +273,124 @@ window.addEventListener('scroll', () => {
 const contactForm = document.getElementById('contact-form');
 
 if (contactForm) {
-    contactForm.addEventListener('submit', (e) => {
+    contactForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         
         const btn = contactForm.querySelector('button');
         const originalText = btn.innerHTML;
+        
+        // Estado de loading
         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
         btn.disabled = true;
-
-        setTimeout(() => {
-            btn.innerHTML = '<i class="fas fa-check"></i> Mensagem Enviada!';
-            btn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
-            showToast('✅ Mensagem enviada com sucesso!');
-
+        btn.style.opacity = '0.7';
+        
+        try {
+            const formData = new FormData(contactForm);
+            
+            const response = await fetch(contactForm.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+            
+            if (response.ok) {
+                // Sucesso
+                btn.innerHTML = '<i class="fas fa-check"></i> Mensagem Enviada!';
+                btn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+                btn.style.opacity = '1';
+                showToast('✅ Mensagem enviada com sucesso! Retornarei em breve.');
+                contactForm.reset();
+                
+                // Confetti celebration
+                if (typeof confetti === 'function') {
+                    confetti({
+                        particleCount: 100,
+                        spread: 70,
+                        origin: { y: 0.6 }
+                    });
+                }
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.style.background = '';
+                    btn.disabled = false;
+                }, 4000);
+            } else {
+                throw new Error('Erro no envio');
+            }
+        } catch (error) {
+            // Erro - oferece alternativa
+            btn.innerHTML = '<i class="fas fa-times"></i> Erro no envio';
+            btn.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
+            btn.style.opacity = '1';
+            
+            showToast('❌ Erro ao enviar. Tente pelo WhatsApp ou email direto!');
+            
             setTimeout(() => {
                 btn.innerHTML = originalText;
                 btn.style.background = '';
                 btn.disabled = false;
-                contactForm.reset();
             }, 3000);
-        }, 2000);
+        }
     });
 }
 
-// ===== ANIMAÇÕES DE SCROLL =====
+// Verificar se veio de um envio bem-sucedido (redirect do Formspree)
+if (window.location.search.includes('enviado=true')) {
+    showToast('✅ Mensagem enviada com sucesso! Obrigado pelo contato.');
+    // Limpar URL
+    window.history.replaceState({}, document.title, window.location.pathname);
+}
+
+// ===== ANIMAÇÕES DE SCROLL (Otimizado) =====
 const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
+    threshold: 0.15,
+    rootMargin: '0px 0px -80px 0px'
 };
+
+// Cache para melhor performance
+let animateStyleAdded = false;
 
 const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
-            entry.target.classList.add('animate');
+            // Usar requestAnimationFrame para melhor performance
+            requestAnimationFrame(() => {
+                entry.target.classList.add('animate');
+            });
+            // Parar de observar após animar
+            observer.unobserve(entry.target);
         }
     });
 }, observerOptions);
 
-// Observar elementos para animação
-document.querySelectorAll('.skill-category, .project-card, .timeline-item, .contact-item').forEach(el => {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(30px)';
-    el.style.transition = 'all 0.6s ease';
+// Adicionar estilos de animação uma única vez
+if (!animateStyleAdded) {
+    const animateStyle = document.createElement('style');
+    animateStyle.textContent = `
+        .animate-ready {
+            opacity: 0;
+            transform: translateY(25px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .animate-ready.animate {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+        }
+    `;
+    document.head.appendChild(animateStyle);
+    animateStyleAdded = true;
+}
+
+// Observar elementos para animação (usando classe ao invés de inline styles)
+document.querySelectorAll('.skill-category, .project-card, .timeline-item, .contact-item').forEach((el, index) => {
+    el.classList.add('animate-ready');
+    // Adicionar delay escalonado para efeito cascata
+    el.style.transitionDelay = `${index * 0.05}s`;
     observer.observe(el);
 });
-
-// Adicionar classe animate
-const animateStyle = document.createElement('style');
-animateStyle.textContent = `
-    .skill-category.animate,
-    .project-card.animate,
-    .timeline-item.animate,
-    .contact-item.animate {
-        opacity: 1 !important;
-        transform: translateY(0) !important;
-    }
-`;
-document.head.appendChild(animateStyle);
 
 // ===== SMOOTH SCROLL PARA LINKS INTERNOS =====
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -293,12 +407,19 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// ===== EFEITO PARALLAX NO HERO =====
+// ===== EFEITO PARALLAX NO HERO (Otimizado) =====
+let ticking = false;
 window.addEventListener('scroll', () => {
-    const hero = document.querySelector('.hero');
-    const scrolled = window.scrollY;
-    if (hero && scrolled < window.innerHeight) {
-        hero.style.backgroundPositionY = scrolled * 0.5 + 'px';
+    if (!ticking) {
+        requestAnimationFrame(() => {
+            const hero = document.querySelector('.hero');
+            const scrolled = window.scrollY;
+            if (hero && scrolled < window.innerHeight) {
+                hero.style.backgroundPositionY = scrolled * 0.3 + 'px';
+            }
+            ticking = false;
+        });
+        ticking = true;
     }
 });
 
@@ -337,23 +458,66 @@ document.querySelectorAll('.skill-item').forEach(skill => {
     });
 });
 
-// ===== TEMA (DARK/LIGHT) =====
-function toggleTheme() {
+// ===== TEMA (DARK/LIGHT) COM TRANSIÇÃO SUAVE =====
+function toggleTheme(event) {
+    // Adiciona classe de transição
+    document.body.classList.add('theme-transitioning');
+    
+    // Remove após a animação
+    setTimeout(() => {
+        document.body.classList.remove('theme-transitioning');
+    }, 500);
+    
     document.body.classList.toggle('light-theme');
     const isLight = document.body.classList.contains('light-theme');
     localStorage.setItem('theme', isLight ? 'light' : 'dark');
     
     const icon = document.getElementById('theme-icon');
+    const toggle = document.getElementById('theme-toggle');
+    
     if (icon) {
-        icon.className = isLight ? 'fas fa-sun' : 'fas fa-moon';
+        // Animação de rotação no ícone
+        icon.style.transform = 'rotate(360deg)';
+        icon.style.transition = 'transform 0.5s ease';
+        setTimeout(() => {
+            icon.className = isLight ? 'fas fa-sun' : 'fas fa-moon';
+            icon.style.transform = 'rotate(0deg)';
+        }, 250);
     }
+    
+    // Acessibilidade - atualizar aria-pressed e aria-label
+    if (toggle) {
+        toggle.setAttribute('aria-pressed', isLight);
+        toggle.setAttribute('aria-label', isLight ? 'Ativar tema escuro' : 'Ativar tema claro');
+    }
+    
+    // Anunciar mudança para leitores de tela
+    announceToScreenReader(isLight ? 'Tema claro ativado' : 'Tema escuro ativado');
+}
+
+// Função para anunciar mudanças para leitores de tela
+function announceToScreenReader(message) {
+    const announcement = document.createElement('div');
+    announcement.setAttribute('role', 'status');
+    announcement.setAttribute('aria-live', 'polite');
+    announcement.setAttribute('aria-atomic', 'true');
+    announcement.className = 'sr-only';
+    announcement.textContent = message;
+    document.body.appendChild(announcement);
+    
+    setTimeout(() => announcement.remove(), 1000);
 }
 
 // Inicializar tema
 if (localStorage.getItem('theme') === 'light') {
     document.body.classList.add('light-theme');
     const icon = document.getElementById('theme-icon');
+    const toggle = document.getElementById('theme-toggle');
     if (icon) icon.className = 'fas fa-sun';
+    if (toggle) {
+        toggle.setAttribute('aria-pressed', 'true');
+        toggle.setAttribute('aria-label', 'Ativar tema escuro');
+    }
 }
 
 // Botão de toggle tema
@@ -559,7 +723,38 @@ document.addEventListener('DOMContentLoaded', () => {
     initMemoryGame();
     initTypingTest();
     initTestimonials();
+    initCertFilters();
 });
+
+// ===== FILTRO DE CERTIFICADOS =====
+function initCertFilters() {
+    const filterBtns = document.querySelectorAll('.cert-filter-btn');
+    const certCards = document.querySelectorAll('.cert-card');
+    
+    if (!filterBtns.length || !certCards.length) return;
+    
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const filter = btn.dataset.filter;
+            
+            // Atualiza botão ativo
+            filterBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            // Filtra os cards
+            certCards.forEach(card => {
+                const category = card.dataset.category;
+                
+                if (filter === 'all' || category === filter) {
+                    card.classList.remove('hidden');
+                    card.style.animation = 'fadeInUp 0.4s ease forwards';
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+        });
+    });
+}
 
 // ===== PLAYGROUND TABS =====
 function initPlaygroundTabs() {
@@ -1359,4 +1554,1069 @@ function initTypingTest() {
     if (timeEl) timeEl.textContent = durSelect?.value || 60;
 }
 
+// ===== FUNCIONALIDADES EXTRAS =====
+
+// Toast de Boas-vindas
+function showWelcomeToast() {
+    const hour = new Date().getHours();
+    let greeting = '';
+    let emoji = '';
+    
+    if (hour >= 5 && hour < 12) {
+        greeting = 'Bom dia';
+        emoji = '☀️';
+    } else if (hour >= 12 && hour < 18) {
+        greeting = 'Boa tarde';
+        emoji = '🌤️';
+    } else {
+        greeting = 'Boa noite';
+        emoji = '🌙';
+    }
+    
+    const isReturning = localStorage.getItem('visited');
+    const message = isReturning 
+        ? `${emoji} ${greeting}! Que bom te ver de novo!`
+        : `${emoji} ${greeting}! Seja bem-vindo ao meu portfólio!`;
+    
+    setTimeout(() => {
+        showToast(message, 4000);
+        localStorage.setItem('visited', 'true');
+    }, 2500);
+}
+
+// Mostrar toast customizado
+function showToast(message, duration = 3000) {
+    // Remove toast existente
+    const existingToast = document.querySelector('.custom-toast');
+    if (existingToast) existingToast.remove();
+    
+    const toast = document.createElement('div');
+    toast.className = 'custom-toast';
+    toast.innerHTML = `
+        <span>${message}</span>
+        <button onclick="this.parentElement.remove()" aria-label="Fechar">&times;</button>
+    `;
+    document.body.appendChild(toast);
+    
+    // Animar entrada
+    setTimeout(() => toast.classList.add('show'), 10);
+    
+    // Auto-remover
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+    }, duration);
+}
+
+// Scroll Reveal Animation
+function initScrollReveal() {
+    const revealElements = document.querySelectorAll('.section-title, .skill-category, .timeline-item, .education-card, .about-text, .about-image, .contact-info, .contact-form-container');
+    
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('revealed');
+                revealObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+    
+    revealElements.forEach(el => {
+        el.classList.add('reveal-element');
+        revealObserver.observe(el);
+    });
+}
+
+// Easter Eggs
+function initEasterEggs() {
+    let konamiCode = [];
+    const konamiSequence = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+    
+    // Konami Code
+    document.addEventListener('keydown', (e) => {
+        konamiCode.push(e.key);
+        konamiCode = konamiCode.slice(-10);
+        
+        if (konamiCode.join('') === konamiSequence.join('')) {
+            activatePartyMode();
+        }
+    });
+    
+    // Click secreto no logo
+    let logoClicks = 0;
+    const logo = document.querySelector('.nav-logo');
+    if (logo) {
+        logo.addEventListener('click', (e) => {
+            logoClicks++;
+            if (logoClicks === 7) {
+                e.preventDefault();
+                showToast('🎉 Você descobriu o clique secreto! Você é curioso! 😄');
+                logoClicks = 0;
+                confettiEffect();
+            }
+            setTimeout(() => logoClicks = 0, 2000);
+        });
+    }
+    
+    // Console Easter Egg
+    console.log('%c🚀 Olá, dev curioso!', 'font-size: 24px; font-weight: bold; color: #6366f1;');
+    console.log('%cQue bom que você veio explorar o console!', 'font-size: 14px; color: #10b981;');
+    console.log('%c💡 Dica: Tente o código Konami (↑↑↓↓←→←→BA)', 'font-size: 12px; color: #f59e0b;');
+    console.log('%c📧 guilhermemutao@gmail.com', 'font-size: 12px; color: #94a3b8;');
+}
+
+// Party Mode (Konami Code)
+function activatePartyMode() {
+    showToast('🎮 PARTY MODE ATIVADO! 🎉');
+    
+    document.body.style.animation = 'rainbow 2s linear infinite';
+    
+    // Adicionar CSS de rainbow se não existir
+    if (!document.getElementById('party-style')) {
+        const style = document.createElement('style');
+        style.id = 'party-style';
+        style.textContent = `
+            @keyframes rainbow {
+                0% { filter: hue-rotate(0deg); }
+                100% { filter: hue-rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    
+    confettiEffect();
+    
+    // Desativar após 5 segundos
+    setTimeout(() => {
+        document.body.style.animation = '';
+        showToast('Party mode desativado 😴');
+    }, 5000);
+}
+
+// Efeito de Confete
+function confettiEffect() {
+    const colors = ['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#ec4899', '#8b5cf6'];
+    const confettiCount = 100;
+    
+    for (let i = 0; i < confettiCount; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.cssText = `
+            position: fixed;
+            width: ${Math.random() * 10 + 5}px;
+            height: ${Math.random() * 10 + 5}px;
+            background: ${colors[Math.floor(Math.random() * colors.length)]};
+            left: ${Math.random() * 100}vw;
+            top: -20px;
+            border-radius: ${Math.random() > 0.5 ? '50%' : '0'};
+            pointer-events: none;
+            z-index: 99999;
+            animation: confetti-fall ${Math.random() * 3 + 2}s linear forwards;
+        `;
+        document.body.appendChild(confetti);
+        
+        setTimeout(() => confetti.remove(), 5000);
+    }
+    
+    // Adicionar animação se não existir
+    if (!document.getElementById('confetti-style')) {
+        const style = document.createElement('style');
+        style.id = 'confetti-style';
+        style.textContent = `
+            @keyframes confetti-fall {
+                0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+                100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+}
+
+// Título da aba dinâmico
+function initDynamicTitle() {
+    const originalTitle = document.title;
+    let isVisible = true;
+    
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            isVisible = false;
+            document.title = '👋 Ei, volta aqui!';
+        } else {
+            isVisible = true;
+            document.title = '🎉 Que bom que voltou!';
+            setTimeout(() => {
+                document.title = originalTitle;
+            }, 2000);
+        }
+    });
+}
+
+// Efeito de Click Ripple em botões
+function initRippleEffect() {
+    document.querySelectorAll('.btn').forEach(button => {
+        button.addEventListener('click', function(e) {
+            const ripple = document.createElement('span');
+            const rect = this.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = e.clientX - rect.left - size / 2;
+            const y = e.clientY - rect.top - size / 2;
+            
+            ripple.style.cssText = `
+                position: absolute;
+                width: ${size}px;
+                height: ${size}px;
+                background: rgba(255,255,255,0.3);
+                border-radius: 50%;
+                left: ${x}px;
+                top: ${y}px;
+                transform: scale(0);
+                animation: ripple 0.6s ease-out;
+                pointer-events: none;
+            `;
+            
+            this.style.position = 'relative';
+            this.style.overflow = 'hidden';
+            this.appendChild(ripple);
+            
+            setTimeout(() => ripple.remove(), 600);
+        });
+    });
+    
+    // Adicionar animação se não existir
+    if (!document.getElementById('ripple-style')) {
+        const style = document.createElement('style');
+        style.id = 'ripple-style';
+        style.textContent = `
+            @keyframes ripple {
+                to { transform: scale(4); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+}
+
+// Parallax suave no hero
+function initParallax() {
+    const hero = document.querySelector('.hero');
+    const heroContent = document.querySelector('.hero-content');
+    
+    if (hero && heroContent) {
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            if (scrolled < window.innerHeight) {
+                heroContent.style.transform = `translateY(${scrolled * 0.3}px)`;
+                heroContent.style.opacity = 1 - (scrolled / window.innerHeight) * 0.5;
+            }
+        });
+    }
+}
+
+// Cursor trail effect melhorado
+function initCursorTrail() {
+    const trail = [];
+    const trailLength = 8;
+    
+    for (let i = 0; i < trailLength; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'cursor-trail';
+        dot.style.cssText = `
+            position: fixed;
+            width: ${8 - i}px;
+            height: ${8 - i}px;
+            background: rgba(99, 102, 241, ${0.5 - i * 0.05});
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            transition: transform 0.1s ease;
+            opacity: 0;
+        `;
+        document.body.appendChild(dot);
+        trail.push(dot);
+    }
+    
+    let mouseX = 0, mouseY = 0;
+    const trailPositions = [];
+    
+    document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+    });
+    
+    function animateTrail() {
+        trailPositions.unshift({ x: mouseX, y: mouseY });
+        trailPositions.splice(trailLength);
+        
+        trail.forEach((dot, i) => {
+            const pos = trailPositions[i] || { x: mouseX, y: mouseY };
+            dot.style.left = pos.x + 'px';
+            dot.style.top = pos.y + 'px';
+            dot.style.opacity = mouseX > 0 ? 1 : 0;
+        });
+        
+        requestAnimationFrame(animateTrail);
+    }
+    
+    animateTrail();
+}
+
+// Inicializar todas as funcionalidades extras
+document.addEventListener('DOMContentLoaded', () => {
+    showWelcomeToast();
+    initScrollReveal();
+    initEasterEggs();
+    initDynamicTitle();
+    initRippleEffect();
+    initParallax();
+    initScrollProgress();
+    initMusicPlayer();
+    initTerminal();
+    initGuestbook();
+    initCursorBySection();
+    init3DTilt();
+    initInteractiveParticles();
+    initGlassmorphism();
+    // initCursorTrail(); // Descomente para ativar trail do cursor
+});
+
+// ===== SCROLL PROGRESS BAR =====
+function initScrollProgress() {
+    const progressBar = document.getElementById('scroll-progress');
+    if (!progressBar) return;
+    
+    window.addEventListener('scroll', () => {
+        const scrollTop = window.pageYOffset;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const scrollPercent = (scrollTop / docHeight) * 100;
+        progressBar.style.width = scrollPercent + '%';
+    });
+}
+
+// ===== MUSIC PLAYER =====
+function initMusicPlayer() {
+    const player = document.getElementById('music-player');
+    const toggle = document.getElementById('music-toggle');
+    const icon = document.getElementById('music-icon');
+    const volumeSlider = document.getElementById('music-volume');
+    
+    if (!player || !toggle) return;
+    
+    // Criar elemento de áudio com stream de lo-fi
+    const audio = new Audio();
+    audio.src = 'https://streams.ilovemusic.de/iloveradio17.mp3'; // Lo-Fi stream
+    audio.volume = 0.3;
+    audio.loop = true;
+    
+    let isPlaying = false;
+    
+    toggle.addEventListener('click', () => {
+        if (isPlaying) {
+            audio.pause();
+            icon.className = 'fas fa-play';
+            player.classList.remove('playing');
+            toggle.classList.remove('playing');
+        } else {
+            audio.play().catch(() => {
+                showToast('🔇 Clique novamente para tocar música');
+            });
+            icon.className = 'fas fa-pause';
+            player.classList.add('playing');
+            toggle.classList.add('playing');
+        }
+        isPlaying = !isPlaying;
+    });
+    
+    if (volumeSlider) {
+        volumeSlider.addEventListener('input', (e) => {
+            audio.volume = e.target.value / 100;
+        });
+    }
+}
+
+// ===== TERMINAL INTERATIVO =====
+function initTerminal() {
+    const input = document.getElementById('terminal-input');
+    const output = document.getElementById('terminal-output');
+    const clearBtn = document.getElementById('terminal-clear');
+    
+    if (!input || !output) return;
+    
+    const commands = {
+        help: () => `
+<span class="terminal-text info">Comandos disponíveis:</span>
+  <span class="cmd-highlight">about</span>      - Sobre mim
+  <span class="cmd-highlight">skills</span>     - Minhas habilidades
+  <span class="cmd-highlight">projects</span>   - Meus projetos
+  <span class="cmd-highlight">contact</span>    - Informações de contato
+  <span class="cmd-highlight">social</span>     - Redes sociais
+  <span class="cmd-highlight">experience</span> - Experiência profissional
+  <span class="cmd-highlight">education</span>  - Formação acadêmica
+  <span class="cmd-highlight">coffee</span>     - ☕ Contador de cafés
+  <span class="cmd-highlight">joke</span>       - Piada de programador
+  <span class="cmd-highlight">matrix</span>     - 🟢 Modo Matrix
+  <span class="cmd-highlight">clear</span>      - Limpar terminal
+  <span class="cmd-highlight">exit</span>       - Sair (spoiler: não funciona 😄)
+        `,
+        about: () => `
+<span class="terminal-ascii">
+   _____ __  __ 
+  / ____|  \\/  |
+ | |  __| \\  / |
+ | | |_ | |\\/| |
+ | |__| | |  | |
+  \\_____|_|  |_|
+</span>
+<span class="terminal-text success">Guilherme Mutão</span>
+<span class="terminal-text">Full-Stack Developer | Angular | Java | Node.js</span>
+<span class="terminal-text">📍 Uberaba, MG - Brasil</span>
+<span class="terminal-text">💼 Atualmente na Radix</span>
+<span class="terminal-text">🎓 Pós-graduando em Data Science</span>
+        `,
+        skills: () => `
+<span class="terminal-text info">💻 Habilidades Técnicas:</span>
+
+<span class="terminal-text success">Front-end:</span> Angular, TypeScript, RxJS, HTML5, CSS3, React
+<span class="terminal-text success">Back-end:</span> Node.js, Java, Python, PHP, REST APIs
+<span class="terminal-text success">Databases:</span> Oracle, PostgreSQL, MySQL, MongoDB
+<span class="terminal-text success">Tools:</span> Git, Docker, Scrum, CI/CD, Linux
+        `,
+        projects: () => `
+<span class="terminal-text info">📁 Projetos em Destaque:</span>
+
+1. <span class="cmd-highlight">SGA</span> - Sistema de Gestão de Atletas
+2. <span class="cmd-highlight">LogísticaHub</span> - Gestão de Frotas
+3. <span class="cmd-highlight">IPTU Digital</span> - Portal do Contribuinte
+4. <span class="cmd-highlight">IntegrationAPI</span> - Middleware Empresarial
+5. <span class="cmd-highlight">ScrumAnalytics</span> - Métricas de Time
+6. <span class="cmd-highlight">EventCheck</span> - Check-in por QR Code
+7. <span class="cmd-highlight">SmartBot</span> - Atendimento Automatizado
+8. <span class="cmd-highlight">EstoqueSmart</span> - Gestão de Inventário
+9. <span class="cmd-highlight">VistoriaApp</span> - Inspeção de Veículos
+
+<span class="terminal-text">Digite o nome do projeto para mais detalhes!</span>
+        `,
+        contact: () => `
+<span class="terminal-text info">📬 Entre em contato:</span>
+
+📧 Email: <span class="cmd-highlight">guilhermemutao@gmail.com</span>
+📱 WhatsApp: <span class="cmd-highlight">+55 34 99768-0592</span>
+🌐 Website: <span class="cmd-highlight">guilhermemutao.dev</span>
+        `,
+        social: () => `
+<span class="terminal-text info">🌐 Redes Sociais:</span>
+
+<span class="terminal-text success">LinkedIn:</span> linkedin.com/in/guilhermemutao
+<span class="terminal-text success">GitHub:</span> github.com/GuilhermeMutao
+<span class="terminal-text success">Email:</span> guilhermemutao@gmail.com
+        `,
+        experience: () => `
+<span class="terminal-text info">💼 Experiência Profissional:</span>
+
+<span class="terminal-text success">2026 - Presente</span> | Full-Stack Developer @ Radix
+    → Angular, Java, TypeScript, Oracle DB
+
+<span class="terminal-text success">2023 - 2026</span> | Full-Stack Developer @ Bravo Logistics
+    → Angular, Node.js, Python, PostgreSQL
+
+<span class="terminal-text success">2022 - 2023</span> | Developer @ Codiub
+    → Angular, PHP, Java, MySQL
+        `,
+        education: () => `
+<span class="terminal-text info">🎓 Formação Acadêmica:</span>
+
+<span class="terminal-text success">2024 - 2025</span> | Pós-graduação em Data Science
+    → Descomplica Faculdade Digital
+
+<span class="terminal-text success">2020 - 2023</span> | Tecnólogo em ADS
+    → IFTM - Instituto Federal do Triângulo Mineiro
+        `,
+        coffee: () => {
+            let coffees = parseInt(localStorage.getItem('coffeeCount') || '0');
+            coffees++;
+            localStorage.setItem('coffeeCount', coffees);
+            return `<span class="terminal-text">☕ Contador de cafés: <span class="cmd-highlight">${coffees}</span> xícaras!</span>
+<span class="terminal-text">Mais um café para continuar codando! ☕😄</span>`;
+        },
+        joke: () => {
+            const jokes = [
+                "Por que o programador usa óculos? Porque ele não consegue C#! 😄",
+                "Quantos programadores são necessários para trocar uma lâmpada? Nenhum, isso é problema de hardware! 💡",
+                "Por que programadores confundem Halloween com Natal? Porque OCT 31 = DEC 25! 🎃🎄",
+                "Um SQL query entra num bar, vai até duas mesas e pergunta: 'Posso juntar vocês?' 🍺",
+                "!false - É engraçado porque é true! 😂",
+                "Existem 10 tipos de pessoas: as que entendem binário e as que não! 🔢",
+                "Programador é a única profissão onde você pode dizer 'funciona na minha máquina' e isso ser uma defesa válida! 💻"
+            ];
+            return `<span class="terminal-text">${jokes[Math.floor(Math.random() * jokes.length)]}</span>`;
+        },
+        matrix: () => {
+            document.body.style.filter = 'hue-rotate(80deg) saturate(1.5)';
+            setTimeout(() => {
+                document.body.style.filter = '';
+            }, 5000);
+            return `<span class="terminal-text success">🟢 MODO MATRIX ATIVADO! (5 segundos)</span>
+<span class="terminal-text">Wake up, Neo... The Matrix has you...</span>`;
+        },
+        clear: () => {
+            output.innerHTML = '';
+            return null;
+        },
+        exit: () => `<span class="terminal-text error">Você realmente achou que ia funcionar? 😄</span>
+<span class="terminal-text">Não tem como sair dessa jornada de código!</span>`,
+        ls: () => `<span class="terminal-text">about.txt  skills.json  projects/  contact.md  README.md</span>`,
+        pwd: () => `<span class="terminal-text">/home/visitor/gm-portfolio</span>`,
+        whoami: () => `<span class="terminal-text">visitor (convidado especial! 🌟)</span>`,
+        date: () => `<span class="terminal-text">${new Date().toLocaleString('pt-BR')}</span>`,
+        echo: (args) => `<span class="terminal-text">${args.join(' ') || ''}</span>`,
+        sudo: () => `<span class="terminal-text error">Nice try! Mas você não tem permissão de superusuário aqui 😏</span>`,
+        rm: () => `<span class="terminal-text error">🚫 Operação negada! Você está tentando destruir meu portfólio? 😱</span>`,
+        cat: (args) => {
+            if (args[0] === 'README.md') {
+                return `<span class="terminal-text"># Bem-vindo ao Portfolio de Guilherme Mutão!</span>
+<span class="terminal-text">Este é um portfólio interativo com muitas surpresas.</span>
+<span class="terminal-text">Explore os comandos digitando <span class="cmd-highlight">help</span></span>`;
+            }
+            return `<span class="terminal-text error">cat: ${args[0] || 'arquivo'}: Arquivo não encontrado</span>`;
+        },
+        neofetch: () => `
+<span class="terminal-ascii" style="color: #6366f1;">
+       _,met\$\$\$\$\$gg.          </span><span class="terminal-text success">visitor@gm-portfolio</span>
+<span class="terminal-ascii" style="color: #6366f1;">    ,g\$\$\$\$\$\$\$\$\$\$\$\$\$\$\$P.       </span><span class="terminal-text">-------------------</span>
+<span class="terminal-ascii" style="color: #6366f1;">  ,g\$\$P"     """Y\$\$."".        </span><span class="terminal-text"><span class="cmd-highlight">OS:</span> Portfolio OS 2.0</span>
+<span class="terminal-ascii" style="color: #6366f1;"> ,\$\$P'              \`\$\$\$.       </span><span class="terminal-text"><span class="cmd-highlight">Host:</span> guilhermemutao.dev</span>
+<span class="terminal-ascii" style="color: #6366f1;">',\$\$P       ,ggs.     \`\$\$b:     </span><span class="terminal-text"><span class="cmd-highlight">Kernel:</span> HTML5 + CSS3 + JS</span>
+<span class="terminal-ascii" style="color: #6366f1;">\`d\$\$'     ,\$P"'   .    \$\$\$      </span><span class="terminal-text"><span class="cmd-highlight">Uptime:</span> 4+ years coding</span>
+<span class="terminal-ascii" style="color: #6366f1;"> \$\$P      d\$'     ,    \$\$P      </span><span class="terminal-text"><span class="cmd-highlight">Packages:</span> Angular, Node, Java</span>
+<span class="terminal-ascii" style="color: #6366f1;"> \$\$:      \$\$.   -    ,d\$\$'      </span><span class="terminal-text"><span class="cmd-highlight">Shell:</span> /bin/creativity</span>
+<span class="terminal-ascii" style="color: #6366f1;"> \$\$;      Y\$b._   _,d\$P'        </span><span class="terminal-text"><span class="cmd-highlight">Theme:</span> Dark Mode</span>
+<span class="terminal-ascii" style="color: #6366f1;"> Y\$\$.    \`.\`"Y\$\$\$\$P"'           </span><span class="terminal-text"><span class="cmd-highlight">Coffee:</span> ${localStorage.getItem('coffeeCount') || 0} cups</span>
+        `
+    };
+    
+    // Histórico de comandos
+    let commandHistory = [];
+    let historyIndex = -1;
+    
+    input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            const cmd = input.value.trim().toLowerCase();
+            if (!cmd) return;
+            
+            // Adicionar ao histórico
+            commandHistory.unshift(cmd);
+            historyIndex = -1;
+            
+            // Mostrar comando digitado
+            addLine(`<span class="terminal-prompt">visitor@gm-portfolio:~$</span> <span class="terminal-text">${input.value}</span>`);
+            
+            // Processar comando
+            const [command, ...args] = cmd.split(' ');
+            
+            if (commands[command]) {
+                const result = typeof commands[command] === 'function' 
+                    ? commands[command](args) 
+                    : commands[command];
+                if (result) addLine(result);
+            } else {
+                addLine(`<span class="terminal-text error">Comando não encontrado: ${command}. Digite <span class="cmd-highlight">help</span> para ver os comandos.</span>`);
+            }
+            
+            input.value = '';
+            output.scrollTop = output.scrollHeight;
+        }
+        
+        // Navegar no histórico com setas
+        if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            if (historyIndex < commandHistory.length - 1) {
+                historyIndex++;
+                input.value = commandHistory[historyIndex];
+            }
+        }
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            if (historyIndex > 0) {
+                historyIndex--;
+                input.value = commandHistory[historyIndex];
+            } else {
+                historyIndex = -1;
+                input.value = '';
+            }
+        }
+    });
+    
+    function addLine(html) {
+        const line = document.createElement('div');
+        line.className = 'terminal-line';
+        line.innerHTML = html;
+        output.appendChild(line);
+    }
+    
+    if (clearBtn) {
+        clearBtn.addEventListener('click', () => {
+            output.innerHTML = `<div class="terminal-line">
+                <span class="terminal-prompt">visitor@gm-portfolio:~$</span>
+                <span class="terminal-text">Terminal limpo! Digite <span class="cmd-highlight">help</span> para ver os comandos.</span>
+            </div>`;
+        });
+    }
+}
+
+// ===== GUESTBOOK =====
+function initGuestbook() {
+    const form = document.getElementById('guestbook-form');
+    const messagesContainer = document.getElementById('guestbook-messages');
+    const countEl = document.getElementById('guestbook-count');
+    const emojiTrigger = document.getElementById('emoji-trigger');
+    const emojiDropdown = document.getElementById('emoji-dropdown');
+    const selectedEmojiEl = document.getElementById('selected-emoji');
+    
+    if (!form || !messagesContainer) return;
+    
+    // Estado do emoji selecionado
+    let selectedEmoji = '😊';
+    
+    // Inicializar seletor de emoji
+    if (emojiTrigger && emojiDropdown) {
+        emojiTrigger.addEventListener('click', (e) => {
+            e.preventDefault();
+            emojiTrigger.classList.toggle('active');
+            emojiDropdown.classList.toggle('show');
+        });
+        
+        // Selecionar emoji
+        emojiDropdown.querySelectorAll('.emoji-option').forEach(option => {
+            option.addEventListener('click', () => {
+                selectedEmoji = option.dataset.emoji;
+                selectedEmojiEl.textContent = selectedEmoji;
+                
+                // Atualizar visual de selecionado
+                emojiDropdown.querySelectorAll('.emoji-option').forEach(opt => opt.classList.remove('selected'));
+                option.classList.add('selected');
+                
+                // Fechar dropdown
+                emojiTrigger.classList.remove('active');
+                emojiDropdown.classList.remove('show');
+            });
+        });
+        
+        // Fechar dropdown ao clicar fora
+        document.addEventListener('click', (e) => {
+            if (!emojiTrigger.contains(e.target) && !emojiDropdown.contains(e.target)) {
+                emojiTrigger.classList.remove('active');
+                emojiDropdown.classList.remove('show');
+            }
+        });
+    }
+    
+    // Carregar mensagens do localStorage
+    let messages = JSON.parse(localStorage.getItem('guestbook') || '[]');
+    
+    // Adicionar mensagens de exemplo se vazio
+    if (messages.length === 0) {
+        messages = [
+            {
+                name: 'Visitante Anônimo',
+                emoji: '👋',
+                message: 'Portfólio incrível! Adorei as funcionalidades interativas.',
+                date: new Date().toISOString()
+            }
+        ];
+        localStorage.setItem('guestbook', JSON.stringify(messages));
+    }
+    
+    renderMessages();
+    
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const name = document.getElementById('guest-name').value.trim();
+        const message = document.getElementById('guest-message').value.trim();
+        
+        if (!name || !message) return;
+        
+        const newMessage = {
+            name,
+            emoji: selectedEmoji,
+            message,
+            date: new Date().toISOString()
+        };
+        
+        messages.unshift(newMessage);
+        localStorage.setItem('guestbook', JSON.stringify(messages));
+        
+        form.reset();
+        selectedEmoji = '😊';
+        if (selectedEmojiEl) selectedEmojiEl.textContent = selectedEmoji;
+        renderMessages();
+        showToast('📝 Mensagem enviada com sucesso!');
+    });
+    
+    function renderMessages() {
+        if (messages.length === 0) {
+            messagesContainer.innerHTML = `
+                <div class="guestbook-empty">
+                    <i class="fas fa-book-open"></i>
+                    <p>Nenhuma mensagem ainda. Seja o primeiro a deixar uma! 💬</p>
+                </div>
+            `;
+        } else {
+            messagesContainer.innerHTML = messages.map(msg => `
+                <div class="guestbook-message">
+                    <div class="guestbook-message-header">
+                        <span class="guestbook-author">
+                            <span class="guestbook-emoji">${msg.emoji}</span>
+                            ${msg.name}
+                        </span>
+                        <span class="guestbook-date">${formatDate(msg.date)}</span>
+                    </div>
+                    <p class="guestbook-message-text">${msg.message}</p>
+                </div>
+            `).join('');
+        }
+        
+        if (countEl) {
+            countEl.textContent = `${messages.length} mensagem${messages.length !== 1 ? 's' : ''}`;
+        }
+    }
+    
+    function formatDate(dateStr) {
+        const date = new Date(dateStr);
+        const now = new Date();
+        const diff = now - date;
+        
+        if (diff < 60000) return 'Agora mesmo';
+        if (diff < 3600000) return `${Math.floor(diff / 60000)} min atrás`;
+        if (diff < 86400000) return `${Math.floor(diff / 3600000)} h atrás`;
+        if (diff < 604800000) return `${Math.floor(diff / 86400000)} dias atrás`;
+        
+        return date.toLocaleDateString('pt-BR');
+    }
+}
+
+// ===== 3D TILT NOS CARDS =====
+function init3DTilt() {
+    const cards = document.querySelectorAll('.project-card, .skill-category, .education-card');
+    
+    cards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            
+            const rotateX = (y - centerY) / 10;
+            const rotateY = (centerX - x) / 10;
+            
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+            card.style.transition = 'transform 0.1s ease';
+            
+            // Efeito de luz seguindo o mouse
+            const glare = card.querySelector('.card-glare') || createGlare(card);
+            glare.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(255,255,255,0.15) 0%, transparent 60%)`;
+        });
+        
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
+            card.style.transition = 'transform 0.5s ease';
+            
+            const glare = card.querySelector('.card-glare');
+            if (glare) glare.style.background = 'transparent';
+        });
+    });
+    
+    function createGlare(card) {
+        const glare = document.createElement('div');
+        glare.className = 'card-glare';
+        glare.style.cssText = `
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            border-radius: inherit;
+            z-index: 1;
+        `;
+        card.style.position = 'relative';
+        card.style.overflow = 'hidden';
+        card.appendChild(glare);
+        return glare;
+    }
+}
+
+// ===== PARTÍCULAS INTERATIVAS =====
+function initInteractiveParticles() {
+    const particlesContainer = document.getElementById('particles');
+    if (!particlesContainer) return;
+    
+    const particleCount = 50;
+    const particles = [];
+    let mouseX = 0, mouseY = 0;
+    
+    // Criar partículas
+    for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'interactive-particle';
+        
+        const size = Math.random() * 6 + 2;
+        const x = Math.random() * 100;
+        const y = Math.random() * 100;
+        
+        particle.style.cssText = `
+            position: absolute;
+            width: ${size}px;
+            height: ${size}px;
+            background: rgba(99, 102, 241, ${Math.random() * 0.5 + 0.2});
+            border-radius: 50%;
+            left: ${x}%;
+            top: ${y}%;
+            pointer-events: none;
+            transition: transform 0.3s ease;
+            box-shadow: 0 0 ${size * 2}px rgba(99, 102, 241, 0.3);
+        `;
+        
+        particlesContainer.appendChild(particle);
+        particles.push({
+            element: particle,
+            x: x,
+            y: y,
+            baseX: x,
+            baseY: y,
+            size: size,
+            speed: Math.random() * 0.5 + 0.1
+        });
+    }
+    
+    // Movimento do mouse
+    const hero = document.querySelector('.hero');
+    if (hero) {
+        hero.addEventListener('mousemove', (e) => {
+            const rect = hero.getBoundingClientRect();
+            mouseX = ((e.clientX - rect.left) / rect.width) * 100;
+            mouseY = ((e.clientY - rect.top) / rect.height) * 100;
+        });
+    }
+    
+    // Animar partículas
+    function animateParticles() {
+        particles.forEach(p => {
+            // Calcular distância do mouse
+            const dx = mouseX - p.x;
+            const dy = mouseY - p.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            
+            // Fugir do mouse se próximo
+            if (distance < 20) {
+                const angle = Math.atan2(dy, dx);
+                const force = (20 - distance) / 20;
+                p.x -= Math.cos(angle) * force * 3;
+                p.y -= Math.sin(angle) * force * 3;
+            } else {
+                // Voltar para posição original suavemente
+                p.x += (p.baseX - p.x) * 0.02;
+                p.y += (p.baseY - p.y) * 0.02;
+            }
+            
+            // Movimento flutuante
+            p.y += Math.sin(Date.now() * 0.001 + p.baseX) * 0.05;
+            p.x += Math.cos(Date.now() * 0.001 + p.baseY) * 0.03;
+            
+            p.element.style.left = p.x + '%';
+            p.element.style.top = p.y + '%';
+        });
+        
+        requestAnimationFrame(animateParticles);
+    }
+    
+    animateParticles();
+}
+
+// ===== GLASSMORPHISM EFFECT =====
+function initGlassmorphism() {
+    // Adicionar estilos de glassmorphism dinamicamente
+    const style = document.createElement('style');
+    style.id = 'glassmorphism-style';
+    style.textContent = `
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.05) !important;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        }
+        
+        body.light-theme .glass-effect {
+            background: rgba(255, 255, 255, 0.7) !important;
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+        }
+        
+        .navbar.scrolled {
+            background: rgba(15, 23, 42, 0.8) !important;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        
+        body.light-theme .navbar.scrolled {
+            background: rgba(248, 250, 252, 0.8) !important;
+        }
+        
+        .project-card {
+            background: rgba(30, 41, 59, 0.6) !important;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        body.light-theme .project-card {
+            background: rgba(255, 255, 255, 0.7) !important;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .skill-category {
+            background: rgba(30, 41, 59, 0.5) !important;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .timeline-content {
+            background: rgba(30, 41, 59, 0.6) !important;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        
+        .education-card {
+            background: rgba(30, 41, 59, 0.5) !important;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+        
+        .testimonial-content {
+            background: rgba(30, 41, 59, 0.6) !important;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        
+        .contact-info, .contact-form-container {
+            background: rgba(30, 41, 59, 0.5) !important;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        
+        .music-player {
+            background: rgba(30, 41, 59, 0.8) !important;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+        }
+        
+        .custom-toast {
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+    `;
+    document.head.appendChild(style);
+}
+
+// ===== CURSOR POR SEÇÃO =====
+function initCursorBySection() {
+    const sections = document.querySelectorAll('section');
+    const cursorFollower = document.getElementById('cursor-follower');
+    
+    if (!cursorFollower) return;
+    
+    const sectionObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const sectionId = entry.target.id;
+                const colors = {
+                    home: '#6366f1',
+                    about: '#10b981',
+                    skills: '#f59e0b',
+                    projects: '#ec4899',
+                    playground: '#8b5cf6',
+                    experience: '#06b6d4',
+                    testimonials: '#f43f5e',
+                    education: '#14b8a6',
+                    contact: '#10b981'
+                };
+                
+                cursorFollower.style.borderColor = colors[sectionId] || '#6366f1';
+            }
+        });
+    }, { threshold: 0.3 });
+    
+    sections.forEach(section => sectionObserver.observe(section));
+}
+
+// ===== BOTÕES MAGNÉTICOS =====
+function initMagneticButtons() {
+    const buttons = document.querySelectorAll('.cta-btn, .btn-primary, .btn-secondary, .social-link');
+    
+    buttons.forEach(btn => {
+        btn.classList.add('magnetic-btn');
+        
+        btn.addEventListener('mousemove', (e) => {
+            const rect = btn.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+            
+            // Efeito magnético sutil
+            btn.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
+        });
+        
+        btn.addEventListener('mouseleave', () => {
+            btn.style.transform = 'translate(0, 0)';
+        });
+    });
+}
+
+// ===== SCROLL REVEAL MELHORADO =====
+function initScrollReveal() {
+    const elementsToReveal = document.querySelectorAll('.project-card, .skill-item, .timeline-item, .stat-item, .about-image-container, .contact-info, .contact-form-container');
+    
+    elementsToReveal.forEach((el, index) => {
+        el.classList.add('reveal-element');
+        
+        // Adiciona variação de direção
+        if (index % 3 === 0) {
+            el.classList.add('reveal-left');
+        } else if (index % 3 === 1) {
+            el.classList.add('reveal-scale');
+        } else {
+            el.classList.add('reveal-right');
+        }
+    });
+    
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('revealed');
+            }
+        });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+    
+    document.querySelectorAll('.reveal-element').forEach(el => {
+        revealObserver.observe(el);
+    });
+}
+
+// ===== SHINE EFFECT NOS CARDS =====
+function initShineEffect() {
+    const cards = document.querySelectorAll('.project-card');
+    
+    cards.forEach(card => {
+        card.classList.add('shine-effect');
+    });
+}
+
+// Inicializar novas funcionalidades visuais
+document.addEventListener('DOMContentLoaded', () => {
+    initMagneticButtons();
+    initScrollReveal();
+    initShineEffect();
+});
 console.log('🚀 Portfolio Guilherme Mutão - Carregado com sucesso!');
+console.log('💡 Dica: Experimente o código Konami!');
+console.log('🎮 Ou digite "help" no terminal do Playground!');
+

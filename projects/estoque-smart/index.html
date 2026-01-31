@@ -333,21 +333,317 @@
         </main>
     </div>
 
-    <!-- Modal -->
+    <!-- Modal Novo Produto -->
     <div class="modal" id="productModal">
         <div class="modal-content">
-            <div class="modal-header"><h2>➕ Novo Produto</h2><button class="close-modal" onclick="closeModal()">&times;</button></div>
-            <form onsubmit="addProduct(event)">
+            <div class="modal-header"><h2 id="modalTitle">➕ Novo Produto</h2><button class="close-modal" onclick="closeModal()">&times;</button></div>
+            <form onsubmit="saveProduct(event)">
+                <input type="hidden" id="editingProductId">
                 <div class="form-group"><label>Nome do Produto</label><input type="text" id="productName" placeholder="Ex: Notebook Dell XPS" required></div>
                 <div class="form-row"><div class="form-group"><label>SKU</label><input type="text" id="productSku" placeholder="Ex: NB-001-DL" required></div><div class="form-group"><label>Categoria</label><select id="productCategory"><option>Eletrônicos</option><option>Periféricos</option><option>Monitores</option><option>Acessórios</option></select></div></div>
                 <div class="form-row"><div class="form-group"><label>Quantidade</label><input type="number" id="productQty" placeholder="0" min="0" required></div><div class="form-group"><label>Preço (R$)</label><input type="number" id="productPrice" placeholder="0.00" step="0.01" min="0" required></div></div>
-                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 15px;"><i class="fas fa-save"></i> Cadastrar</button>
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 15px;"><i class="fas fa-save"></i> <span id="btnSaveText">Cadastrar</span></button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Movimentação -->
+    <div class="modal" id="movementModal">
+        <div class="modal-content">
+            <div class="modal-header"><h2 id="movementTitle">📦 Movimentação de Estoque</h2><button class="close-modal" onclick="closeMovementModal()">&times;</button></div>
+            <form onsubmit="executeMovement(event)">
+                <input type="hidden" id="movementProductId">
+                <div class="form-group">
+                    <label>Produto</label>
+                    <input type="text" id="movementProductName" readonly style="background: #0f172a;">
+                </div>
+                <div class="form-group">
+                    <label>Tipo de Movimentação</label>
+                    <div style="display: flex; gap: 10px; margin-top: 8px;">
+                        <button type="button" class="btn btn-secondary movement-type active" data-type="entrada" onclick="setMovementType('entrada', this)" style="flex: 1;">
+                            <i class="fas fa-arrow-down"></i> Entrada
+                        </button>
+                        <button type="button" class="btn btn-secondary movement-type" data-type="saida" onclick="setMovementType('saida', this)" style="flex: 1;">
+                            <i class="fas fa-arrow-up"></i> Saída
+                        </button>
+                    </div>
+                </div>
+                <input type="hidden" id="movementType" value="entrada">
+                <div class="form-row">
+                    <div class="form-group"><label>Quantidade</label><input type="number" id="movementQty" placeholder="0" min="1" required></div>
+                    <div class="form-group"><label>Estoque Atual</label><input type="text" id="currentStock" readonly style="background: #0f172a;"></div>
+                </div>
+                <div class="form-group"><label>Observação</label><input type="text" id="movementObs" placeholder="Ex: Compra fornecedor X"></div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 15px;"><i class="fas fa-check"></i> Confirmar</button>
             </form>
         </div>
     </div>
 
     <script>
-        // Navigation
+        // ===== DADOS DO ESTOQUE =====
+        let products = JSON.parse(localStorage.getItem('estoqueProducts')) || [
+            { id: 1, name: 'Notebook Dell XPS', sku: 'NB-001-DL', category: 'Eletrônicos', qty: 45, price: 4299.99, icon: 'laptop' },
+            { id: 2, name: 'Mouse Wireless', sku: 'PR-042-MS', category: 'Periféricos', qty: 128, price: 89.90, icon: 'mouse' },
+            { id: 3, name: 'Monitor LG 27"', sku: 'MN-015-LG', category: 'Monitores', qty: 8, price: 1599.00, icon: 'tv' },
+            { id: 4, name: 'Teclado Mecânico', sku: 'PR-067-TK', category: 'Periféricos', qty: 3, price: 349.90, icon: 'keyboard' },
+            { id: 5, name: 'Headset Gamer', sku: 'PR-089-HS', category: 'Acessórios', qty: 67, price: 259.00, icon: 'headphones' }
+        ];
+
+        let movements = JSON.parse(localStorage.getItem('estoqueMovements')) || [];
+        let nextId = products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1;
+
+        // ===== SALVAR NO LOCALSTORAGE =====
+        function saveToStorage() {
+            localStorage.setItem('estoqueProducts', JSON.stringify(products));
+            localStorage.setItem('estoqueMovements', JSON.stringify(movements));
+        }
+
+        // ===== RENDERIZAR TABELA =====
+        function renderProducts(filter = '') {
+            const tbody = document.getElementById('productsTable');
+            if (!tbody) return;
+
+            const filtered = products.filter(p => 
+                p.name.toLowerCase().includes(filter.toLowerCase()) ||
+                p.sku.toLowerCase().includes(filter.toLowerCase()) ||
+                p.category.toLowerCase().includes(filter.toLowerCase())
+            );
+
+            tbody.innerHTML = filtered.map(p => {
+                let status, statusClass;
+                if (p.qty > 20) { status = 'Em Estoque'; statusClass = 'stock-ok'; }
+                else if (p.qty > 5) { status = 'Baixo'; statusClass = 'stock-low'; }
+                else { status = 'Crítico'; statusClass = 'stock-critical'; }
+
+                return `
+                    <tr data-id="${p.id}">
+                        <td>
+                            <div class="product-info">
+                                <div class="product-img"><i class="fas fa-${p.icon}"></i></div>
+                                <div>
+                                    <div class="product-name">${p.name}</div>
+                                    <div class="product-sku">SKU: ${p.sku}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>${p.category}</td>
+                        <td>${p.qty}</td>
+                        <td><span class="stock-badge ${statusClass}">${status}</span></td>
+                        <td>
+                            <button class="action-btn" onclick="openMovementModal(${p.id})" title="Movimentar"><i class="fas fa-exchange-alt"></i></button>
+                            <button class="action-btn" onclick="editProduct(${p.id})" title="Editar"><i class="fas fa-edit"></i></button>
+                            <button class="action-btn" onclick="deleteProduct(${p.id})" title="Excluir"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            updateStats();
+        }
+
+        // ===== ATUALIZAR ESTATÍSTICAS =====
+        function updateStats() {
+            const totalEl = document.getElementById('totalProdutos');
+            const estoqueEl = document.getElementById('totalEstoque');
+            const baixoEl = document.getElementById('estoqueBaixo');
+            
+            if (totalEl) totalEl.textContent = products.length.toLocaleString();
+            if (estoqueEl) estoqueEl.textContent = products.reduce((sum, p) => sum + p.qty, 0).toLocaleString();
+            if (baixoEl) baixoEl.textContent = products.filter(p => p.qty <= 5).length;
+        }
+
+        // ===== BUSCA =====
+        function initSearch() {
+            const searchInput = document.querySelector('.search-box input');
+            if (searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    renderProducts(e.target.value);
+                });
+            }
+        }
+
+        // ===== MODAL PRODUTO =====
+        function openModal(editId = null) {
+            document.getElementById('productModal').classList.add('active');
+            document.getElementById('editingProductId').value = editId || '';
+            document.getElementById('modalTitle').textContent = editId ? '✏️ Editar Produto' : '➕ Novo Produto';
+            document.getElementById('btnSaveText').textContent = editId ? 'Atualizar' : 'Cadastrar';
+            
+            if (editId) {
+                const product = products.find(p => p.id === editId);
+                if (product) {
+                    document.getElementById('productName').value = product.name;
+                    document.getElementById('productSku').value = product.sku;
+                    document.getElementById('productCategory').value = product.category;
+                    document.getElementById('productQty').value = product.qty;
+                    document.getElementById('productPrice').value = product.price;
+                }
+            } else {
+                document.getElementById('productName').value = '';
+                document.getElementById('productSku').value = '';
+                document.getElementById('productQty').value = '';
+                document.getElementById('productPrice').value = '';
+            }
+        }
+
+        function closeModal() { 
+            document.getElementById('productModal').classList.remove('active');
+        }
+
+        function editProduct(id) {
+            openModal(id);
+        }
+
+        function saveProduct(e) {
+            e.preventDefault();
+            
+            const editId = document.getElementById('editingProductId').value;
+            const name = document.getElementById('productName').value;
+            const sku = document.getElementById('productSku').value;
+            const category = document.getElementById('productCategory').value;
+            const qty = parseInt(document.getElementById('productQty').value);
+            const price = parseFloat(document.getElementById('productPrice').value);
+            const icons = { 'Eletrônicos': 'laptop', 'Periféricos': 'keyboard', 'Monitores': 'tv', 'Acessórios': 'headphones' };
+            
+            if (editId) {
+                // Editar existente
+                const product = products.find(p => p.id === parseInt(editId));
+                if (product) {
+                    product.name = name;
+                    product.sku = sku;
+                    product.category = category;
+                    product.qty = qty;
+                    product.price = price;
+                    product.icon = icons[category] || 'box';
+                }
+                showToast('✅ Produto atualizado!');
+            } else {
+                // Novo produto
+                products.unshift({
+                    id: nextId++,
+                    name, sku, category, qty, price,
+                    icon: icons[category] || 'box'
+                });
+                showToast('✅ Produto cadastrado!');
+            }
+            
+            saveToStorage();
+            renderProducts();
+            closeModal();
+            e.target.reset();
+        }
+
+        function deleteProduct(id) {
+            if (confirm('Tem certeza que deseja excluir este produto?')) {
+                products = products.filter(p => p.id !== id);
+                saveToStorage();
+                renderProducts();
+                showToast('🗑️ Produto excluído!');
+            }
+        }
+
+        // ===== MODAL MOVIMENTAÇÃO =====
+        function openMovementModal(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+            
+            document.getElementById('movementModal').classList.add('active');
+            document.getElementById('movementProductId').value = productId;
+            document.getElementById('movementProductName').value = product.name;
+            document.getElementById('currentStock').value = product.qty + ' unidades';
+            document.getElementById('movementQty').value = '';
+            document.getElementById('movementObs').value = '';
+            setMovementType('entrada', document.querySelector('.movement-type[data-type="entrada"]'));
+        }
+
+        function closeMovementModal() {
+            document.getElementById('movementModal').classList.remove('active');
+        }
+
+        function setMovementType(type, btn) {
+            document.getElementById('movementType').value = type;
+            document.querySelectorAll('.movement-type').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+            
+            // Atualizar visual
+            if (type === 'entrada') {
+                document.getElementById('movementTitle').innerHTML = '📥 Entrada de Estoque';
+            } else {
+                document.getElementById('movementTitle').innerHTML = '📤 Saída de Estoque';
+            }
+        }
+
+        function executeMovement(e) {
+            e.preventDefault();
+            
+            const productId = parseInt(document.getElementById('movementProductId').value);
+            const type = document.getElementById('movementType').value;
+            const qty = parseInt(document.getElementById('movementQty').value);
+            const obs = document.getElementById('movementObs').value;
+            
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+            
+            if (type === 'saida' && qty > product.qty) {
+                alert('❌ Quantidade insuficiente em estoque!');
+                return;
+            }
+            
+            // Atualizar estoque
+            if (type === 'entrada') {
+                product.qty += qty;
+            } else {
+                product.qty -= qty;
+            }
+            
+            // Registrar movimento
+            movements.unshift({
+                id: Date.now(),
+                productId,
+                productName: product.name,
+                type,
+                qty,
+                obs,
+                date: new Date().toISOString()
+            });
+            
+            saveToStorage();
+            renderProducts();
+            renderMovements();
+            closeMovementModal();
+            
+            showToast(type === 'entrada' ? '📥 Entrada registrada!' : '📤 Saída registrada!');
+        }
+
+        // ===== RENDERIZAR MOVIMENTAÇÕES =====
+        function renderMovements() {
+            const tbody = document.getElementById('movementsTable');
+            if (!tbody) return;
+            
+            tbody.innerHTML = movements.slice(0, 20).map(m => {
+                const date = new Date(m.date);
+                return `
+                    <tr>
+                        <td>${date.toLocaleDateString('pt-BR')}</td>
+                        <td>${m.productName}</td>
+                        <td><span class="movement-type ${m.type === 'entrada' ? 'movement-entry' : 'movement-exit'}">${m.type === 'entrada' ? '📥 Entrada' : '📤 Saída'}</span></td>
+                        <td>${m.type === 'entrada' ? '+' : '-'}${m.qty}</td>
+                        <td>${m.obs || '-'}</td>
+                    </tr>
+                `;
+            }).join('') || '<tr><td colspan="5" style="text-align: center; color: #64748b;">Nenhuma movimentação registrada</td></tr>';
+        }
+
+        // ===== TOAST =====
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.style.cssText = 'position: fixed; bottom: 80px; right: 20px; background: #1e293b; color: #e2e8f0; padding: 15px 25px; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.3); z-index: 10000; animation: slideIn 0.3s ease;';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        // ===== NAVIGATION =====
         const navLinks = document.querySelectorAll('.nav-menu a[data-page]');
         const pages = document.querySelectorAll('.page-content');
         navLinks.forEach(link => {
@@ -361,51 +657,45 @@
             });
         });
 
-        // Movement Chart
-        const ctx = document.getElementById('movementChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'line',
-            data: { labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'], datasets: [{ label: 'Entradas', data: [65, 78, 45, 89, 56, 32, 28], borderColor: '#10b981', backgroundColor: 'rgba(16, 185, 129, 0.1)', fill: true, tension: 0.4 }, { label: 'Saídas', data: [45, 52, 68, 74, 62, 48, 35], borderColor: '#ef4444', backgroundColor: 'rgba(239, 68, 68, 0.1)', fill: true, tension: 0.4 }] },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: true, position: 'bottom', labels: { color: '#94a3b8', padding: 15 } } }, scales: { y: { beginAtZero: true, grid: { color: 'rgba(139, 92, 246, 0.1)' }, ticks: { color: '#64748b' } }, x: { grid: { display: false }, ticks: { color: '#64748b' } } } }
-        });
-
-        // Report Chart
-        setTimeout(() => {
-            const reportCtx = document.getElementById('reportChart');
-            if (reportCtx) {
-                new Chart(reportCtx.getContext('2d'), {
-                    type: 'bar',
-                    data: { labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'], datasets: [{ label: 'Entradas', data: [1200, 1900, 1500, 2100, 1800, 2400], backgroundColor: 'rgba(16, 185, 129, 0.8)', borderRadius: 5 }, { label: 'Saídas', data: [900, 1400, 1200, 1800, 1500, 2000], backgroundColor: 'rgba(245, 158, 11, 0.8)', borderRadius: 5 }] },
-                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#94a3b8' } } }, scales: { y: { beginAtZero: true, grid: { color: 'rgba(139, 92, 246, 0.1)' }, ticks: { color: '#64748b' } }, x: { grid: { display: false }, ticks: { color: '#64748b' } } } }
+        // ===== GRÁFICOS =====
+        function initCharts() {
+            const ctx = document.getElementById('movementChart');
+            if (ctx) {
+                new Chart(ctx.getContext('2d'), {
+                    type: 'line',
+                    data: { 
+                        labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'], 
+                        datasets: [
+                            { label: 'Entradas', data: [65, 78, 45, 89, 56, 32, 28], borderColor: '#10b981', backgroundColor: 'rgba(16, 185, 129, 0.1)', fill: true, tension: 0.4 }, 
+                            { label: 'Saídas', data: [45, 52, 68, 74, 62, 48, 35], borderColor: '#ef4444', backgroundColor: 'rgba(239, 68, 68, 0.1)', fill: true, tension: 0.4 }
+                        ] 
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: true, position: 'bottom', labels: { color: '#94a3b8', padding: 15 } } }, scales: { y: { beginAtZero: true, grid: { color: 'rgba(139, 92, 246, 0.1)' }, ticks: { color: '#64748b' } }, x: { grid: { display: false }, ticks: { color: '#64748b' } } } }
                 });
             }
-        }, 500);
 
-        function openModal() { document.getElementById('productModal').classList.add('active'); }
-        function closeModal() { document.getElementById('productModal').classList.remove('active'); }
-        function addProduct(e) {
-            e.preventDefault();
-            const name = document.getElementById('productName').value;
-            const sku = document.getElementById('productSku').value;
-            const category = document.getElementById('productCategory').value;
-            const qty = parseInt(document.getElementById('productQty').value);
-            const icons = ['laptop', 'keyboard', 'headphones', 'tv', 'mouse'];
-            const icon = icons[Math.floor(Math.random() * icons.length)];
-            let status, statusClass;
-            if (qty > 20) { status = 'Em Estoque'; statusClass = 'stock-ok'; }
-            else if (qty > 5) { status = 'Baixo'; statusClass = 'stock-low'; }
-            else { status = 'Crítico'; statusClass = 'stock-critical'; }
-            const tbody = document.getElementById('productsTable');
-            const newRow = document.createElement('tr');
-            newRow.innerHTML = `<td><div class="product-info"><div class="product-img"><i class="fas fa-${icon}"></i></div><div><div class="product-name">${name}</div><div class="product-sku">SKU: ${sku}</div></div></div></td><td>${category}</td><td>${qty}</td><td><span class="stock-badge ${statusClass}">${status}</span></td><td><button class="action-btn"><i class="fas fa-edit"></i></button><button class="action-btn"><i class="fas fa-trash"></i></button></td>`;
-            tbody.insertBefore(newRow, tbody.firstChild);
-            const totalEl = document.getElementById('totalProdutos');
-            const current = parseInt(totalEl.textContent.replace(',', ''));
-            totalEl.textContent = (current + 1).toLocaleString();
-            closeModal();
-            e.target.reset();
+            setTimeout(() => {
+                const reportCtx = document.getElementById('reportChart');
+                if (reportCtx) {
+                    new Chart(reportCtx.getContext('2d'), {
+                        type: 'bar',
+                        data: { labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'], datasets: [{ label: 'Entradas', data: [1200, 1900, 1500, 2100, 1800, 2400], backgroundColor: 'rgba(16, 185, 129, 0.8)', borderRadius: 5 }, { label: 'Saídas', data: [900, 1400, 1200, 1800, 1500, 2000], backgroundColor: 'rgba(245, 158, 11, 0.8)', borderRadius: 5 }] },
+                        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#94a3b8' } } }, scales: { y: { beginAtZero: true, grid: { color: 'rgba(139, 92, 246, 0.1)' }, ticks: { color: '#64748b' } }, x: { grid: { display: false }, ticks: { color: '#64748b' } } } }
+                    });
+                }
+            }, 500);
         }
+
+        // ===== INICIALIZAÇÃO =====
+        document.addEventListener('DOMContentLoaded', () => {
+            renderProducts();
+            renderMovements();
+            initSearch();
+            initCharts();
+        });
+
         document.getElementById('productModal').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
+        document.getElementById('movementModal').addEventListener('click', function(e) { if (e.target === this) closeMovementModal(); });
     </script>
 </body>
 </html>

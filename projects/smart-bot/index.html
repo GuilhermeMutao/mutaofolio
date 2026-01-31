@@ -439,6 +439,32 @@
             }
         }
 
+        /* Quick Replies Inline no Chat */
+        .quick-replies-inline {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            padding: 10px 0;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .quick-replies-inline button {
+            background: rgba(139, 92, 246, 0.2);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            color: #8b5cf6;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .quick-replies-inline button:hover {
+            background: #8b5cf6;
+            color: white;
+            transform: scale(1.05);
+        }
+
         /* Back to Portfolio Button */
         .back-to-portfolio {
             position: fixed;
@@ -502,7 +528,7 @@
         <!-- Chat Area -->
         <main class="chat-area">
             <div class="chat-header">
-                <div class="chat-user">
+                <div class="chat-user" id="chatUser">
                     <div class="user-avatar">CL</div>
                     <div class="user-info">
                         <h3>Cliente #1247</h3>
@@ -510,8 +536,8 @@
                     </div>
                 </div>
                 <div class="chat-actions">
-                    <button><i class="fas fa-user-plus"></i></button>
-                    <button><i class="fas fa-ellipsis-v"></i></button>
+                    <button onclick="transferToHuman()" title="Transferir para humano"><i class="fas fa-user-plus"></i></button>
+                    <button onclick="clearChat()" title="Nova conversa"><i class="fas fa-redo"></i></button>
                 </div>
             </div>
 
@@ -587,8 +613,9 @@
             <div class="stat-card">
                 <div class="stat-header">
                     <div class="stat-icon purple"><i class="fas fa-comments"></i></div>
+                    <span id="sentimentIndicator" style="font-size: 1.5rem; padding: 5px 10px; border-radius: 10px; background: rgba(16, 185, 129, 0.2);">😊</span>
                 </div>
-                <div class="stat-value" id="totalConversas">1,247</div>
+                <div class="stat-value" id="totalConversas">1.247</div>
                 <div class="stat-label">Conversas Hoje</div>
             </div>
 
@@ -608,74 +635,277 @@
                 <div class="stat-label">Tempo Médio Resposta</div>
             </div>
 
+            <!-- Gráfico de Sentimento -->
+            <div class="stat-card" style="padding: 15px;">
+                <h4 style="margin-bottom: 10px; font-size: 0.9rem;">😊 Sentimento</h4>
+                <div style="height: 120px;">
+                    <canvas id="sentimentChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Gráfico de Intents -->
+            <div class="stat-card" style="padding: 15px;">
+                <h4 style="margin-bottom: 10px; font-size: 0.9rem;">🎯 Top Intents</h4>
+                <div style="height: 140px;">
+                    <canvas id="intentChart"></canvas>
+                </div>
+            </div>
+
             <div class="quick-replies">
-                <h3>💬 Respostas Rápidas</h3>
+                <h3>💬 Ações Rápidas</h3>
                 <button class="reply-btn" onclick="addQuickReply('Qual o horário de funcionamento?')">
-                    <i class="fas fa-clock"></i> Horário de funcionamento
+                    <i class="fas fa-clock"></i> Horário
                 </button>
                 <button class="reply-btn" onclick="addQuickReply('Preciso de suporte técnico')">
-                    <i class="fas fa-headset"></i> Suporte técnico
+                    <i class="fas fa-headset"></i> Suporte
                 </button>
                 <button class="reply-btn" onclick="addQuickReply('Quero fazer uma reclamação')">
                     <i class="fas fa-exclamation-circle"></i> Reclamação
                 </button>
+                <button class="reply-btn" onclick="addQuickReply('Qual o valor do frete?')">
+                    <i class="fas fa-truck"></i> Frete
+                </button>
+                <button class="reply-btn" onclick="addQuickReply('Quero trocar meu produto')">
+                    <i class="fas fa-exchange-alt"></i> Troca
+                </button>
+                <button class="reply-btn" onclick="transferToHuman()" style="background: rgba(16, 185, 129, 0.2); color: #10b981;">
+                    <i class="fas fa-user"></i> Transferir p/ Humano
+                </button>
+                <button class="reply-btn" onclick="clearChat()" style="background: rgba(239, 68, 68, 0.2); color: #ef4444;">
+                    <i class="fas fa-trash"></i> Nova Conversa
+                </button>
             </div>
 
             <div class="intents-list">
-                <h3>🎯 Top Intents</h3>
-                <div class="intent-item">
-                    <span class="intent-name">consulta_pedido</span>
-                    <span class="intent-count">342</span>
-                </div>
-                <div class="intent-item">
-                    <span class="intent-name">suporte_tecnico</span>
-                    <span class="intent-count">256</span>
-                </div>
-                <div class="intent-item">
-                    <span class="intent-name">duvida_produto</span>
-                    <span class="intent-count">198</span>
-                </div>
-                <div class="intent-item">
-                    <span class="intent-name">horario_atendimento</span>
-                    <span class="intent-count">156</span>
-                </div>
-                <div class="intent-item">
-                    <span class="intent-name">reclamacao</span>
-                    <span class="intent-count">87</span>
+                <h3>📈 Fila de Espera <span id="queueBadge" style="background: #ef4444; color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.75rem;">3</span></h3>
+                <div id="intentsList">
+                    <div class="intent-item">
+                        <span class="intent-name">consulta_pedido</span>
+                        <span class="intent-count">342</span>
+                    </div>
+                    <div class="intent-item">
+                        <span class="intent-name">suporte_tecnico</span>
+                        <span class="intent-count">256</span>
+                    </div>
+                    <div class="intent-item">
+                        <span class="intent-name">duvida_produto</span>
+                        <span class="intent-count">198</span>
+                    </div>
+                    <div class="intent-item">
+                        <span class="intent-name">horario_atendimento</span>
+                        <span class="intent-count">156</span>
+                    </div>
+                    <div class="intent-item">
+                        <span class="intent-name">frete</span>
+                        <span class="intent-count">167</span>
+                    </div>
                 </div>
             </div>
         </aside>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
+        // ===== BANCO DE RESPOSTAS EXPANDIDO =====
         const responses = {
-            'pedido': 'Para consultar seu pedido, informe o número que está no e-mail de confirmação. Formato: #PED-XXXX-XXXXX',
-            'horario': 'Nosso horário de atendimento é de segunda a sexta, das 8h às 18h. Mas eu estou disponível 24 horas! 🤖',
-            'suporte': 'Vou transferir você para nossa equipe de suporte técnico. Um momento, por favor... 👨‍💻',
-            'reclamação': 'Lamento que você teve uma experiência ruim. Vou registrar sua reclamação e um supervisor entrará em contato em até 24h.',
-            'ola': 'Olá! 👋 Como posso ajudá-lo hoje?',
-            'obrigado': 'De nada! Foi um prazer ajudar. Tenha um ótimo dia! 😊',
-            'default': 'Entendi! Deixe-me verificar isso para você. Poderia me dar mais detalhes sobre sua solicitação?'
+            'pedido': [
+                'Para consultar seu pedido, informe o número que está no e-mail de confirmação. Formato: #PED-XXXX-XXXXX 📦',
+                'Claro! Me passa o número do pedido que eu verifico o status para você. 🔍',
+                'Sem problemas! Qual o código do seu pedido? Está no e-mail que você recebeu na compra.'
+            ],
+            'horario': [
+                'Nosso horário de atendimento humano é de segunda a sexta, das 8h às 18h. Mas eu estou disponível 24/7! 🤖',
+                'Atendimento presencial: Seg-Sex 8h-18h. Sáb 8h-12h. Mas pode falar comigo a qualquer hora! 😊',
+                'Nossos especialistas atendem das 8h às 18h em dias úteis. Eu? Estou sempre aqui! ⏰'
+            ],
+            'suporte': [
+                'Vou transferir você para nossa equipe de suporte técnico. Um momento, por favor... 👨‍💻',
+                'Entendi que precisa de suporte. Estou acionando um especialista. Tempo estimado: 2 minutos. ⏳',
+                'Sem problemas! Já estou conectando você com o time técnico. Aguarde um instante. 🔧'
+            ],
+            'reclamacao': [
+                'Lamento muito que você teve uma experiência ruim 😔. Vou registrar sua reclamação e um supervisor entrará em contato em até 24h.',
+                'Peço desculpas pelo inconveniente. Sua satisfação é nossa prioridade. Protocolo gerado: #REC-' + Math.random().toString(36).substr(2, 6).toUpperCase(),
+                'Sinto muito por isso. Vou escalar para nossa ouvidoria e garantir que seja resolvido. Pode contar comigo!'
+            ],
+            'ola': [
+                'Olá! 👋 Sou o SmartBot, seu assistente virtual. Como posso ajudá-lo hoje?',
+                'Oi! Bem-vindo! 😊 Estou aqui para ajudar. O que você precisa?',
+                'Olá! Prazer em atendê-lo! Em que posso ser útil?'
+            ],
+            'obrigado': [
+                'De nada! Foi um prazer ajudar. Tenha um ótimo dia! 😊',
+                'Imagina! Qualquer coisa, é só chamar. Até mais! 👋',
+                'Por nada! Fico feliz em ajudar. Volte sempre! ⭐'
+            ],
+            'preco': [
+                'Para consultar preços, acesse nossa loja online ou me diga qual produto você tem interesse! 🛒',
+                'Os preços variam conforme o produto. Me conta o que você está procurando que eu te ajudo! 💰',
+                'Claro! Qual produto você quer saber o preço? Posso verificar para você!'
+            ],
+            'pagamento': [
+                'Aceitamos PIX, cartões de crédito (até 12x), boleto e carteiras digitais! 💳',
+                'Formas de pagamento: PIX (5% off), Crédito, Débito, Boleto, PicPay e MercadoPago! 💰',
+                'Você pode pagar com PIX, cartão ou boleto. O PIX tem desconto especial! 🎉'
+            ],
+            'troca': [
+                'Trocas podem ser feitas em até 30 dias após a compra. Precisa estar com etiqueta! 🔄',
+                'Para trocas, acesse "Minhas Compras" no app ou me passe o número do pedido! 📦',
+                'Sem problemas! Trocas são gratuitas em até 30 dias. Quer que eu inicie o processo?'
+            ],
+            'frete': [
+                'O frete varia conforme a região. Me passa seu CEP que eu calculo! 🚚',
+                'Frete grátis para compras acima de R$ 199! Qual seu CEP para eu calcular? 📍',
+                'Entregamos em todo Brasil! Me diga seu CEP para ver o prazo e valor.'
+            ],
+            'cancelar': [
+                'Para cancelar, preciso do número do pedido. Lembre-se: só até antes do envio! ⚠️',
+                'Entendi que quer cancelar. Me passa o código do pedido para eu verificar se ainda está em tempo.',
+                'Posso ajudar com o cancelamento! Qual o número do pedido?'
+            ],
+            'default': [
+                'Entendi! Deixe-me verificar isso para você. Poderia me dar mais detalhes? 🤔',
+                'Hmm, não tenho certeza se entendi. Pode reformular sua pergunta? 💭',
+                'Interessante! Me conta mais sobre o que você precisa que eu busco a melhor solução.',
+                'Certo! Vou analisar sua solicitação. Enquanto isso, posso te ajudar com algo mais?'
+            ]
         };
 
+        // ===== HISTÓRICO DE CONVERSAS =====
+        let conversationHistory = [];
+        let sentimentScore = 50; // 0 = negativo, 100 = positivo
+        let intentCounts = {
+            'consulta_pedido': 342,
+            'suporte_tecnico': 256,
+            'duvida_produto': 198,
+            'horario_atendimento': 156,
+            'reclamacao': 87,
+            'pagamento': 134,
+            'troca_devolucao': 98,
+            'frete': 167
+        };
+
+        // ===== CHART.JS - ANALYTICS =====
+        let sentimentChart, intentChart;
+
+        function initCharts() {
+            // Sentiment Chart
+            const sentimentCtx = document.getElementById('sentimentChart');
+            if (sentimentCtx) {
+                sentimentChart = new Chart(sentimentCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Positivo', 'Neutro', 'Negativo'],
+                        datasets: [{
+                            data: [65, 25, 10],
+                            backgroundColor: ['#10b981', '#6366f1', '#ef4444'],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: { color: '#94a3b8', padding: 10 }
+                            }
+                        },
+                        cutout: '70%'
+                    }
+                });
+            }
+
+            // Intent Chart
+            const intentCtx = document.getElementById('intentChart');
+            if (intentCtx) {
+                intentChart = new Chart(intentCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Pedidos', 'Suporte', 'Produtos', 'Horário', 'Pagamento'],
+                        datasets: [{
+                            data: [342, 256, 198, 156, 134],
+                            backgroundColor: ['#8b5cf6', '#06b6d4', '#f59e0b', '#10b981', '#ec4899'],
+                            borderRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            x: { ticks: { color: '#64748b' }, grid: { display: false } },
+                            y: { ticks: { color: '#64748b' }, grid: { color: 'rgba(100,116,139,0.1)' } }
+                        }
+                    }
+                });
+            }
+        }
+
+        // ===== ANÁLISE DE SENTIMENTO =====
+        function analyzeSentiment(message) {
+            const positiveWords = ['obrigado', 'excelente', 'ótimo', 'perfeito', 'maravilhoso', 'adorei', 'bom', 'legal', 'show', 'top'];
+            const negativeWords = ['ruim', 'péssimo', 'horrível', 'reclamação', 'problema', 'raiva', 'insatisfeito', 'absurdo', 'nunca mais'];
+            
+            const lower = message.toLowerCase();
+            let sentiment = 'neutro';
+            
+            if (positiveWords.some(w => lower.includes(w))) {
+                sentiment = 'positivo';
+                sentimentScore = Math.min(100, sentimentScore + 5);
+            } else if (negativeWords.some(w => lower.includes(w))) {
+                sentiment = 'negativo';
+                sentimentScore = Math.max(0, sentimentScore - 10);
+            }
+            
+            updateSentimentIndicator(sentiment);
+            return sentiment;
+        }
+
+        function updateSentimentIndicator(sentiment) {
+            const indicator = document.getElementById('sentimentIndicator');
+            if (indicator) {
+                const emojis = { positivo: '😊', neutro: '😐', negativo: '😟' };
+                const colors = { positivo: '#10b981', neutro: '#6366f1', negativo: '#ef4444' };
+                indicator.textContent = emojis[sentiment];
+                indicator.style.background = colors[sentiment] + '33';
+            }
+        }
+
+        // ===== ENVIO DE MENSAGEM =====
         function sendMessage() {
             const input = document.getElementById('messageInput');
             const message = input.value.trim();
             if (!message) return;
 
+            // Adiciona mensagem do usuário
             addMessage(message, 'user');
+            conversationHistory.push({ role: 'user', text: message, time: new Date() });
             input.value = '';
+
+            // Analisa sentimento
+            const sentiment = analyzeSentiment(message);
 
             // Show typing indicator
             showTyping();
 
-            // Simulate bot response
+            // Simula tempo de resposta variável
+            const responseTime = 800 + Math.random() * 1200;
             setTimeout(() => {
                 hideTyping();
                 const response = getBotResponse(message);
-                addMessage(response, 'bot');
+                addMessage(response.text, 'bot');
+                conversationHistory.push({ role: 'bot', text: response.text, time: new Date() });
+                
+                // Atualiza intent
+                updateIntent(response.intent);
                 updateStats();
-            }, 1500);
+                
+                // Quick replies contextuais
+                if (response.quickReplies) {
+                    showQuickReplies(response.quickReplies);
+                }
+            }, responseTime);
         }
 
         function addMessage(text, type) {
@@ -717,23 +947,57 @@
 
         function getBotResponse(message) {
             const lower = message.toLowerCase();
-            if (lower.includes('pedido') || lower.includes('status') || lower.includes('rastreio')) {
-                return responses.pedido;
-            } else if (lower.includes('horario') || lower.includes('funcionamento') || lower.includes('aberto')) {
-                return responses.horario;
-            } else if (lower.includes('suporte') || lower.includes('tecnico') || lower.includes('problema')) {
-                return responses.suporte;
-            } else if (lower.includes('reclamação') || lower.includes('reclamar') || lower.includes('insatisfeito')) {
-                return responses.reclamação;
-            } else if (lower.includes('ola') || lower.includes('oi') || lower.includes('bom dia') || lower.includes('boa tarde')) {
-                return responses.ola;
-            } else if (lower.includes('obrigado') || lower.includes('valeu') || lower.includes('thanks')) {
-                return responses.obrigado;
+            let intent = 'default';
+            let quickReplies = null;
+            
+            if (lower.includes('pedido') || lower.includes('status') || lower.includes('rastreio') || lower.match(/#ped-\d/i)) {
+                intent = 'pedido';
+                quickReplies = ['Ver meus pedidos', 'Prazo de entrega', 'Falar com atendente'];
+            } else if (lower.includes('horario') || lower.includes('funcionamento') || lower.includes('aberto') || lower.includes('fecha')) {
+                intent = 'horario';
+            } else if (lower.includes('suporte') || lower.includes('tecnico') || lower.includes('problema') || lower.includes('erro')) {
+                intent = 'suporte';
+                quickReplies = ['Problema no app', 'Problema no site', 'Erro no pagamento'];
+            } else if (lower.includes('reclamação') || lower.includes('reclamar') || lower.includes('insatisfeito') || lower.includes('absurdo')) {
+                intent = 'reclamacao';
+            } else if (lower.includes('ola') || lower.includes('oi') || lower.includes('bom dia') || lower.includes('boa tarde') || lower.includes('boa noite')) {
+                intent = 'ola';
+                quickReplies = ['Consultar pedido', 'Suporte técnico', 'Horário de atendimento'];
+            } else if (lower.includes('obrigado') || lower.includes('valeu') || lower.includes('thanks') || lower.includes('agradeço')) {
+                intent = 'obrigado';
+            } else if (lower.includes('preço') || lower.includes('preco') || lower.includes('valor') || lower.includes('quanto custa')) {
+                intent = 'preco';
+            } else if (lower.includes('pagamento') || lower.includes('pagar') || lower.includes('cartão') || lower.includes('pix') || lower.includes('boleto')) {
+                intent = 'pagamento';
+            } else if (lower.includes('troca') || lower.includes('trocar') || lower.includes('devolver') || lower.includes('devolução')) {
+                intent = 'troca';
+                quickReplies = ['Produto com defeito', 'Tamanho errado', 'Desistência'];
+            } else if (lower.includes('frete') || lower.includes('entrega') || lower.includes('envio') || lower.includes('cep')) {
+                intent = 'frete';
+            } else if (lower.includes('cancelar') || lower.includes('cancela') || lower.includes('desistir')) {
+                intent = 'cancelar';
             }
-            return responses.default;
+            
+            const responseArray = responses[intent] || responses.default;
+            const text = responseArray[Math.floor(Math.random() * responseArray.length)];
+            
+            return { text, intent, quickReplies };
+        }
+
+        function showQuickReplies(replies) {
+            const container = document.getElementById('chatMessages');
+            const quickDiv = document.createElement('div');
+            quickDiv.className = 'quick-replies-inline';
+            quickDiv.innerHTML = replies.map(r => 
+                `<button onclick="addQuickReply('${r}')">${r}</button>`
+            ).join('');
+            container.appendChild(quickDiv);
+            container.scrollTop = container.scrollHeight;
         }
 
         function addQuickReply(text) {
+            // Remove quick replies anteriores
+            document.querySelectorAll('.quick-replies-inline').forEach(el => el.remove());
             document.getElementById('messageInput').value = text;
             sendMessage();
         }
@@ -744,9 +1008,94 @@
 
         function updateStats() {
             const el = document.getElementById('totalConversas');
-            const current = parseInt(el.textContent.replace(',', ''));
-            el.textContent = (current + 1).toLocaleString();
+            if (el) {
+                const current = parseInt(el.textContent.replace(/\./g, '').replace(',', ''));
+                el.textContent = (current + 1).toLocaleString('pt-BR');
+            }
         }
+
+        function updateIntent(intent) {
+            const intentMap = {
+                'pedido': 'consulta_pedido',
+                'suporte': 'suporte_tecnico',
+                'preco': 'duvida_produto',
+                'horario': 'horario_atendimento',
+                'reclamacao': 'reclamacao',
+                'pagamento': 'pagamento',
+                'troca': 'troca_devolucao',
+                'frete': 'frete'
+            };
+            
+            const key = intentMap[intent];
+            if (key && intentCounts[key] !== undefined) {
+                intentCounts[key]++;
+                updateIntentDisplay();
+            }
+        }
+
+        function updateIntentDisplay() {
+            const sorted = Object.entries(intentCounts).sort((a, b) => b[1] - a[1]);
+            const listEl = document.getElementById('intentsList');
+            if (listEl) {
+                listEl.innerHTML = sorted.slice(0, 5).map(([name, count]) => `
+                    <div class="intent-item">
+                        <span class="intent-name">${name}</span>
+                        <span class="intent-count">${count}</span>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // ===== TRANSFERIR PARA HUMANO =====
+        function transferToHuman() {
+            addMessage('Transferindo para atendente humano... ⏳', 'bot');
+            setTimeout(() => {
+                addMessage('🧑‍💼 Olá! Meu nome é Carlos da equipe de suporte. Vi que você estava conversando com nosso bot. Como posso ajudá-lo?', 'bot');
+                document.getElementById('chatUser').innerHTML = `
+                    <div class="user-avatar" style="background: linear-gradient(135deg, #10b981, #059669);">C</div>
+                    <div class="user-info">
+                        <h3>Carlos - Suporte</h3>
+                        <span>🟢 Atendente Humano</span>
+                    </div>
+                `;
+            }, 2000);
+        }
+
+        // ===== LIMPAR CONVERSA =====
+        function clearChat() {
+            if (confirm('Deseja iniciar uma nova conversa?')) {
+                document.getElementById('chatMessages').innerHTML = `
+                    <div class="message bot">
+                        <div class="message-avatar"><i class="fas fa-robot"></i></div>
+                        <div>
+                            <div class="message-content">
+                                Olá! 👋 Sou o SmartBot, seu assistente virtual.<br><br>
+                                Como posso ajudá-lo hoje?
+                            </div>
+                            <div class="message-time">${new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</div>
+                        </div>
+                    </div>
+                `;
+                conversationHistory = [];
+            }
+        }
+
+        // ===== INICIALIZAÇÃO =====
+        document.addEventListener('DOMContentLoaded', () => {
+            initCharts();
+            updateIntentDisplay();
+            
+            // Simular notificações
+            setInterval(() => {
+                const badge = document.getElementById('queueBadge');
+                if (badge) {
+                    const current = parseInt(badge.textContent);
+                    if (Math.random() > 0.5) {
+                        badge.textContent = Math.max(0, current + (Math.random() > 0.5 ? 1 : -1));
+                    }
+                }
+            }, 5000);
+        });
     </script>
 </body>
 </html>

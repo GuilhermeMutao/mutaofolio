@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Página Não Encontrada | Guilherme Mutão</title>
+    
+    <meta name="description" content="Oops! A página que você procura não existe.">
+    <meta name="robots" content="noindex, nofollow">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👨‍💻</text></svg>">
+    
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#6366f1">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #818cf8;
+            --secondary-color: #10b981;
+            --dark-color: #0f172a;
+            --dark-secondary: #1e293b;
+            --dark-tertiary: #334155;
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --gradient-primary: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .bg-animation span {
+            position: absolute;
+            display: block;
+            width: 20px;
+            height: 20px;
+            background: rgba(99, 102, 241, 0.1);
+            animation: float 25s infinite;
+            border-radius: 50%;
+        }
+
+        .bg-animation span:nth-child(1) { left: 10%; width: 80px; height: 80px; animation-delay: 0s; }
+        .bg-animation span:nth-child(2) { left: 20%; width: 20px; height: 20px; animation-delay: 2s; animation-duration: 12s; }
+        .bg-animation span:nth-child(3) { left: 25%; width: 40px; height: 40px; animation-delay: 4s; }
+        .bg-animation span:nth-child(4) { left: 40%; width: 60px; height: 60px; animation-delay: 0s; animation-duration: 18s; }
+        .bg-animation span:nth-child(5) { left: 55%; width: 25px; height: 25px; animation-delay: 0s; }
+        .bg-animation span:nth-child(6) { left: 70%; width: 110px; height: 110px; animation-delay: 3s; }
+        .bg-animation span:nth-child(7) { left: 80%; width: 15px; height: 15px; animation-delay: 7s; }
+        .bg-animation span:nth-child(8) { left: 35%; width: 50px; height: 50px; animation-delay: 15s; animation-duration: 45s; }
+        .bg-animation span:nth-child(9) { left: 90%; width: 35px; height: 35px; animation-delay: 2s; animation-duration: 35s; }
+        .bg-animation span:nth-child(10) { left: 5%; width: 100px; height: 100px; animation-delay: 0s; animation-duration: 20s; }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* Main Content */
+        .container {
+            text-align: center;
+            z-index: 1;
+            padding: 40px;
+            max-width: 600px;
+        }
+
+        /* Glitch Effect for 404 */
+        .error-code {
+            font-size: 12rem;
+            font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            animation: glitch 2s infinite;
+            line-height: 1;
+            margin-bottom: 20px;
+        }
+
+        @keyframes glitch {
+            0%, 90%, 100% {
+                transform: translate(0);
+            }
+            92% {
+                transform: translate(-5px, 0);
+            }
+            94% {
+                transform: translate(5px, 0);
+            }
+            96% {
+                transform: translate(-3px, 0);
+            }
+            98% {
+                transform: translate(3px, 0);
+            }
+        }
+
+        .error-code::before,
+        .error-code::after {
+            content: '404';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .error-code::before {
+            animation: glitch-1 0.3s infinite;
+            clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
+        }
+
+        .error-code::after {
+            animation: glitch-2 0.3s infinite;
+            clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
+        }
+
+        @keyframes glitch-1 {
+            0%, 100% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+        }
+
+        @keyframes glitch-2 {
+            0%, 100% { transform: translate(0); }
+            20% { transform: translate(2px, -2px); }
+            40% { transform: translate(2px, 2px); }
+            60% { transform: translate(-2px, -2px); }
+            80% { transform: translate(-2px, 2px); }
+        }
+
+        /* Astronaut Icon */
+        .error-icon {
+            font-size: 5rem;
+            margin-bottom: 30px;
+            animation: float-astronaut 3s ease-in-out infinite;
+        }
+
+        @keyframes float-astronaut {
+            0%, 100% {
+                transform: translateY(0) rotate(-5deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(5deg);
+            }
+        }
+
+        .error-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--text-primary);
+        }
+
+        .error-message {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            line-height: 1.7;
+        }
+
+        /* Buttons */
+        .error-actions {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 35px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(99, 102, 241, 0.6);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 2px solid var(--dark-tertiary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--dark-secondary);
+            border-color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+
+        /* Search Bar */
+        .search-container {
+            margin-top: 50px;
+            position: relative;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .search-container input {
+            width: 100%;
+            padding: 18px 25px;
+            padding-right: 60px;
+            border-radius: 50px;
+            border: 2px solid var(--dark-tertiary);
+            background: var(--dark-secondary);
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .search-container input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
+        }
+
+        .search-container input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .search-container button {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: none;
+            background: var(--gradient-primary);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .search-container button:hover {
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        /* Quick Links */
+        .quick-links {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 1px solid var(--dark-tertiary);
+        }
+
+        .quick-links h3 {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .quick-links-list {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .quick-links-list a {
+            color: var(--primary-light);
+            text-decoration: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            background: var(--dark-secondary);
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .quick-links-list a:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* Focus States for Accessibility */
+        a:focus,
+        button:focus,
+        input:focus {
+            outline: 2px solid var(--primary-light);
+            outline-offset: 3px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .error-code {
+                font-size: 7rem;
+            }
+
+            .error-title {
+                font-size: 1.5rem;
+            }
+
+            .error-message {
+                font-size: 1rem;
+            }
+
+            .error-icon {
+                font-size: 3.5rem;
+            }
+
+            .btn {
+                padding: 12px 25px;
+                font-size: 0.9rem;
+            }
+
+            .error-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="bg-animation" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <main class="container" role="main">
+        <!-- Floating Astronaut -->
+        <div class="error-icon" aria-hidden="true">🧑‍🚀</div>
+        
+        <!-- 404 Glitch -->
+        <h1 class="error-code" aria-label="Erro 404">404</h1>
+        
+        <h2 class="error-title">Oops! Você se perdeu no espaço</h2>
+        
+        <p class="error-message">
+            A página que você está procurando pode ter sido movida, deletada, 
+            ou talvez nunca tenha existido. Mas não se preocupe, vamos te ajudar a voltar!
+        </p>
+
+        <!-- Action Buttons -->
+        <div class="error-actions">
+            <a href="index.html" class="btn btn-primary" aria-label="Voltar para a página inicial">
+                <i class="fas fa-home" aria-hidden="true"></i>
+                Voltar ao Início
+            </a>
+            <a href="index.html#projects" class="btn btn-secondary" aria-label="Ver projetos">
+                <i class="fas fa-folder-open" aria-hidden="true"></i>
+                Ver Projetos
+            </a>
+        </div>
+
+        <!-- Search -->
+        <div class="search-container" role="search">
+            <label for="search-input" class="sr-only">Buscar no site</label>
+            <input 
+                type="text" 
+                id="search-input" 
+                placeholder="O que você está procurando?"
+                aria-label="Buscar no site"
+            >
+            <button type="button" aria-label="Buscar" onclick="handleSearch()">
+                <i class="fas fa-search" aria-hidden="true"></i>
+            </button>
+        </div>
+
+        <!-- Quick Links -->
+        <nav class="quick-links" aria-label="Links rápidos">
+            <h3>Links Rápidos</h3>
+            <div class="quick-links-list">
+                <a href="index.html#about">Sobre</a>
+                <a href="index.html#skills">Habilidades</a>
+                <a href="index.html#projects">Projetos</a>
+                <a href="index.html#playground">Playground</a>
+                <a href="index.html#contact">Contato</a>
+            </div>
+        </nav>
+    </main>
+
+    <script>
+        // Handle search
+        function handleSearch() {
+            const input = document.getElementById('search-input');
+            const query = input.value.trim().toLowerCase();
+            
+            const pages = {
+                'sobre': 'index.html#about',
+                'about': 'index.html#about',
+                'habilidades': 'index.html#skills',
+                'skills': 'index.html#skills',
+                'projetos': 'index.html#projects',
+                'projects': 'index.html#projects',
+                'playground': 'index.html#playground',
+                'jogos': 'index.html#playground',
+                'games': 'index.html#playground',
+                'contato': 'index.html#contact',
+                'contact': 'index.html#contact',
+                'experiencia': 'index.html#experience',
+                'experience': 'index.html#experience',
+                'formacao': 'index.html#education',
+                'education': 'index.html#education',
+                'sga': 'projects/sga-atletas/index.html',
+                'atletas': 'projects/sga-atletas/index.html',
+                'logistica': 'projects/logistica-hub/index.html',
+                'frotas': 'projects/logistica-hub/index.html',
+                'iptu': 'projects/iptu-digital/index.html',
+                'api': 'projects/integration-api/index.html',
+                'scrum': 'projects/scrum-analytics/index.html',
+                'evento': 'projects/event-check/index.html',
+                'event': 'projects/event-check/index.html',
+                'bot': 'projects/smart-bot/index.html',
+                'chat': 'projects/smart-bot/index.html',
+                'estoque': 'projects/estoque-smart/index.html',
+                'vistoria': 'projects/vistoria-app/index.html'
+            };
+
+            for (const [key, url] of Object.entries(pages)) {
+                if (query.includes(key)) {
+                    window.location.href = url;
+                    return;
+                }
+            }
+
+            // Default to home if no match
+            if (query) {
+                window.location.href = 'index.html#projects';
+            }
+        }
+
+        // Search on Enter
+        document.getElementById('search-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                handleSearch();
+            }
+        });
+
+        // Easter egg: Konami Code
+        let konamiCode = [];
+        const konamiSequence = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+        
+        document.addEventListener('keydown', (e) => {
+            konamiCode.push(e.key);
+            konamiCode = konamiCode.slice(-10);
+            
+            if (konamiCode.join('') === konamiSequence.join('')) {
+                document.querySelector('.error-icon').textContent = '🚀';
+                document.querySelector('.error-title').textContent = '🎮 Você encontrou o Easter Egg!';
+                document.querySelector('.error-message').textContent = 'Parabéns, você é um verdadeiro gamer! Agora volte para o portfólio 😄';
+            }
+        });
+    </script>
+
+    <!-- Screen Reader Only Styles -->
+    <style>
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+    </style>
+</body>
+</html>
