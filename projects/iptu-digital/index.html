@@ -479,8 +479,758 @@
             margin-top: 40px;
         }
 
+        /* Dashboard Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: rgba(30, 41, 59, 0.8);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle at top right, rgba(59, 130, 246, 0.2), transparent);
+        }
+        .stat-card-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(59, 130, 246, 0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+        }
+        .stat-card-icon.green { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .stat-card-icon.blue { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
+        .stat-card-icon.orange { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+        .stat-card-icon.red { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+        .stat-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+        .stat-card p {
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+        .stat-card .trend {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 0.8rem;
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+        .stat-card .trend.up { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .stat-card .trend.down { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+
+        /* Notification Bell */
+        .notification-bell {
+            position: relative;
+            cursor: pointer;
+            margin-right: 15px;
+        }
+        .notification-bell i {
+            font-size: 1.3rem;
+        }
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ef4444;
+            color: white;
+            font-size: 0.65rem;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+        .notification-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: #1e293b;
+            border-radius: 12px;
+            width: 320px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            display: none;
+            margin-top: 10px;
+        }
+        .notification-dropdown.active {
+            display: block;
+            animation: dropIn 0.3s ease;
+        }
+        @keyframes dropIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .notification-header {
+            padding: 15px;
+            border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .notification-item {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(59, 130, 246, 0.1);
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .notification-item:hover {
+            background: rgba(59, 130, 246, 0.1);
+        }
+        .notification-item.unread {
+            background: rgba(59, 130, 246, 0.05);
+        }
+        .notification-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+        .notification-icon.warning { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+        .notification-icon.success { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .notification-icon.info { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
+        .notification-icon.error { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+        .notification-content {
+            flex: 1;
+        }
+        .notification-text {
+            font-size: 0.85rem;
+            margin-bottom: 3px;
+        }
+        .notification-time {
+            font-size: 0.75rem;
+            color: #64748b;
+        }
+
+        /* Payment History */
+        .history-section {
+            background: rgba(30, 41, 59, 0.8);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .history-filters {
+            display: flex;
+            gap: 10px;
+        }
+        .history-filter {
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: rgba(59, 130, 246, 0.1);
+            color: #94a3b8;
+            border: none;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+        .history-filter.active {
+            background: #3b82f6;
+            color: white;
+        }
+        .history-timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+        .history-timeline::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: rgba(59, 130, 246, 0.3);
+        }
+        .history-item {
+            position: relative;
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+        .history-item::before {
+            content: '';
+            position: absolute;
+            left: -24px;
+            top: 25px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #3b82f6;
+            border: 3px solid #0f172a;
+        }
+        .history-item.paid::before { background: #10b981; }
+        .history-item.pending::before { background: #f59e0b; }
+        .history-item.overdue::before { background: #ef4444; }
+        .history-item-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .history-item-title {
+            font-weight: 600;
+        }
+        .history-item-date {
+            font-size: 0.85rem;
+            color: #64748b;
+        }
+        .history-item-details {
+            display: flex;
+            gap: 20px;
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+        .history-item-details span i {
+            margin-right: 5px;
+            color: #3b82f6;
+        }
+        .history-item-value {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #10b981;
+        }
+
+        /* Simulator */
+        .simulator-card {
+            background: rgba(30, 41, 59, 0.8);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+        .simulator-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr auto;
+            gap: 20px;
+            align-items: end;
+            margin-bottom: 25px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .form-group label {
+            font-size: 0.85rem;
+            color: #94a3b8;
+        }
+        .form-group input,
+        .form-group select {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 8px;
+            padding: 12px 15px;
+            color: #e2e8f0;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #3b82f6;
+        }
+        .simulator-results {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        .result-card {
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+        .result-card h4 {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            margin-bottom: 10px;
+        }
+        .result-card .value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #3b82f6;
+        }
+        .result-card .value.green { color: #10b981; }
+        .result-card .value.red { color: #ef4444; }
+
+        /* Calendar */
+        .calendar-section {
+            background: rgba(30, 41, 59, 0.8);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .calendar-nav {
+            display: flex;
+            gap: 10px;
+        }
+        .calendar-nav button {
+            background: rgba(59, 130, 246, 0.2);
+            border: none;
+            color: #3b82f6;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .calendar-nav button:hover {
+            background: #3b82f6;
+            color: white;
+        }
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+        }
+        .calendar-day-name {
+            text-align: center;
+            font-size: 0.8rem;
+            color: #64748b;
+            padding: 10px;
+        }
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+        .calendar-day:hover {
+            background: rgba(59, 130, 246, 0.2);
+        }
+        .calendar-day.today {
+            background: #3b82f6;
+            color: white;
+            font-weight: 600;
+        }
+        .calendar-day.has-event::after {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #f59e0b;
+        }
+        .calendar-day.paid::after {
+            background: #10b981;
+        }
+        .calendar-day.other-month {
+            color: #475569;
+        }
+
+        /* Chat Support */
+        .chat-button {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #1e40af);
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 5px 25px rgba(59, 130, 246, 0.4);
+            z-index: 100;
+            transition: all 0.3s;
+        }
+        .chat-button:hover {
+            transform: scale(1.1);
+        }
+        .chat-window {
+            position: fixed;
+            bottom: 150px;
+            right: 20px;
+            width: 380px;
+            height: 500px;
+            background: #1e293b;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .chat-window.active {
+            display: flex;
+            animation: slideUp 0.3s ease;
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .chat-header {
+            background: linear-gradient(135deg, #3b82f6, #1e40af);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .chat-avatar {
+            width: 45px;
+            height: 45px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #3b82f6;
+            font-size: 1.3rem;
+        }
+        .chat-header-info h4 {
+            margin-bottom: 3px;
+        }
+        .chat-header-info span {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+        .chat-close {
+            margin-left: auto;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.3rem;
+            cursor: pointer;
+        }
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .chat-message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 16px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        .chat-message.bot {
+            background: rgba(59, 130, 246, 0.2);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+        .chat-message.user {
+            background: #3b82f6;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+        .chat-quick-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 0 20px 15px;
+        }
+        .chat-quick-btn {
+            padding: 8px 14px;
+            border-radius: 20px;
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: #3b82f6;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .chat-quick-btn:hover {
+            background: #3b82f6;
+            color: white;
+        }
+        .chat-input-area {
+            padding: 15px 20px;
+            border-top: 1px solid rgba(59, 130, 246, 0.2);
+            display: flex;
+            gap: 10px;
+        }
+        .chat-input {
+            flex: 1;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 25px;
+            padding: 12px 20px;
+            color: #e2e8f0;
+            font-size: 0.9rem;
+            outline: none;
+        }
+        .chat-send {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: #3b82f6;
+            border: none;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .chat-send:hover {
+            background: #1e40af;
+        }
+
+        /* Certificate Modal */
+        .certificate-preview {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            color: #1e293b;
+            text-align: center;
+        }
+        .certificate-header {
+            border-bottom: 3px solid #3b82f6;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+        .certificate-header h3 {
+            color: #1e40af;
+            margin-bottom: 5px;
+        }
+        .certificate-body {
+            text-align: left;
+            font-size: 0.9rem;
+            line-height: 1.8;
+        }
+        .certificate-body strong {
+            color: #1e40af;
+        }
+        .certificate-footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .certificate-qr {
+            width: 80px;
+            height: 80px;
+            background: #f1f5f9;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .certificate-qr i {
+            font-size: 2.5rem;
+            color: #1e293b;
+        }
+        .certificate-code {
+            font-family: monospace;
+            font-size: 0.85rem;
+            color: #64748b;
+        }
+
+        /* Map Section */
+        .map-section {
+            background: rgba(30, 41, 59, 0.8);
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 30px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+        .map-container {
+            height: 300px;
+            background: #1e293b;
+            position: relative;
+        }
+        .map-placeholder {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(99, 102, 241, 0.1));
+        }
+        .map-placeholder i {
+            font-size: 4rem;
+            color: #3b82f6;
+            margin-bottom: 15px;
+        }
+        .map-info {
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+        .map-info-item {
+            text-align: center;
+        }
+        .map-info-item label {
+            display: block;
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+        .map-info-item span {
+            font-weight: 600;
+            color: #3b82f6;
+        }
+
+        /* Tabs Navigation */
+        .tabs-nav {
+            display: flex;
+            gap: 5px;
+            background: rgba(30, 41, 59, 0.8);
+            border-radius: 12px;
+            padding: 5px;
+            margin-bottom: 30px;
+            overflow-x: auto;
+        }
+        .tab-btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .tab-btn:hover {
+            color: #e2e8f0;
+            background: rgba(59, 130, 246, 0.1);
+        }
+        .tab-btn.active {
+            background: #3b82f6;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        /* Evolution Chart */
+        .chart-container {
+            background: rgba(30, 41, 59, 0.8);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .chart-legend {
+            display: flex;
+            gap: 20px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+        }
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+        .legend-dot.blue { background: #3b82f6; }
+        .legend-dot.green { background: #10b981; }
+        .chart-bars {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            height: 200px;
+            gap: 15px;
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+        }
+        .chart-bar-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        .chart-bar-wrapper {
+            display: flex;
+            gap: 4px;
+            height: 150px;
+            align-items: flex-end;
+        }
+        .chart-bar {
+            width: 20px;
+            border-radius: 4px 4px 0 0;
+            transition: height 0.5s ease;
+        }
+        .chart-bar.iptu { background: linear-gradient(to top, #1e40af, #3b82f6); }
+        .chart-bar.paid { background: linear-gradient(to top, #059669, #10b981); }
+        .chart-label {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
         @media (max-width: 768px) {
             .services-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
             .welcome-card {
@@ -494,6 +1244,23 @@
             }
             .method-options {
                 grid-template-columns: 1fr;
+            }
+            .simulator-form {
+                grid-template-columns: 1fr;
+            }
+            .simulator-results {
+                grid-template-columns: 1fr;
+            }
+            .tabs-nav {
+                overflow-x: auto;
+            }
+            .map-info {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .chat-window {
+                width: calc(100% - 40px);
+                right: 20px;
+                left: 20px;
             }
         }
 
@@ -539,9 +1306,48 @@
                     <span>Portal do Contribuinte</span>
                 </div>
             </div>
-            <div class="user-menu">
-                <span>Olá, João Silva</span>
-                <i class="fas fa-user-circle" style="font-size: 2rem;"></i>
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <div class="notification-bell" onclick="toggleNotifications()">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">3</span>
+                    <div class="notification-dropdown" id="notificationDropdown">
+                        <div class="notification-header">
+                            <strong>Notificações</strong>
+                            <button onclick="markAllRead(event)" style="background: none; border: none; color: #3b82f6; cursor: pointer; font-size: 0.8rem;">Marcar lidas</button>
+                        </div>
+                        <div class="notification-item unread">
+                            <div class="notification-icon warning">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <div class="notification-content">
+                                <p class="notification-text">IPTU vence em 5 dias - Rua das Flores, 123</p>
+                                <span class="notification-time">Há 2 horas</span>
+                            </div>
+                        </div>
+                        <div class="notification-item unread">
+                            <div class="notification-icon success">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="notification-content">
+                                <p class="notification-text">Pagamento confirmado - Av. Brasil, 456</p>
+                                <span class="notification-time">Há 1 dia</span>
+                            </div>
+                        </div>
+                        <div class="notification-item unread">
+                            <div class="notification-icon info">
+                                <i class="fas fa-info-circle"></i>
+                            </div>
+                            <div class="notification-content">
+                                <p class="notification-text">Carnê IPTU 2026 disponível para download</p>
+                                <span class="notification-time">Há 3 dias</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="user-menu">
+                    <span>Olá, João Silva</span>
+                    <i class="fas fa-user-circle" style="font-size: 2rem;"></i>
+                </div>
             </div>
         </div>
     </header>
@@ -556,13 +1362,68 @@
                 <button class="btn btn-primary" onclick="openPaymentModal()">
                     <i class="fas fa-barcode"></i> Pagar IPTU
                 </button>
-                <button class="btn btn-outline">
+                <button class="btn btn-outline" onclick="openCertificateModal()">
                     <i class="fas fa-file-alt"></i> Certidão Negativa
                 </button>
             </div>
         </div>
 
-        <h2 class="section-title"><i class="fas fa-home"></i> Meus Imóveis</h2>
+        <!-- Stats Dashboard -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="trend up"><i class="fas fa-arrow-up"></i> 2.3%</span>
+                <div class="stat-card-icon blue">
+                    <i class="fas fa-building"></i>
+                </div>
+                <h3>3</h3>
+                <p>Imóveis Cadastrados</p>
+            </div>
+            <div class="stat-card">
+                <span class="trend down"><i class="fas fa-arrow-down"></i> -10%</span>
+                <div class="stat-card-icon orange">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <h3>R$ 1.850</h3>
+                <p>IPTU Pendente</p>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-icon green">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h3>R$ 8.750</h3>
+                <p>Total Pago 2025</p>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-icon red">
+                    <i class="fas fa-percent"></i>
+                </div>
+                <h3>10%</h3>
+                <p>Desconto à Vista</p>
+            </div>
+        </div>
+
+        <!-- Tabs Navigation -->
+        <div class="tabs-nav">
+            <button class="tab-btn active" onclick="showTab('imoveis')">
+                <i class="fas fa-home"></i> Meus Imóveis
+            </button>
+            <button class="tab-btn" onclick="showTab('historico')">
+                <i class="fas fa-history"></i> Histórico
+            </button>
+            <button class="tab-btn" onclick="showTab('simulador')">
+                <i class="fas fa-calculator"></i> Simulador
+            </button>
+            <button class="tab-btn" onclick="showTab('calendario')">
+                <i class="fas fa-calendar-alt"></i> Calendário
+            </button>
+            <button class="tab-btn" onclick="showTab('mapa')">
+                <i class="fas fa-map-marked-alt"></i> Localização
+            </button>
+        </div>
+
+        <!-- Tab: Meus Imóveis -->
+        <div class="tab-content active" id="tab-imoveis">
+            <h2 class="section-title"><i class="fas fa-home"></i> Meus Imóveis</h2>
         <div class="properties-grid">
             <div class="property-card">
                 <div class="property-header">
@@ -638,38 +1499,471 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Terceiro Imóvel -->
+            <div class="property-card">
+                <div class="property-header">
+                    <div class="property-icon">
+                        <i class="fas fa-warehouse"></i>
+                    </div>
+                    <span class="property-status status-overdue">Atrasado</span>
+                </div>
+                <div class="property-body">
+                    <div class="property-address">Rua Industrial, 789 - Galpão B</div>
+                    <div class="property-inscription">Inscrição: 03.08.015.0012.00007</div>
+                    <div class="property-details">
+                        <div class="detail-item">
+                            <label>Valor IPTU 2026</label>
+                            <span>R$ 4.500,00</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Área</label>
+                            <span>450 m²</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Venceu em</label>
+                            <span style="color: #ef4444;">15/01/2026</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Multa/Juros</label>
+                            <span style="color: #ef4444;">+ R$ 180,00</span>
+                        </div>
+                    </div>
+                    <div class="property-actions">
+                        <button class="btn btn-primary" onclick="openPaymentModal()">
+                            <i class="fas fa-exclamation-circle"></i> Regularizar
+                        </button>
+                        <button class="btn btn-outline">
+                            <i class="fas fa-calculator"></i> Parcelar
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <h2 class="section-title"><i class="fas fa-th-large"></i> Serviços</h2>
+        <h2 class="section-title"><i class="fas fa-th-large"></i> Serviços Rápidos</h2>
         <div class="services-grid">
-            <div class="service-card">
+            <div class="service-card" onclick="showTab('simulador')">
                 <div class="service-icon">
                     <i class="fas fa-file-invoice-dollar"></i>
                 </div>
                 <h3>2ª Via de Guia</h3>
                 <p>Emita segunda via do boleto</p>
             </div>
-            <div class="service-card">
+            <div class="service-card" onclick="showTab('simulador')">
                 <div class="service-icon">
                     <i class="fas fa-calculator"></i>
                 </div>
                 <h3>Simular Parcelamento</h3>
                 <p>Calcule parcelas e juros</p>
             </div>
-            <div class="service-card">
+            <div class="service-card" onclick="openCertificateModal()">
                 <div class="service-icon">
                     <i class="fas fa-certificate"></i>
                 </div>
                 <h3>Certidões</h3>
                 <p>Negativa de débitos</p>
             </div>
-            <div class="service-card">
+            <div class="service-card" onclick="showTab('historico')">
                 <div class="service-icon">
                     <i class="fas fa-history"></i>
                 </div>
                 <h3>Histórico</h3>
                 <p>Consulte pagamentos</p>
             </div>
+        </div>
+        </div> <!-- End Tab Imoveis -->
+
+        <!-- Tab: Histórico -->
+        <div class="tab-content" id="tab-historico">
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h2 class="section-title" style="margin: 0;"><i class="fas fa-chart-bar"></i> Evolução Anual</h2>
+                    <div class="chart-legend">
+                        <div class="legend-item">
+                            <span class="legend-dot blue"></span>
+                            <span>Valor IPTU</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-dot green"></span>
+                            <span>Valor Pago</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="chart-bars">
+                    <div class="chart-bar-group">
+                        <div class="chart-bar-wrapper">
+                            <div class="chart-bar iptu" style="height: 60px;"></div>
+                            <div class="chart-bar paid" style="height: 60px;"></div>
+                        </div>
+                        <span class="chart-label">2020</span>
+                    </div>
+                    <div class="chart-bar-group">
+                        <div class="chart-bar-wrapper">
+                            <div class="chart-bar iptu" style="height: 75px;"></div>
+                            <div class="chart-bar paid" style="height: 75px;"></div>
+                        </div>
+                        <span class="chart-label">2021</span>
+                    </div>
+                    <div class="chart-bar-group">
+                        <div class="chart-bar-wrapper">
+                            <div class="chart-bar iptu" style="height: 85px;"></div>
+                            <div class="chart-bar paid" style="height: 85px;"></div>
+                        </div>
+                        <span class="chart-label">2022</span>
+                    </div>
+                    <div class="chart-bar-group">
+                        <div class="chart-bar-wrapper">
+                            <div class="chart-bar iptu" style="height: 100px;"></div>
+                            <div class="chart-bar paid" style="height: 100px;"></div>
+                        </div>
+                        <span class="chart-label">2023</span>
+                    </div>
+                    <div class="chart-bar-group">
+                        <div class="chart-bar-wrapper">
+                            <div class="chart-bar iptu" style="height: 120px;"></div>
+                            <div class="chart-bar paid" style="height: 115px;"></div>
+                        </div>
+                        <span class="chart-label">2024</span>
+                    </div>
+                    <div class="chart-bar-group">
+                        <div class="chart-bar-wrapper">
+                            <div class="chart-bar iptu" style="height: 135px;"></div>
+                            <div class="chart-bar paid" style="height: 95px;"></div>
+                        </div>
+                        <span class="chart-label">2025</span>
+                    </div>
+                    <div class="chart-bar-group">
+                        <div class="chart-bar-wrapper">
+                            <div class="chart-bar iptu" style="height: 145px;"></div>
+                            <div class="chart-bar paid" style="height: 50px;"></div>
+                        </div>
+                        <span class="chart-label">2026</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="history-section">
+                <div class="history-header">
+                    <h2 class="section-title" style="margin: 0;"><i class="fas fa-history"></i> Histórico de Pagamentos</h2>
+                    <div class="history-filters">
+                        <button class="history-filter active">Todos</button>
+                        <button class="history-filter">Pagos</button>
+                        <button class="history-filter">Pendentes</button>
+                        <button class="history-filter">2026</button>
+                    </div>
+                </div>
+                <div class="history-timeline">
+                    <div class="history-item paid">
+                        <div class="history-item-header">
+                            <span class="history-item-title">Av. Brasil, 456 - IPTU 2026 (Cota Única)</span>
+                            <span class="history-item-value">R$ 2.880,00</span>
+                        </div>
+                        <span class="history-item-date">10 de Janeiro de 2026</span>
+                        <div class="history-item-details">
+                            <span><i class="fas fa-check-circle"></i> Pago via PIX</span>
+                            <span><i class="fas fa-percent"></i> Desconto 10%</span>
+                            <span><i class="fas fa-receipt"></i> #2026010001</span>
+                        </div>
+                    </div>
+                    <div class="history-item pending">
+                        <div class="history-item-header">
+                            <span class="history-item-title">Rua das Flores, 123 - IPTU 2026 (Parcela 1/10)</span>
+                            <span class="history-item-value" style="color: #f59e0b;">R$ 185,00</span>
+                        </div>
+                        <span class="history-item-date">Vence em 15 de Fevereiro de 2026</span>
+                        <div class="history-item-details">
+                            <span><i class="fas fa-clock"></i> Aguardando pagamento</span>
+                            <span><i class="fas fa-calendar"></i> 5 dias restantes</span>
+                        </div>
+                    </div>
+                    <div class="history-item overdue">
+                        <div class="history-item-header">
+                            <span class="history-item-title">Rua Industrial, 789 - IPTU 2026 (Cota Única)</span>
+                            <span class="history-item-value" style="color: #ef4444;">R$ 4.680,00</span>
+                        </div>
+                        <span class="history-item-date">Venceu em 15 de Janeiro de 2026</span>
+                        <div class="history-item-details">
+                            <span><i class="fas fa-exclamation-triangle"></i> Em atraso</span>
+                            <span><i class="fas fa-plus-circle"></i> Multa + Juros: R$ 180,00</span>
+                        </div>
+                    </div>
+                    <div class="history-item paid">
+                        <div class="history-item-header">
+                            <span class="history-item-title">Rua das Flores, 123 - IPTU 2025 (Cota Única)</span>
+                            <span class="history-item-value">R$ 1.620,00</span>
+                        </div>
+                        <span class="history-item-date">05 de Janeiro de 2025</span>
+                        <div class="history-item-details">
+                            <span><i class="fas fa-check-circle"></i> Pago via Boleto</span>
+                            <span><i class="fas fa-percent"></i> Desconto 10%</span>
+                        </div>
+                    </div>
+                    <div class="history-item paid">
+                        <div class="history-item-header">
+                            <span class="history-item-title">Rua Industrial, 789 - IPTU 2025 (Parcelado)</span>
+                            <span class="history-item-value">R$ 4.500,00</span>
+                        </div>
+                        <span class="history-item-date">Dezembro de 2025 (10 parcelas)</span>
+                        <div class="history-item-details">
+                            <span><i class="fas fa-check-circle"></i> Quitado</span>
+                            <span><i class="fas fa-credit-card"></i> Débito automático</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Simulador -->
+        <div class="tab-content" id="tab-simulador">
+            <div class="simulator-card">
+                <h2 class="section-title" style="margin: 0 0 25px;"><i class="fas fa-calculator"></i> Simulador de Parcelamento</h2>
+                <div class="simulator-form">
+                    <div class="form-group">
+                        <label>Selecione o Imóvel</label>
+                        <select id="simImovel" onchange="updateSimulator()">
+                            <option value="1850">Rua das Flores, 123 - R$ 1.850,00</option>
+                            <option value="3200">Av. Brasil, 456 - R$ 3.200,00</option>
+                            <option value="4500">Rua Industrial, 789 - R$ 4.500,00</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Número de Parcelas</label>
+                        <select id="simParcelas" onchange="updateSimulator()">
+                            <option value="1">À vista (10% desconto)</option>
+                            <option value="2">2x sem juros</option>
+                            <option value="3">3x sem juros</option>
+                            <option value="4">4x sem juros</option>
+                            <option value="5">5x sem juros</option>
+                            <option value="6">6x (1% juros)</option>
+                            <option value="8">8x (2% juros)</option>
+                            <option value="10" selected>10x (3% juros)</option>
+                            <option value="12">12x (5% juros)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Primeiro Vencimento</label>
+                        <input type="date" id="simData" value="2026-02-15" onchange="updateSimulator()">
+                    </div>
+                    <button class="btn btn-primary" onclick="updateSimulator()">
+                        <i class="fas fa-sync"></i> Calcular
+                    </button>
+                </div>
+                <div class="simulator-results">
+                    <div class="result-card">
+                        <h4>Valor Original</h4>
+                        <div class="value" id="valorOriginal">R$ 1.850,00</div>
+                    </div>
+                    <div class="result-card">
+                        <h4>Juros/Desconto</h4>
+                        <div class="value green" id="valorJuros">+ R$ 55,50</div>
+                    </div>
+                    <div class="result-card">
+                        <h4>Total a Pagar</h4>
+                        <div class="value" id="valorTotal">R$ 1.905,50</div>
+                    </div>
+                    <div class="result-card">
+                        <h4>Valor da Parcela</h4>
+                        <div class="value" id="valorParcela">R$ 190,55</div>
+                    </div>
+                    <div class="result-card">
+                        <h4>Primeira Parcela</h4>
+                        <div class="value" id="primeiraParcela">15/02/2026</div>
+                    </div>
+                    <div class="result-card">
+                        <h4>Última Parcela</h4>
+                        <div class="value" id="ultimaParcela">15/11/2026</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabela de Parcelas -->
+            <div class="history-section">
+                <h2 class="section-title" style="margin: 0 0 20px;"><i class="fas fa-list-ol"></i> Cronograma de Parcelas</h2>
+                <div id="tabelaParcelas" style="display: grid; gap: 10px;">
+                    <!-- Preenchido via JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Calendário -->
+        <div class="tab-content" id="tab-calendario">
+            <div class="calendar-section">
+                <div class="calendar-header">
+                    <h2 class="section-title" style="margin: 0;"><i class="fas fa-calendar-alt"></i> Calendário de Vencimentos</h2>
+                    <div class="calendar-nav">
+                        <button onclick="changeMonth(-1)"><i class="fas fa-chevron-left"></i></button>
+                        <span id="currentMonth" style="padding: 0 15px; font-weight: 600;">Fevereiro 2026</span>
+                        <button onclick="changeMonth(1)"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+                <div class="calendar-grid">
+                    <div class="calendar-day-name">Dom</div>
+                    <div class="calendar-day-name">Seg</div>
+                    <div class="calendar-day-name">Ter</div>
+                    <div class="calendar-day-name">Qua</div>
+                    <div class="calendar-day-name">Qui</div>
+                    <div class="calendar-day-name">Sex</div>
+                    <div class="calendar-day-name">Sáb</div>
+                    <!-- Days filled by JavaScript -->
+                    <div class="calendar-day other-month">26</div>
+                    <div class="calendar-day other-month">27</div>
+                    <div class="calendar-day other-month">28</div>
+                    <div class="calendar-day other-month">29</div>
+                    <div class="calendar-day other-month">30</div>
+                    <div class="calendar-day other-month">31</div>
+                    <div class="calendar-day">1</div>
+                    <div class="calendar-day">2</div>
+                    <div class="calendar-day">3</div>
+                    <div class="calendar-day">4</div>
+                    <div class="calendar-day">5</div>
+                    <div class="calendar-day">6</div>
+                    <div class="calendar-day">7</div>
+                    <div class="calendar-day">8</div>
+                    <div class="calendar-day">9</div>
+                    <div class="calendar-day today">10</div>
+                    <div class="calendar-day">11</div>
+                    <div class="calendar-day">12</div>
+                    <div class="calendar-day">13</div>
+                    <div class="calendar-day">14</div>
+                    <div class="calendar-day has-event">15</div>
+                    <div class="calendar-day">16</div>
+                    <div class="calendar-day">17</div>
+                    <div class="calendar-day">18</div>
+                    <div class="calendar-day">19</div>
+                    <div class="calendar-day">20</div>
+                    <div class="calendar-day">21</div>
+                    <div class="calendar-day">22</div>
+                    <div class="calendar-day">23</div>
+                    <div class="calendar-day">24</div>
+                    <div class="calendar-day">25</div>
+                    <div class="calendar-day">26</div>
+                    <div class="calendar-day">27</div>
+                    <div class="calendar-day">28</div>
+                </div>
+            </div>
+
+            <!-- Eventos do Mês -->
+            <div class="history-section">
+                <h2 class="section-title" style="margin: 0 0 20px;"><i class="fas fa-bell"></i> Vencimentos deste Mês</h2>
+                <div class="history-timeline">
+                    <div class="history-item pending">
+                        <div class="history-item-header">
+                            <span class="history-item-title">IPTU Rua das Flores, 123 - Parcela 1/10</span>
+                            <span class="history-item-value" style="color: #f59e0b;">R$ 185,00</span>
+                        </div>
+                        <span class="history-item-date">15 de Fevereiro de 2026</span>
+                        <div class="history-item-details">
+                            <span><i class="fas fa-clock"></i> Em 5 dias</span>
+                            <button class="btn btn-primary" style="padding: 6px 12px; font-size: 0.8rem;" onclick="openPaymentModal()">Pagar Agora</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Mapa/Localização -->
+        <div class="tab-content" id="tab-mapa">
+            <div class="map-section">
+                <div class="map-container">
+                    <div class="map-placeholder">
+                        <i class="fas fa-map-marked-alt"></i>
+                        <p>Mapa Interativo</p>
+                        <span style="color: #64748b; font-size: 0.85rem;">Rua das Flores, 123 - Centro</span>
+                    </div>
+                </div>
+                <div class="map-info">
+                    <div class="map-info-item">
+                        <label>Zona</label>
+                        <span>Residencial ZR-2</span>
+                    </div>
+                    <div class="map-info-item">
+                        <label>Quadra</label>
+                        <span>003</span>
+                    </div>
+                    <div class="map-info-item">
+                        <label>Lote</label>
+                        <span>0004</span>
+                    </div>
+                    <div class="map-info-item">
+                        <label>Setor</label>
+                        <span>01.02</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detalhes do Imóvel -->
+            <div class="history-section">
+                <h2 class="section-title" style="margin: 0 0 20px;"><i class="fas fa-info-circle"></i> Dados Cadastrais</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                    <div class="result-card" style="text-align: left;">
+                        <h4 style="margin-bottom: 15px;">Informações Gerais</h4>
+                        <p style="margin-bottom: 8px;"><strong>Proprietário:</strong> João Silva</p>
+                        <p style="margin-bottom: 8px;"><strong>CPF:</strong> ***.***.789-00</p>
+                        <p style="margin-bottom: 8px;"><strong>Inscrição:</strong> 01.02.003.0004.00001</p>
+                        <p><strong>Cadastro:</strong> 15/03/2010</p>
+                    </div>
+                    <div class="result-card" style="text-align: left;">
+                        <h4 style="margin-bottom: 15px;">Características</h4>
+                        <p style="margin-bottom: 8px;"><strong>Área Terreno:</strong> 300 m²</p>
+                        <p style="margin-bottom: 8px;"><strong>Área Construída:</strong> 250 m²</p>
+                        <p style="margin-bottom: 8px;"><strong>Tipo:</strong> Casa</p>
+                        <p><strong>Padrão:</strong> Alto</p>
+                    </div>
+                    <div class="result-card" style="text-align: left;">
+                        <h4 style="margin-bottom: 15px;">Valores Venais</h4>
+                        <p style="margin-bottom: 8px;"><strong>Terreno:</strong> R$ 450.000,00</p>
+                        <p style="margin-bottom: 8px;"><strong>Construção:</strong> R$ 375.000,00</p>
+                        <p style="margin-bottom: 8px;"><strong>Total:</strong> R$ 825.000,00</p>
+                        <p><strong>Alíquota:</strong> 0.5%</p>
+                    </div>
+                    <div class="result-card" style="text-align: left;">
+                        <h4 style="margin-bottom: 15px;">Ações</h4>
+                        <button class="btn btn-outline" style="width: 100%; margin-bottom: 10px;">
+                            <i class="fas fa-download"></i> Baixar BIC
+                        </button>
+                        <button class="btn btn-outline" style="width: 100%;">
+                            <i class="fas fa-edit"></i> Atualizar Dados
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Button -->
+    <button class="chat-button" onclick="toggleChat()">
+        <i class="fas fa-comments"></i>
+    </button>
+
+    <!-- Chat Window -->
+    <div class="chat-window" id="chatWindow">
+        <div class="chat-header">
+            <div class="chat-avatar">
+                <i class="fas fa-robot"></i>
+            </div>
+            <div class="chat-header-info">
+                <h4>Assistente IPTU</h4>
+                <span><i class="fas fa-circle" style="color: #10b981; font-size: 0.5rem;"></i> Online</span>
+            </div>
+            <button class="chat-close" onclick="toggleChat()">&times;</button>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="chat-message bot">
+                Olá! Sou o assistente virtual do IPTU Digital. Como posso ajudar você hoje?
+            </div>
+        </div>
+        <div class="chat-quick-actions">
+            <button class="chat-quick-btn" onclick="quickChat('Como pagar meu IPTU?')">Como pagar?</button>
+            <button class="chat-quick-btn" onclick="quickChat('Quero parcelar meu IPTU')">Parcelamento</button>
+            <button class="chat-quick-btn" onclick="quickChat('Preciso de uma certidão negativa')">Certidões</button>
+            <button class="chat-quick-btn" onclick="quickChat('Meu IPTU está atrasado, o que fazer?')">IPTU atrasado</button>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" class="chat-input" placeholder="Digite sua mensagem..." id="chatInput" onkeypress="handleChatEnter(event)">
+            <button class="chat-send" onclick="sendChatMessage()">
+                <i class="fas fa-paper-plane"></i>
+            </button>
         </div>
     </div>
 
@@ -776,7 +2070,63 @@
         <p>© 2026 Prefeitura Municipal - IPTU Digital | Todos os direitos reservados</p>
     </footer>
 
+    <!-- Modal de Certidão -->
+    <div class="modal-overlay" id="certificateModal">
+        <div class="modal" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2><i class="fas fa-certificate"></i> Certidão Negativa de Débitos</h2>
+                <button class="modal-close" onclick="closeCertificateModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="certificate-preview">
+                    <div class="certificate-header">
+                        <h3>PREFEITURA MUNICIPAL</h3>
+                        <p style="color: #64748b; font-size: 0.9rem;">Secretaria de Finanças</p>
+                        <h4 style="margin-top: 15px; color: #1e40af;">CERTIDÃO NEGATIVA DE DÉBITOS - IPTU</h4>
+                    </div>
+                    <div class="certificate-body">
+                        <p style="margin-bottom: 15px;">Certificamos para os devidos fins que <strong>JOÃO SILVA</strong>, inscrito no CPF sob nº <strong>***.***789-00</strong>, referente ao imóvel situado na <strong>RUA DAS FLORES, 123 - CENTRO</strong>, inscrição municipal nº <strong>01.02.003.0004.00001</strong>, <span style="color: #10b981; font-weight: 600;">NÃO CONSTA</span> débitos relativos ao Imposto Predial e Territorial Urbano - IPTU nesta municipalidade.</p>
+                        <p style="margin-bottom: 15px;"><strong>Validade:</strong> Esta certidão é válida por <strong>90 (noventa) dias</strong> a partir da data de emissão.</p>
+                        <p style="margin-bottom: 15px;"><strong>Data de Emissão:</strong> 10/02/2026 às 14:32:45</p>
+                        <p><strong>Código de Autenticação:</strong> CND-2026-IPTU-0001-AB3F-9K2L</p>
+                    </div>
+                    <div class="certificate-footer">
+                        <div>
+                            <p class="certificate-code">Valide em: www.prefeitura.gov.br/validar</p>
+                            <p class="certificate-code">Código: CND-2026-IPTU-0001-AB3F-9K2L</p>
+                        </div>
+                        <div class="certificate-qr">
+                            <i class="fas fa-qrcode"></i>
+                        </div>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 15px; margin-top: 20px;">
+                    <button class="btn btn-primary" style="flex: 1;" onclick="downloadCertificate()">
+                        <i class="fas fa-download"></i> Baixar PDF
+                    </button>
+                    <button class="btn btn-outline" style="flex: 1;" onclick="printCertificate()">
+                        <i class="fas fa-print"></i> Imprimir
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
+        // Tab Navigation
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById('tab-' + tabName).classList.add('active');
+            event.target.closest('.tab-btn').classList.add('active');
+            
+            if (tabName === 'simulador') {
+                updateSimulator();
+            }
+        }
+
+        // Payment Modal
         function openPaymentModal() {
             document.getElementById('paymentModal').classList.add('active');
         }
@@ -786,11 +2136,31 @@
         }
 
         document.getElementById('paymentModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closePaymentModal();
-            }
+            if (e.target === this) closePaymentModal();
         });
 
+        // Certificate Modal
+        function openCertificateModal() {
+            document.getElementById('certificateModal').classList.add('active');
+        }
+
+        function closeCertificateModal() {
+            document.getElementById('certificateModal').classList.remove('active');
+        }
+
+        document.getElementById('certificateModal').addEventListener('click', function(e) {
+            if (e.target === this) closeCertificateModal();
+        });
+
+        function downloadCertificate() {
+            showToast('Certidão baixada com sucesso!', 'success');
+        }
+
+        function printCertificate() {
+            showToast('Preparando impressão...', 'info');
+        }
+
+        // Payment Methods
         document.querySelectorAll('.method-option').forEach(option => {
             option.addEventListener('click', function() {
                 document.querySelectorAll('.method-option').forEach(o => o.classList.remove('selected'));
@@ -811,6 +2181,184 @@
                 }, 2000);
             });
         }
+
+        // Notifications
+        function toggleNotifications() {
+            event.stopPropagation();
+            document.getElementById('notificationDropdown').classList.toggle('active');
+        }
+
+        function markAllRead(e) {
+            e.stopPropagation();
+            document.querySelectorAll('.notification-item').forEach(item => {
+                item.classList.remove('unread');
+            });
+            document.querySelector('.notification-badge').textContent = '0';
+            document.querySelector('.notification-badge').style.display = 'none';
+            showToast('Todas notificações marcadas como lidas', 'success');
+        }
+
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.notification-bell')) {
+                document.getElementById('notificationDropdown').classList.remove('active');
+            }
+        });
+
+        // Chat
+        function toggleChat() {
+            document.getElementById('chatWindow').classList.toggle('active');
+        }
+
+        function quickChat(message) {
+            addChatMessage(message, 'user');
+            setTimeout(() => {
+                const responses = {
+                    'Como pagar meu IPTU?': 'Você pode pagar via PIX, boleto ou cartão de crédito. Clique em "Pagar IPTU" para gerar o código de pagamento instantâneo!',
+                    'Quero parcelar meu IPTU': 'Ótimo! Oferecemos parcelamento em até 12x. Acesse a aba "Simulador" para calcular as parcelas e juros.',
+                    'Preciso de uma certidão negativa': 'Para emitir sua Certidão Negativa de Débitos, clique no botão "Certidão Negativa" no topo da página. A emissão é instantânea!',
+                    'Meu IPTU está atrasado, o que fazer?': 'Sem problemas! Acesse seu imóvel e clique em "Regularizar". Você pode pagar à vista ou parcelar o débito com multa e juros calculados automaticamente.'
+                };
+                addChatMessage(responses[message] || 'Entendi! Um atendente humano entrará em contato em breve.', 'bot');
+            }, 1000);
+        }
+
+        function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (message) {
+                addChatMessage(message, 'user');
+                input.value = '';
+                setTimeout(() => {
+                    addChatMessage('Recebi sua mensagem! Estou processando... Um momento, por favor.', 'bot');
+                }, 800);
+            }
+        }
+
+        function handleChatEnter(e) {
+            if (e.key === 'Enter') sendChatMessage();
+        }
+
+        function addChatMessage(text, sender) {
+            const messages = document.getElementById('chatMessages');
+            const msg = document.createElement('div');
+            msg.className = 'chat-message ' + sender;
+            msg.textContent = text;
+            messages.appendChild(msg);
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        // Simulator
+        function updateSimulator() {
+            const valor = parseFloat(document.getElementById('simImovel').value);
+            const parcelas = parseInt(document.getElementById('simParcelas').value);
+            const dataInput = document.getElementById('simData').value;
+            
+            let juros = 0;
+            if (parcelas === 1) juros = -0.10;
+            else if (parcelas <= 5) juros = 0;
+            else if (parcelas === 6) juros = 0.01;
+            else if (parcelas === 8) juros = 0.02;
+            else if (parcelas === 10) juros = 0.03;
+            else if (parcelas === 12) juros = 0.05;
+            
+            const valorJuros = valor * juros;
+            const total = valor + valorJuros;
+            const valorParcela = total / parcelas;
+            
+            document.getElementById('valorOriginal').textContent = formatCurrency(valor);
+            document.getElementById('valorJuros').textContent = (juros < 0 ? '- ' : '+ ') + formatCurrency(Math.abs(valorJuros));
+            document.getElementById('valorJuros').className = 'value ' + (juros < 0 ? 'green' : juros > 0 ? 'red' : '');
+            document.getElementById('valorTotal').textContent = formatCurrency(total);
+            document.getElementById('valorParcela').textContent = formatCurrency(valorParcela);
+            
+            const data = new Date(dataInput);
+            document.getElementById('primeiraParcela').textContent = formatDate(data);
+            
+            const ultimaData = new Date(data);
+            ultimaData.setMonth(ultimaData.getMonth() + parcelas - 1);
+            document.getElementById('ultimaParcela').textContent = formatDate(ultimaData);
+            
+            // Gerar tabela de parcelas
+            const tabela = document.getElementById('tabelaParcelas');
+            tabela.innerHTML = '';
+            
+            for (let i = 1; i <= parcelas; i++) {
+                const parcelaData = new Date(data);
+                parcelaData.setMonth(parcelaData.getMonth() + i - 1);
+                
+                const item = document.createElement('div');
+                item.className = 'history-item' + (i === 1 ? ' pending' : '');
+                item.innerHTML = `
+                    <div class="history-item-header">
+                        <span class="history-item-title">Parcela ${i}/${parcelas}</span>
+                        <span class="history-item-value" style="color: #3b82f6;">${formatCurrency(valorParcela)}</span>
+                    </div>
+                    <span class="history-item-date">Vencimento: ${formatDate(parcelaData)}</span>
+                `;
+                tabela.appendChild(item);
+            }
+        }
+
+        function formatCurrency(value) {
+            return 'R$ ' + value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        function formatDate(date) {
+            return date.toLocaleDateString('pt-BR');
+        }
+
+        // Calendar Navigation
+        let currentMonth = 1; // February = 1 (0-indexed)
+        let currentYear = 2026;
+
+        function changeMonth(delta) {
+            currentMonth += delta;
+            if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+            if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+            
+            const months = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+            document.getElementById('currentMonth').textContent = months[currentMonth] + ' ' + currentYear;
+        }
+
+        // History Filters
+        document.querySelectorAll('.history-filter').forEach(filter => {
+            filter.addEventListener('click', function() {
+                document.querySelectorAll('.history-filter').forEach(f => f.classList.remove('active'));
+                this.classList.add('active');
+                showToast('Filtro aplicado: ' + this.textContent, 'info');
+            });
+        });
+
+        // Toast Notifications
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 100px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6'};
+                color: white;
+                padding: 12px 24px;
+                border-radius: 8px;
+                font-size: 0.9rem;
+                z-index: 10000;
+                animation: slideUp 0.3s ease;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            `;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'fadeOut 0.3s ease forwards';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateSimulator();
+        });
     </script>
 </body>
 </html>

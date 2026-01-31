@@ -82,7 +82,7 @@ window.addEventListener('scroll', () => {
 });
 
 // ===== TYPING EFFECT =====
-const typingElement = document.getElementById('typing');
+let typingElement = null;
 const words = [
     'Full-Stack Developer',
     'Angular Specialist',
@@ -95,19 +95,25 @@ let wordIndex = 0;
 let charIndex = 0;
 let isDeleting = false;
 let typeSpeed = 100;
+let typingInitialized = false;
 
 function typeEffect() {
-    if (!typingElement) return;
+    // Buscar elemento apenas uma vez e verificar se existe
+    if (!typingElement) {
+        typingElement = document.getElementById('typing');
+    }
+    
+    if (!typingElement || typingElement.id !== 'typing') return;
     
     const currentWord = words[wordIndex];
 
     if (isDeleting) {
-        typingElement.textContent = currentWord.substring(0, charIndex - 1);
-        charIndex--;
+        charIndex = Math.max(0, charIndex - 1);
+        typingElement.textContent = currentWord.substring(0, charIndex);
         typeSpeed = 50;
     } else {
-        typingElement.textContent = currentWord.substring(0, charIndex + 1);
-        charIndex++;
+        charIndex = Math.min(currentWord.length, charIndex + 1);
+        typingElement.textContent = currentWord.substring(0, charIndex);
         typeSpeed = 100;
     }
 
@@ -538,7 +544,13 @@ document.head.appendChild(toastStyles);
 
 // ===== INICIALIZAÇÃO =====
 document.addEventListener('DOMContentLoaded', () => {
-    typeEffect();
+    // Inicializar typing apenas se o elemento existir e ainda não foi inicializado
+    const typingEl = document.getElementById('typing');
+    if (typingEl && !typingInitialized) {
+        typingInitialized = true;
+        typingElement = typingEl;
+        typeEffect();
+    }
     initPlaygroundTabs();
     initMarkdownEditor();
     initChecklist();

@@ -25,8 +25,40 @@
         .search-bar input { background: none; border: none; color: #e2e8f0; width: 100%; outline: none; }
         .search-bar i { color: #94a3b8; }
         .header-actions { display: flex; align-items: center; gap: 20px; }
-        .notification-btn { width: 40px; height: 40px; border-radius: 50%; background: #0f172a; border: none; color: #94a3b8; cursor: pointer; position: relative; }
-        .notification-badge { position: absolute; top: -5px; right: -5px; width: 18px; height: 18px; background: #ef4444; border-radius: 50%; font-size: 0.7rem; display: flex; align-items: center; justify-content: center; color: white; }
+        .notification-btn { width: 40px; height: 40px; border-radius: 50%; background: #0f172a; border: none; color: #94a3b8; cursor: pointer; position: relative; transition: all 0.3s; }
+        .notification-btn:hover { color: #6366f1; background: rgba(99, 102, 241, 0.2); }
+        .notification-badge { position: absolute; top: -5px; right: -5px; width: 18px; height: 18px; background: #ef4444; border-radius: 50%; font-size: 0.7rem; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; }
+        .notification-dropdown { position: absolute; top: 50px; right: 0; background: #1e293b; border-radius: 16px; width: 380px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5); z-index: 1000; display: none; border: 1px solid rgba(99, 102, 241, 0.2); overflow: hidden; }
+        .notification-dropdown.active { display: block; animation: dropIn 0.3s ease; }
+        @keyframes dropIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .notification-header { padding: 15px 20px; border-bottom: 1px solid rgba(99, 102, 241, 0.2); display: flex; justify-content: space-between; align-items: center; background: rgba(99, 102, 241, 0.1); }
+        .notification-header h4 { font-size: 1rem; display: flex; align-items: center; gap: 8px; }
+        .notification-header h4 i { color: #6366f1; }
+        .mark-read-btn { background: none; border: none; color: #6366f1; cursor: pointer; font-size: 0.8rem; transition: all 0.2s; }
+        .mark-read-btn:hover { color: #818cf8; }
+        .notification-list { max-height: 400px; overflow-y: auto; }
+        .notification-item { padding: 15px 20px; border-bottom: 1px solid rgba(99, 102, 241, 0.1); display: flex; gap: 12px; align-items: flex-start; cursor: pointer; transition: all 0.2s; }
+        .notification-item:hover { background: rgba(99, 102, 241, 0.1); }
+        .notification-item.unread { background: rgba(99, 102, 241, 0.05); }
+        .notification-item.unread::before { content: ''; position: absolute; left: 8px; top: 50%; transform: translateY(-50%); width: 6px; height: 6px; background: #6366f1; border-radius: 50%; }
+        .notification-item { position: relative; }
+        .notification-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+        .notification-icon.alert { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+        .notification-icon.warning { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+        .notification-icon.success { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .notification-icon.info { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
+        .notification-icon.delivery { background: rgba(99, 102, 241, 0.2); color: #6366f1; }
+        .notification-content { flex: 1; min-width: 0; }
+        .notification-text { font-size: 0.9rem; margin-bottom: 4px; line-height: 1.4; }
+        .notification-text strong { color: #e2e8f0; }
+        .notification-meta { display: flex; justify-content: space-between; align-items: center; }
+        .notification-time { font-size: 0.75rem; color: #64748b; }
+        .notification-tag { font-size: 0.7rem; padding: 2px 8px; border-radius: 10px; background: rgba(99, 102, 241, 0.2); color: #818cf8; }
+        .notification-footer { padding: 12px 20px; border-top: 1px solid rgba(99, 102, 241, 0.2); text-align: center; }
+        .notification-footer a { color: #6366f1; text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: all 0.2s; }
+        .notification-footer a:hover { color: #818cf8; }
+        .notification-empty { padding: 40px 20px; text-align: center; color: #64748b; }
+        .notification-empty i { font-size: 2.5rem; margin-bottom: 15px; opacity: 0.5; }
         .page-content { display: none; animation: fadeInPage 0.4s ease; flex: 1; padding: 20px; }
         .page-content.active { display: block; }
         @keyframes fadeInPage { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -137,7 +169,107 @@
         <header class="header">
             <div class="search-bar"><i class="fas fa-search"></i><input type="text" placeholder="Buscar veículo, motorista ou entrega..."></div>
             <div class="header-actions">
-                <button class="notification-btn"><i class="fas fa-bell"></i><span class="notification-badge">3</span></button>
+                <div style="position: relative;">
+                    <button class="notification-btn" onclick="toggleNotifications(event)">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge" id="notificationCount">5</span>
+                    </button>
+                    <div class="notification-dropdown" id="notificationDropdown">
+                        <div class="notification-header">
+                            <h4><i class="fas fa-bell"></i> Notificações</h4>
+                            <button class="mark-read-btn" onclick="markAllAsRead(event)">Marcar todas como lidas</button>
+                        </div>
+                        <div class="notification-list" id="notificationList">
+                            <div class="notification-item unread" onclick="handleNotificationClick(this, 'alert')">
+                                <div class="notification-icon alert">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <p class="notification-text"><strong>Entrega Atrasada!</strong> Pedido #ENT-2347 está 45min atrasado</p>
+                                    <div class="notification-meta">
+                                        <span class="notification-time">Há 5 minutos</span>
+                                        <span class="notification-tag">Urgente</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="notification-item unread" onclick="handleNotificationClick(this, 'warning')">
+                                <div class="notification-icon warning">
+                                    <i class="fas fa-gas-pump"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <p class="notification-text"><strong>Combustível Baixo</strong> TRK-003 com apenas 15% de tanque</p>
+                                    <div class="notification-meta">
+                                        <span class="notification-time">Há 12 minutos</span>
+                                        <span class="notification-tag">Atenção</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="notification-item unread" onclick="handleNotificationClick(this, 'success')">
+                                <div class="notification-icon success">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <p class="notification-text"><strong>Rota Concluída!</strong> VAN-002 finalizou todas as 12 entregas</p>
+                                    <div class="notification-meta">
+                                        <span class="notification-time">Há 28 minutos</span>
+                                        <span class="notification-tag">Sucesso</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="notification-item unread" onclick="handleNotificationClick(this, 'info')">
+                                <div class="notification-icon info">
+                                    <i class="fas fa-route"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <p class="notification-text"><strong>Rota Otimizada</strong> Nova rota calculada para TRK-001: -15km</p>
+                                    <div class="notification-meta">
+                                        <span class="notification-time">Há 45 minutos</span>
+                                        <span class="notification-tag">Sistema</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="notification-item unread" onclick="handleNotificationClick(this, 'delivery')">
+                                <div class="notification-icon delivery">
+                                    <i class="fas fa-box"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <p class="notification-text"><strong>Nova Entrega</strong> Pedido #ENT-2350 adicionado à rota Norte</p>
+                                    <div class="notification-meta">
+                                        <span class="notification-time">Há 1 hora</span>
+                                        <span class="notification-tag">Entrega</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="notification-item" onclick="handleNotificationClick(this, 'success')">
+                                <div class="notification-icon success">
+                                    <i class="fas fa-user-check"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <p class="notification-text"><strong>Check-in</strong> Ana Lima iniciou turno às 08:00</p>
+                                    <div class="notification-meta">
+                                        <span class="notification-time">Há 3 horas</span>
+                                        <span class="notification-tag">Motorista</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="notification-item" onclick="handleNotificationClick(this, 'info')">
+                                <div class="notification-icon info">
+                                    <i class="fas fa-tools"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <p class="notification-text"><strong>Manutenção Agendada</strong> TRK-006 - Troca de óleo em 02/02</p>
+                                    <div class="notification-meta">
+                                        <span class="notification-time">Ontem</span>
+                                        <span class="notification-tag">Manutenção</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="notification-footer">
+                            <a href="#" onclick="viewAllNotifications(event)">Ver todas as notificações <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
                 <div style="display: flex; align-items: center; gap: 10px;"><span>Operador</span><div style="width: 35px; height: 35px; background: #6366f1; border-radius: 50%; display: flex; align-items: center; justify-content: center;"><i class="fas fa-user"></i></div></div>
             </div>
         </header>
@@ -421,6 +553,175 @@
                 });
             }
         }, 500);
+
+        // Notification System
+        function toggleNotifications(e) {
+            e.stopPropagation();
+            const dropdown = document.getElementById('notificationDropdown');
+            dropdown.classList.toggle('active');
+        }
+
+        function markAllAsRead(e) {
+            e.stopPropagation();
+            const items = document.querySelectorAll('.notification-item.unread');
+            items.forEach(item => item.classList.remove('unread'));
+            updateNotificationCount();
+            showToast('✅ Todas notificações marcadas como lidas');
+        }
+
+        function handleNotificationClick(element, type) {
+            element.classList.remove('unread');
+            updateNotificationCount();
+            
+            // Navigate based on notification type
+            const pageMap = {
+                'alert': 'entregas',
+                'warning': 'combustivel',
+                'success': 'rastreamento',
+                'info': 'rotas',
+                'delivery': 'entregas'
+            };
+            
+            const targetPage = pageMap[type] || 'rastreamento';
+            navigateToPage(targetPage);
+            
+            document.getElementById('notificationDropdown').classList.remove('active');
+        }
+
+        function navigateToPage(pageName) {
+            const navLinks = document.querySelectorAll('.nav-menu a[data-page]');
+            const pages = document.querySelectorAll('.page-content');
+            
+            navLinks.forEach(l => l.classList.remove('active'));
+            pages.forEach(p => p.classList.remove('active'));
+            
+            const targetLink = document.querySelector(`[data-page="${pageName}"]`);
+            if (targetLink) targetLink.classList.add('active');
+            
+            const targetPage = document.getElementById('page-' + pageName);
+            if (targetPage) targetPage.classList.add('active');
+            
+            if (pageName === 'rotas') setTimeout(initRoutesMap, 100);
+            if (pageName === 'rastreamento' && map) setTimeout(() => map.invalidateSize(), 100);
+        }
+
+        function updateNotificationCount() {
+            const unreadCount = document.querySelectorAll('.notification-item.unread').length;
+            const badge = document.getElementById('notificationCount');
+            badge.textContent = unreadCount;
+            badge.style.display = unreadCount > 0 ? 'flex' : 'none';
+        }
+
+        function viewAllNotifications(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            showToast('📋 Abrindo central de notificações...');
+            document.getElementById('notificationDropdown').classList.remove('active');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            const dropdown = document.getElementById('notificationDropdown');
+            const btn = e.target.closest('.notification-btn');
+            if (!btn && !e.target.closest('.notification-dropdown')) {
+                dropdown.classList.remove('active');
+            }
+        });
+
+        // Toast notification
+        function showToast(message) {
+            const existing = document.querySelector('.toast-notification');
+            if (existing) existing.remove();
+            
+            const toast = document.createElement('div');
+            toast.className = 'toast-notification';
+            toast.innerHTML = message;
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 30px;
+                left: 50%;
+                transform: translateX(-50%) translateY(100px);
+                background: linear-gradient(135deg, #6366f1, #8b5cf6);
+                color: white;
+                padding: 16px 32px;
+                border-radius: 50px;
+                font-weight: 500;
+                font-size: 0.95rem;
+                z-index: 10000;
+                box-shadow: 0 10px 40px rgba(99, 102, 241, 0.4);
+                opacity: 0;
+                transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            `;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.transform = 'translateX(-50%) translateY(0)';
+                toast.style.opacity = '1';
+            }, 10);
+            
+            setTimeout(() => {
+                toast.style.transform = 'translateX(-50%) translateY(100px)';
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Simulate real-time notifications
+        function simulateNewNotification() {
+            const notifications = [
+                { icon: 'fas fa-truck', iconClass: 'success', text: '<strong>Entrega Confirmada!</strong> #ENT-2351 assinado pelo cliente', tag: 'Entrega' },
+                { icon: 'fas fa-exclamation-circle', iconClass: 'warning', text: '<strong>Trânsito Intenso</strong> Rota Norte com 20min de atraso', tag: 'Tráfego' },
+                { icon: 'fas fa-map-marker-alt', iconClass: 'info', text: '<strong>Chegada</strong> MOT-004 chegou no destino final', tag: 'Localização' },
+                { icon: 'fas fa-clock', iconClass: 'alert', text: '<strong>Tempo Limite</strong> Janela de entrega expira em 30min', tag: 'Urgente' }
+            ];
+            
+            const notif = notifications[Math.floor(Math.random() * notifications.length)];
+            const list = document.getElementById('notificationList');
+            
+            const newItem = document.createElement('div');
+            newItem.className = 'notification-item unread';
+            newItem.onclick = function() { handleNotificationClick(this, notif.iconClass); };
+            newItem.innerHTML = `
+                <div class="notification-icon ${notif.iconClass}">
+                    <i class="${notif.icon}"></i>
+                </div>
+                <div class="notification-content">
+                    <p class="notification-text">${notif.text}</p>
+                    <div class="notification-meta">
+                        <span class="notification-time">Agora</span>
+                        <span class="notification-tag">${notif.tag}</span>
+                    </div>
+                </div>
+            `;
+            
+            list.insertBefore(newItem, list.firstChild);
+            updateNotificationCount();
+            
+            // Flash the bell icon
+            const btn = document.querySelector('.notification-btn');
+            btn.style.animation = 'bellShake 0.5s ease';
+            setTimeout(() => btn.style.animation = '', 500);
+        }
+
+        // Add bell shake animation
+        const shakeStyle = document.createElement('style');
+        shakeStyle.textContent = `
+            @keyframes bellShake {
+                0%, 100% { transform: rotate(0); }
+                20% { transform: rotate(15deg); }
+                40% { transform: rotate(-15deg); }
+                60% { transform: rotate(10deg); }
+                80% { transform: rotate(-10deg); }
+            }
+        `;
+        document.head.appendChild(shakeStyle);
+
+        // Simulate new notifications every 30-60 seconds
+        setInterval(() => {
+            if (Math.random() > 0.5) {
+                simulateNewNotification();
+            }
+        }, 45000);
     </script>
 </body>
 </html>

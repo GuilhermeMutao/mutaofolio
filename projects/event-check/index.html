@@ -695,6 +695,859 @@
             font-weight: 600;
         }
 
+        /* Eventos Page */
+        .eventos-page {
+            padding: 20px;
+        }
+        .event-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .event-item {
+            background: #1e293b;
+            border-radius: 16px;
+            padding: 18px;
+            border-left: 4px solid #8b5cf6;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .event-item:hover {
+            transform: translateX(5px);
+            background: #243548;
+        }
+        .event-item.live {
+            border-left-color: #10b981;
+            animation: pulse-border 2s infinite;
+        }
+        .event-item.upcoming {
+            border-left-color: #f59e0b;
+        }
+        .event-item.past {
+            border-left-color: #64748b;
+            opacity: 0.7;
+        }
+        @keyframes pulse-border {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+            50% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+        }
+        .event-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+        .event-item-title {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        .event-item-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .event-item-badge.live {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+        .event-item-badge.upcoming {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+        }
+        .event-item-badge.past {
+            background: rgba(100, 116, 139, 0.2);
+            color: #94a3b8;
+        }
+        .event-item-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+        .event-item-meta i {
+            margin-right: 5px;
+            color: #8b5cf6;
+        }
+        .event-item-progress {
+            margin-top: 12px;
+        }
+        .event-progress-bar {
+            height: 6px;
+            background: rgba(139, 92, 246, 0.2);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .event-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #8b5cf6, #10b981);
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+        .event-progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-top: 5px;
+        }
+
+        /* Manual Check-in */
+        .manual-checkin {
+            background: #1e293b;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .manual-checkin h4 {
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+        }
+        .manual-checkin h4 i {
+            color: #8b5cf6;
+            margin-right: 8px;
+        }
+        .manual-input-group {
+            display: flex;
+            gap: 10px;
+        }
+        .manual-input {
+            flex: 1;
+            background: #0f172a;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 12px;
+            padding: 12px 15px;
+            color: #e2e8f0;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .manual-input:focus {
+            border-color: #8b5cf6;
+        }
+        .manual-btn {
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .manual-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* Credenciamento / Badge */
+        .badge-preview {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            margin: 0 20px 20px;
+            color: #0f172a;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+        .badge-header {
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            color: white;
+            padding: 15px;
+            border-radius: 12px;
+            margin: -25px -25px 20px;
+        }
+        .badge-event-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        .badge-event-date {
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+        .badge-photo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: white;
+        }
+        .badge-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 5px;
+        }
+        .badge-role {
+            color: #8b5cf6;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+        .badge-qr {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto;
+            background: #f1f5f9;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .badge-qr i {
+            font-size: 4rem;
+            color: #0f172a;
+        }
+        .badge-code {
+            margin-top: 10px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            color: #64748b;
+            letter-spacing: 2px;
+        }
+
+        /* Notificações */
+        .notification-dropdown {
+            position: absolute;
+            top: 60px;
+            right: 20px;
+            background: #1e293b;
+            border-radius: 16px;
+            width: 300px;
+            max-height: 400px;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            display: none;
+            animation: dropIn 0.3s ease;
+        }
+        .notification-dropdown.active {
+            display: block;
+        }
+        @keyframes dropIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .notification-header {
+            padding: 15px;
+            border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .notification-header h4 {
+            font-size: 0.95rem;
+        }
+        .notification-clear {
+            font-size: 0.75rem;
+            color: #8b5cf6;
+            cursor: pointer;
+        }
+        .notification-item {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(139, 92, 246, 0.1);
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .notification-item:hover {
+            background: rgba(139, 92, 246, 0.1);
+        }
+        .notification-item.unread {
+            background: rgba(139, 92, 246, 0.05);
+        }
+        .notification-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+        .notification-icon.success { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .notification-icon.warning { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+        .notification-icon.info { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
+        .notification-icon.error { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+        .notification-content {
+            flex: 1;
+        }
+        .notification-text {
+            font-size: 0.85rem;
+            margin-bottom: 3px;
+        }
+        .notification-time {
+            font-size: 0.75rem;
+            color: #64748b;
+        }
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ef4444;
+            color: white;
+            font-size: 0.65rem;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+        .header-icons .icon-wrapper {
+            position: relative;
+            cursor: pointer;
+        }
+
+        /* Seating Map */
+        .seating-page {
+            padding: 20px;
+        }
+        .seating-legend {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8rem;
+        }
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+        }
+        .legend-dot.available { background: #10b981; }
+        .legend-dot.occupied { background: #8b5cf6; }
+        .legend-dot.reserved { background: #f59e0b; }
+        .legend-dot.blocked { background: #64748b; }
+        .seating-grid {
+            background: #1e293b;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .seating-stage {
+            background: rgba(139, 92, 246, 0.3);
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+            margin-bottom: 25px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #8b5cf6;
+        }
+        .seating-section {
+            margin-bottom: 20px;
+        }
+        .section-label {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .seats-row {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+        .seat {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            font-size: 0.6rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 600;
+        }
+        .seat.available {
+            background: rgba(16, 185, 129, 0.3);
+            color: #10b981;
+        }
+        .seat.available:hover {
+            background: #10b981;
+            color: white;
+            transform: scale(1.1);
+        }
+        .seat.occupied {
+            background: rgba(139, 92, 246, 0.3);
+            color: #8b5cf6;
+        }
+        .seat.reserved {
+            background: rgba(245, 158, 11, 0.3);
+            color: #f59e0b;
+        }
+        .seat.blocked {
+            background: rgba(100, 116, 139, 0.3);
+            color: #64748b;
+            cursor: not-allowed;
+        }
+        .seating-info {
+            background: #0f172a;
+            border-radius: 12px;
+            padding: 15px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            text-align: center;
+        }
+        .seating-stat {
+            font-size: 0.85rem;
+        }
+        .seating-stat-value {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #8b5cf6;
+        }
+        .seating-stat-label {
+            font-size: 0.75rem;
+            color: #64748b;
+        }
+
+        /* Configurações */
+        .settings-page {
+            padding: 20px;
+        }
+        .settings-section {
+            background: #1e293b;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+        .settings-section h4 {
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .settings-section h4 i {
+            color: #8b5cf6;
+        }
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(139, 92, 246, 0.1);
+        }
+        .setting-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        .setting-label {
+            font-size: 0.9rem;
+        }
+        .setting-desc {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-top: 3px;
+        }
+        .toggle-switch {
+            width: 50px;
+            height: 26px;
+            background: #0f172a;
+            border-radius: 13px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .toggle-switch.active {
+            background: #8b5cf6;
+        }
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            top: 3px;
+            left: 3px;
+            transition: transform 0.3s;
+        }
+        .toggle-switch.active::after {
+            transform: translateX(24px);
+        }
+        .setting-select {
+            background: #0f172a;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 8px;
+            padding: 8px 12px;
+            color: #e2e8f0;
+            font-size: 0.85rem;
+            outline: none;
+        }
+
+        /* Histórico Detalhado */
+        .history-page {
+            padding: 20px;
+        }
+        .history-filters {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+        }
+        .history-filter {
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: rgba(139, 92, 246, 0.1);
+            color: #94a3b8;
+            font-size: 0.85rem;
+            border: none;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s;
+        }
+        .history-filter.active {
+            background: #8b5cf6;
+            color: white;
+        }
+        .history-timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+        .history-timeline::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: rgba(139, 92, 246, 0.3);
+        }
+        .history-item {
+            position: relative;
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .history-item::before {
+            content: '';
+            position: absolute;
+            left: -24px;
+            top: 20px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #8b5cf6;
+            border: 3px solid #0f172a;
+        }
+        .history-item.success::before { background: #10b981; }
+        .history-item.warning::before { background: #f59e0b; }
+        .history-item.error::before { background: #ef4444; }
+        .history-item-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        .history-item-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        .history-item-time {
+            font-size: 0.75rem;
+            color: #64748b;
+        }
+        .history-item-details {
+            font-size: 0.85rem;
+            color: #94a3b8;
+        }
+        .history-item-meta {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+            font-size: 0.75rem;
+            color: #64748b;
+        }
+        .history-item-meta span i {
+            margin-right: 5px;
+        }
+
+        /* Offline Mode Indicator */
+        .offline-banner {
+            background: linear-gradient(90deg, #ef4444, #f97316);
+            color: white;
+            text-align: center;
+            padding: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: none;
+        }
+        .offline-banner.active {
+            display: block;
+            animation: pulse-bg 2s infinite;
+        }
+        @keyframes pulse-bg {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        /* Export Modal */
+        .export-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .export-modal.active {
+            display: flex;
+        }
+        .export-content {
+            background: #1e293b;
+            border-radius: 20px;
+            padding: 25px;
+            width: 100%;
+            max-width: 350px;
+        }
+        .export-content h3 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .export-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .export-option {
+            background: #0f172a;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .export-option:hover {
+            border-color: #8b5cf6;
+            background: rgba(139, 92, 246, 0.1);
+        }
+        .export-option i {
+            font-size: 1.5rem;
+            color: #8b5cf6;
+            width: 40px;
+        }
+        .export-option-text {
+            flex: 1;
+        }
+        .export-option-title {
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+        .export-option-desc {
+            font-size: 0.75rem;
+            color: #64748b;
+        }
+        .export-close {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: none;
+            padding: 12px;
+            border-radius: 12px;
+            width: 100%;
+            margin-top: 15px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            padding: 0 20px 20px;
+        }
+        .quick-action {
+            background: rgba(139, 92, 246, 0.1);
+            border-radius: 12px;
+            padding: 15px 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .quick-action:hover {
+            background: rgba(139, 92, 246, 0.2);
+            transform: translateY(-2px);
+        }
+        .quick-action i {
+            font-size: 1.3rem;
+            color: #8b5cf6;
+            margin-bottom: 8px;
+        }
+        .quick-action span {
+            display: block;
+            font-size: 0.7rem;
+            color: #94a3b8;
+        }
+
+        /* Live Stats */
+        .live-stats {
+            background: #1e293b;
+            border-radius: 16px;
+            padding: 20px;
+            margin: 0 20px 20px;
+        }
+        .live-stats-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .live-stats-header h4 {
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .live-indicator {
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            animation: pulse-live 1.5s infinite;
+        }
+        @keyframes pulse-live {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+        .live-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        .live-stat-item {
+            background: #0f172a;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+        }
+        .live-stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        .live-stat-value.green { color: #10b981; }
+        .live-stat-value.purple { color: #8b5cf6; }
+        .live-stat-value.orange { color: #f59e0b; }
+        .live-stat-value.blue { color: #3b82f6; }
+        .live-stat-label {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-top: 3px;
+        }
+
+        /* Participant Detail Modal */
+        .participant-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .participant-modal.active {
+            display: flex;
+        }
+        .participant-detail {
+            background: #1e293b;
+            border-radius: 20px;
+            padding: 25px;
+            width: 100%;
+            max-width: 350px;
+            text-align: center;
+        }
+        .participant-detail-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        .participant-detail-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        .participant-detail-email {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+        .participant-detail-info {
+            background: #0f172a;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(139, 92, 246, 0.1);
+        }
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+        .detail-label {
+            color: #64748b;
+            font-size: 0.85rem;
+        }
+        .detail-value {
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        .participant-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .participant-action-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .participant-action-btn.primary {
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            color: white;
+        }
+        .participant-action-btn.secondary {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
         @media (min-width: 768px) {
             body {
                 background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%);
@@ -751,11 +1604,74 @@
             </span>
         </div>
 
+        <!-- Offline Banner -->
+        <div class="offline-banner" id="offlineBanner">
+            <i class="fas fa-wifi-slash"></i> Modo Offline - Dados serão sincronizados
+        </div>
+
         <div class="header">
             <h1>EventCheck</h1>
             <div class="header-icons">
-                <i class="fas fa-bell"></i>
-                <i class="fas fa-cog"></i>
+                <div class="icon-wrapper" onclick="toggleNotifications()">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge" id="notifBadge">5</span>
+                </div>
+                <div class="icon-wrapper" onclick="navigateToPage('config')">
+                    <i class="fas fa-cog"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notifications Dropdown -->
+        <div class="notification-dropdown" id="notifDropdown">
+            <div class="notification-header">
+                <h4>Notificações</h4>
+                <span class="notification-clear" onclick="clearNotifications()">Limpar tudo</span>
+            </div>
+            <div class="notification-item unread">
+                <div class="notification-icon success">
+                    <i class="fas fa-check"></i>
+                </div>
+                <div class="notification-content">
+                    <div class="notification-text">Check-in de Marina Lima realizado</div>
+                    <div class="notification-time">Agora mesmo</div>
+                </div>
+            </div>
+            <div class="notification-item unread">
+                <div class="notification-icon info">
+                    <i class="fas fa-info"></i>
+                </div>
+                <div class="notification-content">
+                    <div class="notification-text">50% dos participantes já chegaram!</div>
+                    <div class="notification-time">Há 5 min</div>
+                </div>
+            </div>
+            <div class="notification-item unread">
+                <div class="notification-icon warning">
+                    <i class="fas fa-exclamation"></i>
+                </div>
+                <div class="notification-content">
+                    <div class="notification-text">VIP Carlos Oliveira aguardando na entrada</div>
+                    <div class="notification-time">Há 10 min</div>
+                </div>
+            </div>
+            <div class="notification-item">
+                <div class="notification-icon success">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                <div class="notification-content">
+                    <div class="notification-text">15 check-ins realizados nos últimos 10 min</div>
+                    <div class="notification-time">Há 15 min</div>
+                </div>
+            </div>
+            <div class="notification-item">
+                <div class="notification-icon error">
+                    <i class="fas fa-times"></i>
+                </div>
+                <div class="notification-content">
+                    <div class="notification-text">QR Code inválido detectado</div>
+                    <div class="notification-time">Há 20 min</div>
+                </div>
             </div>
         </div>
 
@@ -782,7 +1698,52 @@
                 </div>
             </div>
 
-            <div class="qr-section">
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <div class="quick-action" onclick="openScanner()">
+                    <i class="fas fa-qrcode"></i>
+                    <span>Scan</span>
+                </div>
+                <div class="quick-action" onclick="navigateToPage('participantes')">
+                    <i class="fas fa-user-plus"></i>
+                    <span>Manual</span>
+                </div>
+                <div class="quick-action" onclick="navigateToPage('credencial')">
+                    <i class="fas fa-id-badge"></i>
+                    <span>Crachá</span>
+                </div>
+                <div class="quick-action" onclick="openExportModal()">
+                    <i class="fas fa-download"></i>
+                    <span>Exportar</span>
+                </div>
+            </div>
+
+            <!-- Live Stats -->
+            <div class="live-stats">
+                <div class="live-stats-header">
+                    <h4><span class="live-indicator"></span> Estatísticas em Tempo Real</h4>
+                </div>
+                <div class="live-stats-grid">
+                    <div class="live-stat-item">
+                        <div class="live-stat-value green" id="liveCheckins">247</div>
+                        <div class="live-stat-label">Check-ins</div>
+                    </div>
+                    <div class="live-stat-item">
+                        <div class="live-stat-value purple" id="liveRate">49%</div>
+                        <div class="live-stat-label">Taxa</div>
+                    </div>
+                    <div class="live-stat-item">
+                        <div class="live-stat-value orange" id="liveVips">28</div>
+                        <div class="live-stat-label">VIPs</div>
+                    </div>
+                    <div class="live-stat-item">
+                        <div class="live-stat-value blue" id="livePerMin">12</div>
+                        <div class="live-stat-label">Por min</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="qr-section" style="padding-top: 10px;">
                 <div class="qr-container">
                     <div class="qr-code"></div>
                 </div>
@@ -891,9 +1852,20 @@
         <!-- PÁGINA PARTICIPANTES -->
         <div class="page-content" id="page-participantes">
             <div class="participants-page">
+                <!-- Manual Check-in -->
+                <div class="manual-checkin">
+                    <h4><i class="fas fa-keyboard"></i> Check-in Manual</h4>
+                    <div class="manual-input-group">
+                        <input type="text" class="manual-input" placeholder="Nome ou código do participante" id="manualInput">
+                        <button class="manual-btn" onclick="doManualCheckin()">
+                            <i class="fas fa-check"></i>
+                        </button>
+                    </div>
+                </div>
+
                 <div class="search-box">
                     <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Buscar participante..." id="searchParticipant">
+                    <input type="text" placeholder="Buscar participante..." id="searchParticipant" oninput="searchParticipants()">
                 </div>
                 
                 <div class="filter-tabs">
@@ -1028,6 +2000,393 @@
             </div>
         </div>
 
+        <!-- PÁGINA CREDENCIAL -->
+        <div class="page-content" id="page-credencial">
+            <div class="eventos-page">
+                <h3 style="margin-bottom: 20px;"><i class="fas fa-id-badge" style="color: #8b5cf6;"></i> Credenciamento</h3>
+                
+                <div class="search-box" style="margin-bottom: 20px;">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Buscar participante para gerar crachá..." id="badgeSearch">
+                </div>
+
+                <div class="badge-preview">
+                    <div class="badge-header">
+                        <div class="badge-event-name">Tech Conference 2026</div>
+                        <div class="badge-event-date">25 de Janeiro, 2026</div>
+                    </div>
+                    <div class="badge-photo" id="badgeInitials">ML</div>
+                    <div class="badge-name" id="badgeName">Marina Lima</div>
+                    <div class="badge-role" id="badgeRole">Participante VIP</div>
+                    <div class="badge-qr">
+                        <i class="fas fa-qrcode"></i>
+                    </div>
+                    <div class="badge-code">TEC-2026-0247</div>
+                </div>
+
+                <div style="padding: 0 20px;">
+                    <button class="scan-btn" style="width: 100%; justify-content: center;" onclick="printBadge()">
+                        <i class="fas fa-print"></i> Imprimir Crachá
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- PÁGINA EVENTOS -->
+        <div class="page-content" id="page-eventos">
+            <div class="eventos-page">
+                <div class="section-header" style="margin-bottom: 20px;">
+                    <span class="section-title"><i class="fas fa-calendar-alt" style="color: #8b5cf6; margin-right: 8px;"></i>Meus Eventos</span>
+                    <button style="background: #8b5cf6; color: white; border: none; padding: 8px 15px; border-radius: 20px; font-size: 0.8rem; cursor: pointer;">
+                        <i class="fas fa-plus"></i> Novo
+                    </button>
+                </div>
+
+                <div class="event-list">
+                    <div class="event-item live" onclick="selectEvent('tech')">
+                        <div class="event-item-header">
+                            <div class="event-item-title">Tech Conference 2026</div>
+                            <span class="event-item-badge live"><i class="fas fa-circle"></i> Ao Vivo</span>
+                        </div>
+                        <div class="event-item-meta">
+                            <span><i class="far fa-calendar"></i> 25 Jan 2026</span>
+                            <span><i class="far fa-clock"></i> 19:00</span>
+                            <span><i class="fas fa-map-marker-alt"></i> SP</span>
+                        </div>
+                        <div class="event-item-progress">
+                            <div class="event-progress-bar">
+                                <div class="event-progress-fill" style="width: 49%;"></div>
+                            </div>
+                            <div class="event-progress-text">
+                                <span>247 / 500 check-ins</span>
+                                <span>49%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="event-item upcoming" onclick="selectEvent('workshop')">
+                        <div class="event-item-header">
+                            <div class="event-item-title">Workshop DevOps</div>
+                            <span class="event-item-badge upcoming">Em Breve</span>
+                        </div>
+                        <div class="event-item-meta">
+                            <span><i class="far fa-calendar"></i> 15 Fev 2026</span>
+                            <span><i class="far fa-clock"></i> 14:00</span>
+                            <span><i class="fas fa-map-marker-alt"></i> RJ</span>
+                        </div>
+                        <div class="event-item-progress">
+                            <div class="event-progress-bar">
+                                <div class="event-progress-fill" style="width: 0%;"></div>
+                            </div>
+                            <div class="event-progress-text">
+                                <span>0 / 150 check-ins</span>
+                                <span>0%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="event-item past">
+                        <div class="event-item-header">
+                            <div class="event-item-title">Meetup Angular 2025</div>
+                            <span class="event-item-badge past">Encerrado</span>
+                        </div>
+                        <div class="event-item-meta">
+                            <span><i class="far fa-calendar"></i> 10 Dez 2025</span>
+                            <span><i class="far fa-clock"></i> 19:30</span>
+                            <span><i class="fas fa-map-marker-alt"></i> SP</span>
+                        </div>
+                        <div class="event-item-progress">
+                            <div class="event-progress-bar">
+                                <div class="event-progress-fill" style="width: 87%;"></div>
+                            </div>
+                            <div class="event-progress-text">
+                                <span>87 / 100 check-ins</span>
+                                <span>87%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PÁGINA MAPA DE ASSENTOS -->
+        <div class="page-content" id="page-assentos">
+            <div class="seating-page">
+                <h3 style="margin-bottom: 15px;"><i class="fas fa-chair" style="color: #8b5cf6;"></i> Mapa de Assentos</h3>
+                
+                <div class="seating-legend">
+                    <div class="legend-item">
+                        <div class="legend-dot available"></div>
+                        <span>Disponível</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot occupied"></div>
+                        <span>Ocupado</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot reserved"></div>
+                        <span>Reservado</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot blocked"></div>
+                        <span>Bloqueado</span>
+                    </div>
+                </div>
+
+                <div class="seating-grid">
+                    <div class="seating-stage"><i class="fas fa-microphone-alt"></i> PALCO</div>
+                    
+                    <div class="seating-section">
+                        <div class="section-label">Seção A - VIP</div>
+                        <div class="seats-row">
+                            <div class="seat occupied">A1</div>
+                            <div class="seat occupied">A2</div>
+                            <div class="seat occupied">A3</div>
+                            <div class="seat reserved">A4</div>
+                            <div class="seat available">A5</div>
+                            <div class="seat available">A6</div>
+                            <div class="seat occupied">A7</div>
+                            <div class="seat occupied">A8</div>
+                        </div>
+                        <div class="seats-row">
+                            <div class="seat occupied">A9</div>
+                            <div class="seat available">A10</div>
+                            <div class="seat available">A11</div>
+                            <div class="seat reserved">A12</div>
+                            <div class="seat occupied">A13</div>
+                            <div class="seat occupied">A14</div>
+                            <div class="seat available">A15</div>
+                            <div class="seat available">A16</div>
+                        </div>
+                    </div>
+
+                    <div class="seating-section">
+                        <div class="section-label">Seção B - Regular</div>
+                        <div class="seats-row">
+                            <div class="seat available">B1</div>
+                            <div class="seat occupied">B2</div>
+                            <div class="seat occupied">B3</div>
+                            <div class="seat available">B4</div>
+                            <div class="seat blocked">B5</div>
+                            <div class="seat blocked">B6</div>
+                            <div class="seat available">B7</div>
+                            <div class="seat occupied">B8</div>
+                        </div>
+                        <div class="seats-row">
+                            <div class="seat occupied">B9</div>
+                            <div class="seat occupied">B10</div>
+                            <div class="seat available">B11</div>
+                            <div class="seat available">B12</div>
+                            <div class="seat available">B13</div>
+                            <div class="seat occupied">B14</div>
+                            <div class="seat occupied">B15</div>
+                            <div class="seat available">B16</div>
+                        </div>
+                        <div class="seats-row">
+                            <div class="seat available">B17</div>
+                            <div class="seat available">B18</div>
+                            <div class="seat occupied">B19</div>
+                            <div class="seat occupied">B20</div>
+                            <div class="seat occupied">B21</div>
+                            <div class="seat available">B22</div>
+                            <div class="seat available">B23</div>
+                            <div class="seat available">B24</div>
+                        </div>
+                    </div>
+
+                    <div class="seating-info">
+                        <div class="seating-stat">
+                            <div class="seating-stat-value">24</div>
+                            <div class="seating-stat-label">Disponíveis</div>
+                        </div>
+                        <div class="seating-stat">
+                            <div class="seating-stat-value">18</div>
+                            <div class="seating-stat-label">Ocupados</div>
+                        </div>
+                        <div class="seating-stat">
+                            <div class="seating-stat-value">2</div>
+                            <div class="seating-stat-label">Reservados</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PÁGINA HISTÓRICO -->
+        <div class="page-content" id="page-historico">
+            <div class="history-page">
+                <h3 style="margin-bottom: 15px;"><i class="fas fa-history" style="color: #8b5cf6;"></i> Histórico de Atividades</h3>
+                
+                <div class="history-filters">
+                    <button class="history-filter active">Todos</button>
+                    <button class="history-filter">Check-ins</button>
+                    <button class="history-filter">Erros</button>
+                    <button class="history-filter">Sistema</button>
+                </div>
+
+                <div class="history-timeline">
+                    <div class="history-item success">
+                        <div class="history-item-header">
+                            <span class="history-item-title">Check-in Realizado</span>
+                            <span class="history-item-time">Agora</span>
+                        </div>
+                        <div class="history-item-details">Marina Lima realizou check-in com sucesso</div>
+                        <div class="history-item-meta">
+                            <span><i class="fas fa-qrcode"></i> QR Code</span>
+                            <span><i class="fas fa-user"></i> Operador: João</span>
+                        </div>
+                    </div>
+
+                    <div class="history-item success">
+                        <div class="history-item-header">
+                            <span class="history-item-title">Check-in Realizado</span>
+                            <span class="history-item-time">Há 2 min</span>
+                        </div>
+                        <div class="history-item-details">Ricardo Costa realizou check-in com sucesso</div>
+                        <div class="history-item-meta">
+                            <span><i class="fas fa-qrcode"></i> QR Code</span>
+                            <span><i class="fas fa-user"></i> Operador: João</span>
+                        </div>
+                    </div>
+
+                    <div class="history-item warning">
+                        <div class="history-item-header">
+                            <span class="history-item-title">Tentativa Duplicada</span>
+                            <span class="history-item-time">Há 5 min</span>
+                        </div>
+                        <div class="history-item-details">Pedro Almeida já havia feito check-in anteriormente</div>
+                        <div class="history-item-meta">
+                            <span><i class="fas fa-qrcode"></i> QR Code</span>
+                            <span><i class="fas fa-exclamation-triangle"></i> Duplicado</span>
+                        </div>
+                    </div>
+
+                    <div class="history-item error">
+                        <div class="history-item-header">
+                            <span class="history-item-title">QR Code Inválido</span>
+                            <span class="history-item-time">Há 8 min</span>
+                        </div>
+                        <div class="history-item-details">Código escaneado não corresponde a nenhum participante</div>
+                        <div class="history-item-meta">
+                            <span><i class="fas fa-times-circle"></i> Código: XYZ123</span>
+                        </div>
+                    </div>
+
+                    <div class="history-item success">
+                        <div class="history-item-header">
+                            <span class="history-item-title">Check-in Manual</span>
+                            <span class="history-item-time">Há 12 min</span>
+                        </div>
+                        <div class="history-item-details">Ana Santos - check-in feito manualmente</div>
+                        <div class="history-item-meta">
+                            <span><i class="fas fa-keyboard"></i> Manual</span>
+                            <span><i class="fas fa-user"></i> Operador: Maria</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PÁGINA CONFIGURAÇÕES -->
+        <div class="page-content" id="page-config">
+            <div class="settings-page">
+                <h3 style="margin-bottom: 20px;"><i class="fas fa-cog" style="color: #8b5cf6;"></i> Configurações</h3>
+                
+                <div class="settings-section">
+                    <h4><i class="fas fa-qrcode"></i> Scanner</h4>
+                    <div class="setting-item">
+                        <div>
+                            <div class="setting-label">Vibração ao escanear</div>
+                            <div class="setting-desc">Vibrar ao detectar QR Code</div>
+                        </div>
+                        <div class="toggle-switch active" onclick="this.classList.toggle('active')"></div>
+                    </div>
+                    <div class="setting-item">
+                        <div>
+                            <div class="setting-label">Som de confirmação</div>
+                            <div class="setting-desc">Tocar som ao fazer check-in</div>
+                        </div>
+                        <div class="toggle-switch active" onclick="this.classList.toggle('active')"></div>
+                    </div>
+                    <div class="setting-item">
+                        <div>
+                            <div class="setting-label">Flash automático</div>
+                            <div class="setting-desc">Ligar flash em ambientes escuros</div>
+                        </div>
+                        <div class="toggle-switch" onclick="this.classList.toggle('active')"></div>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h4><i class="fas fa-bell"></i> Notificações</h4>
+                    <div class="setting-item">
+                        <div>
+                            <div class="setting-label">Notificações push</div>
+                            <div class="setting-desc">Receber alertas de check-in</div>
+                        </div>
+                        <div class="toggle-switch active" onclick="this.classList.toggle('active')"></div>
+                    </div>
+                    <div class="setting-item">
+                        <div>
+                            <div class="setting-label">Alerta de VIP</div>
+                            <div class="setting-desc">Notificar chegada de VIPs</div>
+                        </div>
+                        <div class="toggle-switch active" onclick="this.classList.toggle('active')"></div>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h4><i class="fas fa-database"></i> Dados</h4>
+                    <div class="setting-item">
+                        <div>
+                            <div class="setting-label">Modo offline</div>
+                            <div class="setting-desc">Salvar dados localmente</div>
+                        </div>
+                        <div class="toggle-switch active" onclick="this.classList.toggle('active')"></div>
+                    </div>
+                    <div class="setting-item">
+                        <div>
+                            <div class="setting-label">Sincronização automática</div>
+                            <div class="setting-desc">Sincronizar quando online</div>
+                        </div>
+                        <div class="toggle-switch active" onclick="this.classList.toggle('active')"></div>
+                    </div>
+                    <div class="setting-item">
+                        <div>
+                            <div class="setting-label">Intervalo de sync</div>
+                        </div>
+                        <select class="setting-select">
+                            <option>5 segundos</option>
+                            <option selected>10 segundos</option>
+                            <option>30 segundos</option>
+                            <option>1 minuto</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h4><i class="fas fa-palette"></i> Aparência</h4>
+                    <div class="setting-item">
+                        <div>
+                            <div class="setting-label">Tema escuro</div>
+                        </div>
+                        <div class="toggle-switch active" onclick="this.classList.toggle('active')"></div>
+                    </div>
+                    <div class="setting-item">
+                        <div>
+                            <div class="setting-label">Cor primária</div>
+                        </div>
+                        <select class="setting-select">
+                            <option selected>Roxo</option>
+                            <option>Azul</option>
+                            <option>Verde</option>
+                            <option>Laranja</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <nav class="bottom-nav">
             <a href="#" class="nav-item active" data-page="inicio">
                 <i class="fas fa-home"></i>
@@ -1039,7 +2398,11 @@
             </a>
             <a href="#" class="nav-item" data-page="participantes">
                 <i class="fas fa-users"></i>
-                <span>Participantes</span>
+                <span>Lista</span>
+            </a>
+            <a href="#" class="nav-item" data-page="eventos">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Eventos</span>
             </a>
             <a href="#" class="nav-item" data-page="relatorios">
                 <i class="fas fa-chart-bar"></i>
@@ -1071,22 +2434,114 @@
         <button class="success-close" onclick="closeSuccess()">OK</button>
     </div>
 
+    <!-- Export Modal -->
+    <div class="export-modal" id="exportModal">
+        <div class="export-content">
+            <h3><i class="fas fa-download" style="color: #8b5cf6;"></i> Exportar Dados</h3>
+            <div class="export-options">
+                <div class="export-option" onclick="exportData('excel')">
+                    <i class="fas fa-file-excel"></i>
+                    <div class="export-option-text">
+                        <div class="export-option-title">Excel (.xlsx)</div>
+                        <div class="export-option-desc">Planilha com todos os dados</div>
+                    </div>
+                </div>
+                <div class="export-option" onclick="exportData('csv')">
+                    <i class="fas fa-file-csv"></i>
+                    <div class="export-option-text">
+                        <div class="export-option-title">CSV (.csv)</div>
+                        <div class="export-option-desc">Formato texto separado por vírgulas</div>
+                    </div>
+                </div>
+                <div class="export-option" onclick="exportData('pdf')">
+                    <i class="fas fa-file-pdf"></i>
+                    <div class="export-option-text">
+                        <div class="export-option-title">PDF (.pdf)</div>
+                        <div class="export-option-desc">Relatório formatado para impressão</div>
+                    </div>
+                </div>
+                <div class="export-option" onclick="exportData('json')">
+                    <i class="fas fa-file-code"></i>
+                    <div class="export-option-text">
+                        <div class="export-option-title">JSON (.json)</div>
+                        <div class="export-option-desc">Dados estruturados para integração</div>
+                    </div>
+                </div>
+            </div>
+            <button class="export-close" onclick="closeExportModal()">Cancelar</button>
+        </div>
+    </div>
+
+    <!-- Participant Detail Modal -->
+    <div class="participant-modal" id="participantModal">
+        <div class="participant-detail">
+            <div class="participant-detail-avatar" id="modalAvatar">ML</div>
+            <div class="participant-detail-name" id="modalName">Marina Lima</div>
+            <div class="participant-detail-email" id="modalEmail">marina.lima@email.com</div>
+            
+            <div class="participant-detail-info">
+                <div class="detail-row">
+                    <span class="detail-label">Tipo</span>
+                    <span class="detail-value">VIP</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Status</span>
+                    <span class="detail-value" style="color: #10b981;">✓ Check-in realizado</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Horário</span>
+                    <span class="detail-value">19:05</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Código</span>
+                    <span class="detail-value">TEC-2026-0247</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Assento</span>
+                    <span class="detail-value">A3</span>
+                </div>
+            </div>
+
+            <div class="participant-actions">
+                <button class="participant-action-btn primary" onclick="printParticipantBadge()">
+                    <i class="fas fa-print"></i> Imprimir
+                </button>
+                <button class="participant-action-btn secondary" onclick="closeParticipantModal()">
+                    Fechar
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
         const names = [
-            { name: 'Carlos Oliveira', initials: 'CO' },
-            { name: 'Juliana Mendes', initials: 'JM' },
-            { name: 'Pedro Almeida', initials: 'PA' },
-            { name: 'Fernanda Rocha', initials: 'FR' },
-            { name: 'Lucas Silva', initials: 'LS' },
-            { name: 'Beatriz Ferreira', initials: 'BF' },
-            { name: 'Gabriel Santos', initials: 'GS' },
-            { name: 'Amanda Costa', initials: 'AC' }
+            { name: 'Carlos Oliveira', initials: 'CO', email: 'carlos.oliveira@email.com', type: 'Regular' },
+            { name: 'Juliana Mendes', initials: 'JM', email: 'juliana.mendes@email.com', type: 'VIP' },
+            { name: 'Pedro Almeida', initials: 'PA', email: 'pedro.almeida@email.com', type: 'Regular' },
+            { name: 'Fernanda Rocha', initials: 'FR', email: 'fernanda.rocha@email.com', type: 'VIP' },
+            { name: 'Lucas Silva', initials: 'LS', email: 'lucas.silva@email.com', type: 'Regular' },
+            { name: 'Beatriz Ferreira', initials: 'BF', email: 'beatriz.ferreira@email.com', type: 'Speaker' },
+            { name: 'Gabriel Santos', initials: 'GS', email: 'gabriel.santos@email.com', type: 'Regular' },
+            { name: 'Amanda Costa', initials: 'AC', email: 'amanda.costa@email.com', type: 'VIP' }
         ];
 
         let checkinCount = 247;
+        let vipCount = 28;
+        let perMinute = 12;
+        let notificationCount = 5;
+
+        // Simular estatísticas em tempo real
+        setInterval(() => {
+            perMinute = Math.floor(Math.random() * 8) + 8;
+            document.getElementById('livePerMin').textContent = perMinute;
+        }, 5000);
 
         function openScanner() {
             document.getElementById('scannerModal').classList.add('active');
+            // Simular vibração se disponível
+            if (navigator.vibrate) {
+                navigator.vibrate(50);
+            }
         }
 
         function closeScanner() {
@@ -1096,46 +2551,236 @@
         function simulateScan() {
             closeScanner();
             
+            // Som de confirmação (se disponível)
+            playSuccessSound();
+            
             setTimeout(() => {
                 const person = names[Math.floor(Math.random() * names.length)];
                 document.getElementById('successName').textContent = person.name;
                 document.getElementById('successInfo').textContent = 'Check-in realizado às ' + new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
                 document.getElementById('successModal').classList.add('active');
 
-                // Update counter
+                // Update counters
                 checkinCount++;
                 document.getElementById('checkedIn').textContent = checkinCount;
+                document.getElementById('liveCheckins').textContent = checkinCount;
+                
+                const rate = Math.round((checkinCount / 500) * 100);
+                document.getElementById('liveRate').textContent = rate + '%';
+
+                if (person.type === 'VIP') {
+                    vipCount++;
+                    document.getElementById('liveVips').textContent = vipCount;
+                    addNotification('VIP ' + person.name + ' realizou check-in', 'warning');
+                }
 
                 // Add to list
-                const list = document.getElementById('checkinList');
-                const newItem = document.createElement('div');
-                newItem.className = 'checkin-item';
-                newItem.innerHTML = `
-                    <div class="checkin-avatar">${person.initials}</div>
-                    <div class="checkin-info">
-                        <div class="checkin-name">${person.name}</div>
-                        <div class="checkin-time">Agora mesmo</div>
-                    </div>
-                    <div class="checkin-status">
-                        <i class="fas fa-check"></i>
-                    </div>
-                `;
-                list.insertBefore(newItem, list.firstChild);
-
-                // Update times on existing items
-                const items = list.querySelectorAll('.checkin-item');
-                if (items.length > 1) {
-                    items[1].querySelector('.checkin-time').textContent = 'Há 1 min';
-                }
-                if (items.length > 5) {
-                    list.removeChild(list.lastChild);
+                addToCheckinList(person);
+                
+                // Add notification
+                addNotification('Check-in de ' + person.name + ' realizado', 'success');
+                
+                // Update scanner stats
+                const scannerToday = document.getElementById('scannerToday');
+                if (scannerToday) {
+                    scannerToday.textContent = parseInt(scannerToday.textContent) + 1;
                 }
             }, 1500);
+        }
+
+        function addToCheckinList(person) {
+            const list = document.getElementById('checkinList');
+            const newItem = document.createElement('div');
+            newItem.className = 'checkin-item';
+            newItem.onclick = () => openParticipantModal(person);
+            newItem.innerHTML = `
+                <div class="checkin-avatar">${person.initials}</div>
+                <div class="checkin-info">
+                    <div class="checkin-name">${person.name}</div>
+                    <div class="checkin-time">Agora mesmo</div>
+                </div>
+                <div class="checkin-status">
+                    <i class="fas fa-check"></i>
+                </div>
+            `;
+            list.insertBefore(newItem, list.firstChild);
+
+            // Update times on existing items
+            const items = list.querySelectorAll('.checkin-item');
+            if (items.length > 1) {
+                items[1].querySelector('.checkin-time').textContent = 'Há 1 min';
+            }
+            if (items.length > 5) {
+                list.removeChild(list.lastChild);
+            }
         }
 
         function closeSuccess() {
             document.getElementById('successModal').classList.remove('active');
         }
+
+        // Notifications
+        function toggleNotifications() {
+            const dropdown = document.getElementById('notifDropdown');
+            dropdown.classList.toggle('active');
+        }
+
+        function addNotification(text, type = 'info') {
+            notificationCount++;
+            const badge = document.getElementById('notifBadge');
+            if (badge) {
+                badge.textContent = notificationCount;
+            }
+        }
+
+        function clearNotifications() {
+            notificationCount = 0;
+            document.getElementById('notifBadge').textContent = '0';
+            document.getElementById('notifDropdown').classList.remove('active');
+        }
+
+        // Close notifications when clicking outside
+        document.addEventListener('click', (e) => {
+            const dropdown = document.getElementById('notifDropdown');
+            const bell = e.target.closest('.icon-wrapper');
+            if (!bell && dropdown.classList.contains('active')) {
+                dropdown.classList.remove('active');
+            }
+        });
+
+        // Manual Check-in
+        function doManualCheckin() {
+            const input = document.getElementById('manualInput');
+            const name = input.value.trim();
+            
+            if (name) {
+                const initials = name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+                const person = { name, initials, email: name.toLowerCase().replace(' ', '.') + '@email.com', type: 'Manual' };
+                
+                document.getElementById('successName').textContent = name;
+                document.getElementById('successInfo').textContent = 'Check-in manual realizado às ' + new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+                document.getElementById('successModal').classList.add('active');
+                
+                checkinCount++;
+                document.getElementById('checkedIn').textContent = checkinCount;
+                document.getElementById('liveCheckins').textContent = checkinCount;
+                
+                addToCheckinList(person);
+                input.value = '';
+                
+                playSuccessSound();
+            }
+        }
+
+        // Search participants
+        function searchParticipants() {
+            const query = document.getElementById('searchParticipant').value.toLowerCase();
+            const items = document.querySelectorAll('.participant-item');
+            
+            items.forEach(item => {
+                const name = item.querySelector('.participant-name').textContent.toLowerCase();
+                const email = item.querySelector('.participant-email').textContent.toLowerCase();
+                
+                if (name.includes(query) || email.includes(query)) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        // Export Modal
+        function openExportModal() {
+            document.getElementById('exportModal').classList.add('active');
+        }
+
+        function closeExportModal() {
+            document.getElementById('exportModal').classList.remove('active');
+        }
+
+        function exportData(format) {
+            closeExportModal();
+            
+            const formatNames = {
+                excel: 'Excel',
+                csv: 'CSV',
+                pdf: 'PDF',
+                json: 'JSON'
+            };
+            
+            // Simular download
+            setTimeout(() => {
+                alert('📥 Arquivo ' + formatNames[format] + ' gerado com sucesso!\n\nDownload: checkins_tech_conference_2026.' + (format === 'excel' ? 'xlsx' : format));
+            }, 500);
+        }
+
+        // Participant Modal
+        function openParticipantModal(person) {
+            document.getElementById('modalAvatar').textContent = person.initials;
+            document.getElementById('modalName').textContent = person.name;
+            document.getElementById('modalEmail').textContent = person.email || 'email@example.com';
+            document.getElementById('participantModal').classList.add('active');
+        }
+
+        function closeParticipantModal() {
+            document.getElementById('participantModal').classList.remove('active');
+        }
+
+        function printParticipantBadge() {
+            closeParticipantModal();
+            navigateToPage('credencial');
+        }
+
+        // Print Badge
+        function printBadge() {
+            alert('🖨️ Enviando crachá para impressão...');
+        }
+
+        // Select Event
+        function selectEvent(eventId) {
+            navigateToPage('inicio');
+        }
+
+        // Seat selection
+        document.querySelectorAll('.seat.available').forEach(seat => {
+            seat.addEventListener('click', function() {
+                const seatId = this.textContent;
+                if (confirm('Reservar assento ' + seatId + '?')) {
+                    this.classList.remove('available');
+                    this.classList.add('reserved');
+                }
+            });
+        });
+
+        // Sound effect
+        function playSuccessSound() {
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.value = 800;
+                oscillator.type = 'sine';
+                gainNode.gain.value = 0.1;
+                
+                oscillator.start();
+                oscillator.stop(audioContext.currentTime + 0.1);
+            } catch (e) {
+                // Audio not supported
+            }
+        }
+
+        // Offline detection
+        window.addEventListener('online', () => {
+            document.getElementById('offlineBanner').classList.remove('active');
+        });
+
+        window.addEventListener('offline', () => {
+            document.getElementById('offlineBanner').classList.add('active');
+        });
 
         // Touch feedback
         document.querySelectorAll('.nav-item').forEach(item => {
@@ -1172,6 +2817,9 @@
                     item.classList.add('active');
                 }
             });
+            
+            // Close notifications
+            document.getElementById('notifDropdown').classList.remove('active');
         }
 
         // Filter tabs functionality
@@ -1179,8 +2827,70 @@
             tab.addEventListener('click', function() {
                 document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
                 this.classList.add('active');
+                
+                // Filter logic
+                const filter = this.textContent.toLowerCase();
+                const items = document.querySelectorAll('.participant-item');
+                
+                items.forEach(item => {
+                    const status = item.querySelector('.participant-status');
+                    if (filter.includes('todos')) {
+                        item.style.display = 'flex';
+                    } else if (filter.includes('check-in') && status.classList.contains('checked')) {
+                        item.style.display = 'flex';
+                    } else if (filter.includes('pendente') && status.classList.contains('pending')) {
+                        item.style.display = 'flex';
+                    } else if (filter.includes('vip')) {
+                        // Show VIPs (in real app, would check VIP status)
+                        item.style.display = 'flex';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
             });
         });
+
+        // History filters
+        document.querySelectorAll('.history-filter').forEach(filter => {
+            filter.addEventListener('click', function() {
+                document.querySelectorAll('.history-filter').forEach(f => f.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Make participant items clickable
+        document.querySelectorAll('.participant-item').forEach(item => {
+            item.style.cursor = 'pointer';
+            item.addEventListener('click', function() {
+                const name = this.querySelector('.participant-name').textContent;
+                const email = this.querySelector('.participant-email').textContent;
+                const initials = this.querySelector('.participant-avatar').textContent;
+                openParticipantModal({ name, email, initials });
+            });
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            // Ctrl/Cmd + S = Open Scanner
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                e.preventDefault();
+                openScanner();
+            }
+            // Escape = Close modals
+            if (e.key === 'Escape') {
+                closeScanner();
+                closeSuccess();
+                closeExportModal();
+                closeParticipantModal();
+                document.getElementById('notifDropdown').classList.remove('active');
+            }
+            // Enter on manual input
+            if (e.key === 'Enter' && document.activeElement.id === 'manualInput') {
+                doManualCheckin();
+            }
+        });
+
+        console.log('🎫 EventCheck - Sistema de Check-in carregado!');
     </script>
 </body>
 </html>
